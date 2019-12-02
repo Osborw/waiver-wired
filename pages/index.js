@@ -1,24 +1,41 @@
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/MyLayout';
+import PositionSelector from '../components/PositionSelector'
 import Row from '../components/Row'
-import {getSomething} from '../db/getStuff'
+import * as Get from '../db/getStuff'
 
-const Index = (props) =>  {
+const Index = () =>  {
+
+  const [players, setPlayers] = useState([]);
+
+  useEffect(() => {
+    const init = async () => {
+      setPlayers(await setInitialList())
+    }
+    init();
+  }, [])
+
+  const getNewTop50 = async (position) => {
+    const ret = await Get.top50(position)
+    setPlayers(ret)
+  }
+
   return (
     <Layout>
       <p>Hello Next.js</p>
-      {props.ret.map((p, idx) => {
-        return <Row key={idx+1} rank={idx+1} name={p.name} avg={p.avg_points}/>
+      <PositionSelector onClick={getNewTop50} />
+      {players.map((p, idx) => {
+        return <Row key={idx+1} rank={idx+1} name={p.name} position={p.position} avg={p.avgPoints}/>
       })}
     </Layout>
-  );
+  )
 }
 
-Index.getInitialProps = async function() {
+const setInitialList = async () => {
+  const initialPos = 'QB'
+  const ret = await Get.top50(initialPos)
+  return ret
+}
 
-  const ret = await getSomething()
-  return {
-    ret: ret
-  }
-};
 
-export default Index;
+export default Index; 
