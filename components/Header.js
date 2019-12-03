@@ -5,7 +5,7 @@ const linkStyle = {
 };
 
 const Header = () => (
-  <div>
+  <div style={{marginBottom: '16px'}}>
     <Link href="/">
       <a style={linkStyle}>Home</a>
     </Link>
