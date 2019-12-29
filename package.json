@@ -25,6 +25,10 @@
     "next": "^9.1.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "victory": "^33.1.6"
+    "recharts": "^2.0.0-beta.1",
+    "styled-components": "^4.4.1"
+  },
+  "devDependencies": {
+    "babel-plugin-styled-components": "^1.8.0"
   }
 }

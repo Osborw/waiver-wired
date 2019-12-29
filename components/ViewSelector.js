@@ -11,7 +11,7 @@ export const View = {
 }
 
 export const ViewSelector = ({onClick}) => (
-  <div style={{marginBottom: '16px', marginLeft: '16px'}}>
+  <div style={{marginBottom: '16px',}}>
       <a style={linkStyle} onClick={() => onClick(View.table)}>Table</a>
       <a style={linkStyle} onClick={() => onClick(View.graph)}>Graph</a>
   </div>

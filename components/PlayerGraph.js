@@ -1,46 +1,59 @@
 import {
-  VictoryChart,
-  VictoryScatter,
-  VictoryTheme,
-  VictoryTooltip,
-} from 'victory'
+  ScatterChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Scatter,
+  Cell,
+} from 'recharts'
+import { Top50GraphTooltip } from './GraphTooltip'
 
-export default ({ players }) => {
-  
+export default ({ players, position }) => {
+
+  const isFlexPosition = () => {
+    return position === 'FLEX'
+  }
+
   const determineColor = ownerId => {
     if (ownerId === '471674442926256128') return 'green'
     else if (ownerId) return 'black'
     else return 'blue'
   }
 
+  const datum = players.map((p, idx) => {
+    return {
+      x: idx + 1,
+      y: p.avgPoints,
+      label: p.name,
+      color: determineColor(p.ownerId),
+    }
+  })
+
   return (
-    <div style={{ width: '60%' }}>
-      <VictoryChart
-        theme={VictoryTheme.material}
-        domain={{ x: [0, 50], y: [-2, 30] }}
+    <div>
+      <ScatterChart
+        width={isFlexPosition() ? 1300 : 650}
+        height={400}
+        margin={{ top: 20, right: 20, bottom: 10, left: 10 }}
       >
-        <VictoryScatter
-          labelComponent={<VictoryTooltip />}
-          style={{
-            data: {
-              fill: ({ datum }) => datum.color,
-            },
-            labels: {
-              fontSize: 15,
-              fill: ({ datum }) => datum.color,
-            },
-          }}
-          size={2.5}
-          data={players.map((p, idx) => {
-            return {
-              x: idx,
-              y: p.avgPoints,
-              label: p.name,
-              color: determineColor(p.ownerId),
-            }
-          })}
+        <CartesianGrid strokeDasharray='3 3' vertical={false} />
+        <XAxis dataKey='x' name='rank' domain={isFlexPosition() ? [0, 100] : [0,50]}/>
+        <YAxis dataKey='y' name='avgPoints' interval={'preserveStartEnd'}/>
+        <Tooltip
+          content={Top50GraphTooltip}
         />
-      </VictoryChart>
+        <Scatter name='Players' data={datum} fill='#8884d8'>
+          {datum.map((entry, index) => {
+            return (
+              <Cell
+                key={`cell-${index}`}
+                fill={entry.color}
+              />
+            )
+          })}
+        </Scatter>
+      </ScatterChart>
     </div>
   )
 }

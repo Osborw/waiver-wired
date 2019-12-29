@@ -11,7 +11,7 @@ export const TimeFrame = {
 }
 
 export const TimeFrameSelector = ({onClick}) => (
-  <div style={{marginBottom: '16px', marginLeft: '16px'}}>
+  <div style={{marginBottom: '16px',}}>
       <a style={linkStyle} onClick={() => onClick(TimeFrame.allSeason)}>All Season</a>
       <a style={linkStyle} onClick={() => onClick(TimeFrame.fiveWeeks)}>Last 5 Weeks</a>
   </div>

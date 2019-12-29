@@ -5,7 +5,7 @@ import { TimeFrameSelector, TimeFrame } from '../components/TimeFrameSelector'
 import { ViewSelector, View } from '../components/ViewSelector'
 import PlayerTable from '../components/PlayerTable'
 import PlayerGraph from '../components/PlayerGraph'
-import * as Get from '../server/getStuff'
+import * as Get from '../server/getIndex'
 
 const Index = () => {
   const [players, setPlayers] = useState([])
@@ -52,14 +52,14 @@ const Index = () => {
     <Layout>
       <TimeFrameSelector onClick={setNewTimeFrame} />
       <PositionSelector onClick={setNewPosition} />
-      <h2 style={{ marginLeft: '16px' }}>
+      <h2 >
         {`${position} - ${
           timeFrame === TimeFrame.allSeason ? 'All Season' : 'Over Five Weeks'
         }`}
       </h2>
       <ViewSelector onClick={setView} />
-      {view === View.table && <PlayerTable players={players}/>}
-      {view === View.graph && <PlayerGraph players={players}/>}
+      {view === View.table && <PlayerTable players={players} position={position} timeFrame={timeFrame} view={view} />}
+      {view === View.graph && <PlayerGraph players={players} position={position} />}
     </Layout>
   )
 }
