@@ -116,9 +116,9 @@ export const Row = ({
         {selectedPosition === 'FLEX' && <Cell>{position}</Cell>}
         <NameField name={name} ownerId={ownerId} />
         {gamesPlayed && <Cell>{gamesPlayed}</Cell>}
-        <Cell inputSize={AvgPPRFieldLength}>{avg.toFixed(2)}</Cell>
+        <Cell inputSize={AvgPPRFieldLength}>{avg ? avg.toFixed(2) : 0}</Cell>
         <Cell inputSize={AvgPPRFieldLength}>
-          {(gamesPlayed > 2 && stdDev) ? stdDev.toFixed(2) : '------'}
+          {(gamesPlayed > 1 && stdDev) ? stdDev.toFixed(2) : '------'}
         </Cell>
         <Cell>{individualGraphVisible ? ' ˄ ' : ' ˅ '}</Cell>
       </Cells>
@@ -128,7 +128,7 @@ export const Row = ({
             <IndividualGraph
               weeks={weeks}
               avg={avg}
-              stdDev={gamesPlayed > 2 ? stdDev : 0}
+              stdDev={gamesPlayed > 1 ? stdDev : null}
               position={selectedPosition}
               timeFrame={timeFrame}
             />

@@ -20,7 +20,7 @@ export const IndividualGraphTooltip = props => {
         {payload[0] ? (
           <>
             <div>{`Week ${payload[0].payload.x}`}</div>
-            <div>{payload[0].payload.y ? `${payload[0].payload.y}` : 'Not Active'}</div>
+            <div>{payload[0].payload.y != undefined ? `${payload[0].payload.y}` : 'Not Active'}</div>
           </>
         ) : (
           <div>{`Not Active`}</div>

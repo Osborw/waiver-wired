@@ -40,6 +40,8 @@ const IndividualGraph = ({ weeks, avg, stdDev, position, timeFrame }) => {
       <Tooltip content={IndividualGraphTooltip} position={{x:380, y:10}}/>
       <Area type='linear' dataKey='y' stroke='#8884d8' fill='#8884d8' />
       <Line type='monotone' dataKey='avg' stroke='#ff7300' dot={false} activeDot={false} />
+      {stdDev && <Line type='monotone' dataKey='ceil' stroke='#12732c' dot={false} activeDot={false} />}
+      {stdDev && <Line type='monotone' dataKey='floor' stroke='#bd1515' dot={false} activeDot={false} />}
     </ComposedChart>
   )
 }
