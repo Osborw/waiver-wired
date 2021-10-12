@@ -6,7 +6,6 @@ export default ({ players, position, timeFrame, view }) => {
 
   //Resets visibility of indv graphs when players change
   useEffect(() => {
-    console.log(players)
     toggleAllVisible(!allVisible)
   }, [players])
 
