@@ -25,7 +25,7 @@ const IndividualGraph = ({ weeks, avg, stdDev, position, timeFrame }) => {
 
   const yDomain = position === 'K' ? [0, 25] : [0, 50]
   //this isnt working for some reason vvvvvv
-  const xDomain = timeFrame === TimeFrame.fiveWeeks ? [8, 14] : [1, 17]
+  const xDomain = timeFrame === TimeFrame.fiveWeeks ? [1, 17] : [1, 17]
 
   return (
     <ComposedChart
