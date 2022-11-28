@@ -7,7 +7,7 @@ const { promisify, isNullOrUndefined } = require('util')
 
 const filePath = path.resolve('files')
 const ELIGIBLE_POSITIONS = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
-const MAX_WEEKS = 17 
+const MAX_WEEKS = 18 
 
 const parseJSON = filename => {
     const rawdata = fs.readFileSync(`files/${filename}`)

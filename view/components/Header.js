@@ -6,11 +6,11 @@ const linkStyle = {
 
 const Header = () => (
   <div style={{marginBottom: '16px'}}>
-    <Link href="/">
-      <a style={linkStyle}>Home</a>
+    <Link href="/" style={linkStyle}>
+      Home
     </Link>
-    <Link href="/about">
-      <a style={linkStyle}>About</a>
+    <Link href="/about" style={linkStyle}>
+      About
     </Link>
   </div>
 );
