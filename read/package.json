@@ -1,0 +1,16 @@
+{
+  "name": "eff-read",
+  "version": "1.0.0",
+  "description": "read in data",
+  "main": "main.js",
+  "scripts": {
+    "start": "node -r esm src/main",
+    "test": "jest --watchAll"
+  },
+  "dependencies": {
+    "esm": "3.2.25",
+    "fs": "0.0.1-security",
+    "mathjs": "11.4.0",
+    "node-fetch": "2.6.6"
+  }
+}

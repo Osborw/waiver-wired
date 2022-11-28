@@ -1,0 +1,19 @@
+{
+  "name": "eff-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -r esm server.js"
+  },
+  "dependencies": {
+    "esm": "3.2.25",
+    "fastify": "4.10.2",
+    "fastify-autoload": "3.13.0",
+    "@fastify/cors": "8.2.0",
+    "fs": "0.0.1-security",
+    "mathjs": "11.4.0",
+    "nodemon": "2.0.20",
+    "uuid": "9.0.0"
+  }
+}
