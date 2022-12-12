@@ -1,5 +1,5 @@
 ## Waiver Wired
-A React/JS app for collection and view of weekly fantasy football statistcis to improve your waiver wire picks.
+A React/JS app for collection and view of weekly fantasy football statistics to improve your waiver wire picks.
 
 ## Usage
 ### Read
