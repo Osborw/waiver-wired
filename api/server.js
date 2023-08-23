@@ -2,7 +2,7 @@ import * as Store from './db/store'
 import cors from '@fastify/cors'
 const fastify = require('fastify')({ logger: true })
 
-const MAX_WEEK = 15 
+const MAX_WEEK = 18 
 
 fastify.register(cors, {
   origin: true,
