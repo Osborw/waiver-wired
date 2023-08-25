@@ -1,143 +1,33 @@
-
-const fetch = require('node-fetch')
-const fs = require('fs')
-const path = require('path')
-const math = require('mathjs')
-const { promisify, isNullOrUndefined } = require('util')
+import fetch from 'node-fetch'
+import fs from 'fs'
+import path from 'path'
+import math from 'mathjs'
+import { promisify, isNullOrUndefined } from 'util'
+import { Defense, EligiblePositions, Player, RawPlayer } from '../../shared/types'
 
 const filePath = path.resolve('files')
-const ELIGIBLE_POSITIONS = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
 const MAX_WEEKS = 18 
 
-const parseJSON = filename => {
-    const rawdata = fs.readFileSync(`files/${filename}`)
+const isEligiblePosition = (pos: string) => {
+    return Object.keys(EligiblePositions).includes(pos)
+}
+
+const parseJSON = (filename: string) => {
+    const rawdata = fs.readFileSync(`files/${filename}`).toString()
     return JSON.parse(rawdata)
 }
 
-// READ IN PLAYERS
-export const players = async db => {
-    return new Promise(async (res, rej) => {
-        console.log('loading players')
-        const URL = 'https://api.sleeper.app/v1/players/nfl'
-
-        await getPlayerData(URL, db)
-        console.log('loaded players')
-        res('players')
-    })
-}
-
-const getPlayerData = async (url, db) => {
-    let data
-    try {
-        const response = await fetch(url)
-        console.log('Got players data')
-        const json = await response.json()
-        data = json
-        console.log('Retrieved player JSON')
-    } catch (error) {
-        console.log('ERROR', error)
-    }
-
-    const allPlayersObj = {}
-
-    let stuff = new Set()
-
-    Object.keys(data).map(async id => {
-        const player = data[id]
-        if (player.position === 'DEF') {
-            Object.keys(player).map(key => {
-                stuff.add(key)
-            })
-        }
-        const name = player.full_name ? player.full_name.replace(`'`, `\\'`) : (player.position === 'DEF' ? `${player.first_name} ${player.last_name}` : null)
-        const team = player.team || 'FA'
-        const position = player.position
-        const status = player.status
-        const injury_status = player.injury_status
-        const active = player.active || false
-        const age = player.age || -1
-        const years_exp = player.years_exp === null ? -1 : player.years_exp
-        const number = player.number || -1
-        const height = player.height ? player.height.replace(`'`, `\\'`) : null
-        const weight = player.weight || -1
-        const depth_chart_position = player.depth_chart_position
-        const depth_chart_order = player.depth_chart_order
-        const fantasy_data_id =
-            player.fantasy_data_id === null ? -1 : player.fantasy_data_id
-        const stats_id = player.stats_id === null ? -1 : player.stats_id
-        const espn_id = player.espn_id === null ? -1 : player.espn_id
-        const injury_start_date =
-            player.injury_start_date === undefined ? null : player.injury_start_date
-        const search_rank = player.search_rank === null ? -1 : player.search_rank
-        const fantasy_positions = player.fantasy_positions || ['unknown']
-        if (position !== 'DEF' && active && ELIGIBLE_POSITIONS.includes(position)) {
-            fantasy_positions.map(async p => {
-                try {
-                    const playerObj = {
-                        id,
-                        name,
-                        team,
-                        position,
-                        fantasy_position: p,
-                        status,
-                        injury_status,
-                        active,
-                        age,
-                        years_exp,
-                        number,
-                        height,
-                        weight,
-                        depth_chart_position,
-                        depth_chart_order,
-                        search_rank,
-                        fantasy_data_id,
-                        stats_id,
-                        espn_id,
-                        injury_start_date
-                    }
-                    allPlayersObj[id] = playerObj
-                } catch (err) {
-                    console.log(err)
-                }
-            })
-        }
-        else if (position === 'DEF' && active) {
-            try {
-                const playerObj = {
-                    id,
-                    name,
-                    team,
-                    position,
-                    fantasy_position: position,
-                    active,
-                }
-                allPlayersObj[id] = playerObj
-            } catch (err) {
-                console.log(err)
-            }
-        }
-    })
-
-    console.log('num players loaded:', Object.keys(allPlayersObj).length)
-    const allPlayersString = JSON.stringify(allPlayersObj)
-    fs.writeFileSync(`${filePath}/players.json`, allPlayersString, 'utf8', (err) => console.error(err))
-}
-
-
 // READ IN SEASON STATS
 export const seasonStats = async () => {
-    return new Promise(async (res, rej) => {
-        console.log('Loading season stats')
-        const URL = 'https://api.sleeper.app/v1/stats/nfl/regular/2022'
+    console.log('Loading season stats')
+    const URL = 'https://api.sleeper.app/v1/stats/nfl/regular/2022'
 
-        await getSeasonData(URL)
-        console.log('Loaded season stats')
-        res()
-    })
+    await getSeasonData(URL)
+    console.log('Loaded season stats')
 }
 
-const getSeasonData = async (url) => {
-    let data
+const getSeasonData = async (url: string) => {
+    let data: any
     try {
         const response = await fetch(url)
         const json = await response.json()

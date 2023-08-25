@@ -1,5 +1,5 @@
 import { readPlayers, readWeeks, readSeason } from './readFile'
-const math = require('mathjs')
+import math from 'mathjs'
 
 const isFlexPosition = (player) => player.position === 'RB' || player.position === 'WR' || player.position === 'TE'
 

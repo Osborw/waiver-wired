@@ -12,5 +12,8 @@
     "fs": "0.0.1-security",
     "mathjs": "11.4.0",
     "node-fetch": "2.6.7"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.4"
   }
 }
