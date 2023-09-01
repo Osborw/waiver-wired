@@ -11,7 +11,7 @@ const isEligiblePosition = (pos: string) => {
 }
 
 // READ IN PLAYERS
-export const players = async () => {
+export const loadPlayers= async () => {
     console.log('loading players')
     const URL = 'https://api.sleeper.app/v1/players/nfl'
 

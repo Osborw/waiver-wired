@@ -1,12 +1,18 @@
-import * as LoadLocal from './load'
+import { calculateData } from './calculators'
+import { loadPlayers } from './load-players'
+import { loadRosters } from './load-rosters'
+import { loadSeasonStats } from './load-season'
+import { loadWeeklyStats } from './load-weekly'
 
 const main = async () => {
 
-    await LoadLocal.players()
-    await LoadLocal.seasonStats()
-    await LoadLocal.weeklyStats()
-    await LoadLocal.rosters()
-    await LoadLocal.calculateData()
+    const MAX_WEEKS = 18 
+
+    await loadPlayers()
+    await loadSeasonStats()
+    await loadWeeklyStats(MAX_WEEKS)
+    await loadRosters()
+    await calculateData(MAX_WEEKS)
 }
 
 main()
