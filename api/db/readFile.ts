@@ -1,5 +1,6 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs'
+import path from 'path'
+
 const filePath = path.resolve('../read/files')
 
 export const readPlayers = async () => JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
