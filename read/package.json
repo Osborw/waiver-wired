@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node -r esm src/main",
+    "start-ts": "ts-node src/main",
     "test": "jest --watchAll"
   },
   "dependencies": {
@@ -12,6 +13,11 @@
     "esm": "3.2.25",
     "fs": "0.0.1-security",
     "mathjs": "11.4.0",
-    "node-fetch": "2.6.7"
+    "node-fetch": "2.6.7",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.4"
   }
 }

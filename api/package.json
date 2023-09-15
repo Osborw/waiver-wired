@@ -4,13 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r esm server.js"
+    "start": "nodemon -r esm server.js",
+    "start-ts": "ts-node server",
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@fastify/cors": "8.2.0",
     "esm": "3.2.25",
     "fastify": "4.10.2",
     "fastify-autoload": "3.13.0",
-    "@fastify/cors": "8.2.0",
     "fs": "0.0.1-security",
     "mathjs": "11.4.0",
     "nodemon": "2.0.20",
