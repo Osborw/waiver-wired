@@ -72,7 +72,7 @@ export const calculateData = async (maxWeeks: number) => {
     console.log('Done calculating data')
 }
 
-const calculateStandardDeviation = async (ids) => {
+const calculateStandardDeviation = async (ids: string[]) => {
     const weeks = JSON.parse((await fs.promises.readFile(`${filePath}/weeks.json`)).toString())
     let season = JSON.parse((await fs.promises.readFile(`${filePath}/season.json`)).toString())
 
@@ -100,9 +100,9 @@ const calculateAllDefPPR = async (maxWeeks: number) => {
         if (allPlayers[id]['position'] === EligiblePositions.DEF) return id
     })
 
-    const calculateDefPPR = async (id) => {
+    const calculateDefPPR = async (id: string) => {
         let sum = 0
-        let i
+        let i: number
         for (i = 1; i <= maxWeeks; i++) {
             const data = weeks[i][id]
 
@@ -140,7 +140,7 @@ const calculateAllDefPPR = async (maxWeeks: number) => {
     }
 
     await Promise.all(defenses.map(async id => {
-        await calculateDefPPR(id)
+        await calculateDefPPR(id as string)
     }))
 
     const allWeeksString = JSON.stringify(weeks)
