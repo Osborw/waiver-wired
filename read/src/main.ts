@@ -6,7 +6,7 @@ import { loadWeeklyStats } from './load-weekly'
 
 const main = async () => {
 
-    const MAX_WEEKS = 18 
+    const MAX_WEEKS = 2 
 
     await loadPlayers()
     await loadSeasonStats()

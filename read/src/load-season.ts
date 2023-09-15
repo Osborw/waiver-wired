@@ -14,7 +14,7 @@ const parseJSON = (filename: string) => {
 // READ IN SEASON STATS
 export const loadSeasonStats = async () => {
     console.log('Loading season stats')
-    const URL = 'https://api.sleeper.app/v1/stats/nfl/regular/2022'
+    const URL = 'https://api.sleeper.app/v1/stats/nfl/regular/2023'
 
     await getSeasonData(URL)
     console.log('Loaded season stats')
@@ -32,7 +32,7 @@ const getSeasonData = async (url: string) => {
         data = parseJSON('season.json')
     }
 
-    const allPlayersObj = {}
+    const allPlayersObj: Record<string, any> = {}
 
     const allPlayers = JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
     const ids = Object.keys(allPlayers)

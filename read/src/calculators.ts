@@ -1,4 +1,4 @@
-import math from 'mathjs'
+import {round, std} from 'mathjs'
 import fs from 'fs'
 import path from 'path'
 import { EligiblePositions } from '../../shared/types'
@@ -29,7 +29,7 @@ export const calculatePPR = (data: any) => {
     (data.xpmiss || 0) * -1 +
     (data.fum || 0) * -1
 
-    ptsPPR = math.round((ptsPPR + Number.EPSILON) * 100) / 100
+    ptsPPR = round((ptsPPR + Number.EPSILON) * 100) / 100
     return ptsPPR
 }
 
@@ -81,7 +81,7 @@ const calculateStandardDeviation = async (ids: string[]) => {
             if(weeks[week][id] && weeks[week][id].gp === 1) return weeks[week][id]['pts_ppr'] || 0
         })
         const filtered = pprPerWeek.filter(val => val !== undefined)
-        const stddev = filtered.length > 0 ? math.std(filtered) : 0
+        const stddev = filtered.length > 0 ? std(filtered) : 0
         season[id] = {...season[id], std_dev: stddev }
     })
 

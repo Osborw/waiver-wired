@@ -3,11 +3,22 @@ import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
 import { Defense, EligiblePositions, Player, RawPlayer } from '../../shared/types'
+import { isPositive } from 'mathjs'
 
 const filePath = path.resolve('files')
 
 const isEligiblePosition = (pos: string) => {
     return Object.keys(EligiblePositions).includes(pos)
+}
+
+const isDefense = (pos: string | null) => {
+    return pos === EligiblePositions[EligiblePositions.DEF]
+}
+
+const getPositionFromEnum = (position: string) => {
+  const keyName = Object.keys(EligiblePositions).find(key => key === position);
+  if(!keyName) return EligiblePositions.NA
+  return EligiblePositions[keyName as keyof typeof EligiblePositions] 
 }
 
 // READ IN PLAYERS
@@ -31,20 +42,20 @@ const getPlayerData = async (url: string) => {
         console.log('ERROR', error)
     }
 
-    const allPlayersObj = {}
+    const allPlayersObj: Record<string, any> = {}
 
     let allPlayerKeys = new Set()
 
     Object.keys(data).map(async (id: string) => {
         const player: RawPlayer = data[id]
         const position = player.position
-        if (position && EligiblePositions[position] === EligiblePositions.DEF) {
+        if (isDefense(position)) {
             Object.keys(player).map(key => {
                 allPlayerKeys.add(key)
             })
         }
 
-        const name = player.full_name ? player.full_name.replace(`'`, `\\'`) : (position && EligiblePositions[position] === EligiblePositions.DEF ? `${player.first_name} ${player.last_name}` : 'NA_Name')
+        const name = player.full_name ? player.full_name.replace(`'`, `\\'`) : (isDefense(position) ? `${player.first_name} ${player.last_name}` : 'NA_Name')
         const team = player.team || 'FA'
         const status = player.status
         const injury_status = player.injury_status
@@ -62,15 +73,15 @@ const getPlayerData = async (url: string) => {
         const espn_id = player.espn_id === null ? -1 : player.espn_id
         const search_rank = player.search_rank === null ? -1 : player.search_rank
         const fantasy_positions = player.fantasy_positions || ['NA']
-        if (!!position && EligiblePositions[position] !== EligiblePositions.DEF && active && isEligiblePosition(position)) {
+        if (position && !isDefense(position) && active && isEligiblePosition(position)) {
             fantasy_positions.map(async (p: string) => {
                 try {
                     const playerObj: Player = {
                         id,
                         name,
                         team,
-                        position: EligiblePositions[position],
-                        fantasy_position: EligiblePositions[p],
+                        position: getPositionFromEnum(position),
+                        fantasy_position: getPositionFromEnum(p),
                         status,
                         injury_status,
                         active,
@@ -93,7 +104,7 @@ const getPlayerData = async (url: string) => {
                 }
             })
         }
-        else if (!!position && EligiblePositions[position] === EligiblePositions.DEF && active) {
+        else if (isDefense(position) && active) {
             try {
                 const playerObj: Defense = {
                     id,

@@ -1,12 +1,12 @@
 export enum EligiblePositions {
-    QB,
-    RB,
-    WR,
-    TE,
-    K,
-    DEF,
-    FLEX,
-    NA
+    QB = 'QB',
+    RB = 'RB',
+    WR = 'WR',
+    TE = 'TE',
+    K = 'K',
+    DEF = 'DEF',
+    FLEX = 'FLEX',
+    NA = 'NA'
 }
 
 enum Status {

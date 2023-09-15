@@ -6,7 +6,7 @@ const filePath = path.resolve('files')
 
 export const loadRosters = async () => {
     console.log('Loading rosters')
-    const URL = `https://api.sleeper.app/v1/league/828872539710263296/rosters`
+    const URL = `https://api.sleeper.app/v1/league/987823230465503232/rosters`
 
     await getRosterData(URL)
     console.log('Loaded rosters')
@@ -26,10 +26,10 @@ const getRosterData = async (url: string) => {
 
     let allPlayers = JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
 
-    await Promise.all(data.map(async user => {
+    await Promise.all(data.map(async (user: any) => {
         const id = user.owner_id
         const players = user.players
-        await Promise.all(players.map(async p => {
+        await Promise.all(players.map(async (p: any) => {
             if (allPlayers[p]) {
                 allPlayers[p] = { ...allPlayers[p], owner_id: id }
             }
