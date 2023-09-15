@@ -36,8 +36,8 @@ const Cell = styled.div`
   marginbottom: 2px;
   marginleft: 10px;
   marginright: 10px;
-  width: ${props => props.inputSize || SmallNumberFieldLength};
-  color: ${props => props.inputColor || 'black'};
+  width: ${props => props.inputsize || SmallNumberFieldLength};
+  color: ${props => props.inputcolor || 'black'};
   text-align: center;
 `
 
@@ -46,10 +46,10 @@ export const TitleRow = ({ position, timeFrame, view, toggleAllVisible }) => {
     <TitleRowComponent>
       <Cell>{'Rank'}</Cell>
       {position === 'FLEX' && <Cell>{'Position'}</Cell>}
-      <Cell inputSize={NameFieldLength}>{'Name'}</Cell>
+      <Cell inputsize={NameFieldLength}>{'Name'}</Cell>
       <Cell>{'Games Played'}</Cell>
-      <Cell inputSize={AvgPPRFieldLength}>{'Average PPR'}</Cell>
-      <Cell inputSize={AvgPPRFieldLength}>{'Standard Deviation'}</Cell>
+      <Cell inputsize={AvgPPRFieldLength}>{'Average PPR'}</Cell>
+      <Cell inputsize={AvgPPRFieldLength}>{'Standard Deviation'}</Cell>
       <Cell>
         <button
           onClick={() => toggleAllVisible()}
@@ -69,15 +69,15 @@ const NameField = ({ name, ownerId }) => {
   return (
     <div>
       {ownerId === '471674442926256128' && (
-        <Cell inputColor='green' inputSize={NameFieldLength}>
+        <Cell inputcolor='green' inputsize={NameFieldLength}>
           {name}
         </Cell>
       )}
       {ownedButNotByMe(ownerId) && (
-        <Cell inputSize={NameFieldLength}>{name}</Cell>
+        <Cell inputsize={NameFieldLength}>{name}</Cell>
       )}
       {!ownerId && (
-        <Cell inputColor='blue' inputSize={NameFieldLength}>
+        <Cell inputcolor='blue' inputsize={NameFieldLength}>
           {name}
         </Cell>
       )}
@@ -116,8 +116,8 @@ export const Row = ({
         {selectedPosition === 'FLEX' && <Cell>{position}</Cell>}
         <NameField name={name} ownerId={ownerId} />
         {gamesPlayed && <Cell>{gamesPlayed}</Cell>}
-        <Cell inputSize={AvgPPRFieldLength}>{avg ? avg.toFixed(2) : 0}</Cell>
-        <Cell inputSize={AvgPPRFieldLength}>
+        <Cell inputsize={AvgPPRFieldLength}>{avg ? avg.toFixed(2) : 0}</Cell>
+        <Cell inputsize={AvgPPRFieldLength}>
           {(gamesPlayed > 1 && stdDev) ? stdDev.toFixed(2) : '------'}
         </Cell>
         <Cell>{individualGraphVisible ? ' ˄ ' : ' ˅ '}</Cell>

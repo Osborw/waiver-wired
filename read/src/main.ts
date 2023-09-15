@@ -3,7 +3,9 @@ import { loadPlayers } from './load-players'
 import { loadRosters } from './load-rosters'
 import { loadSeasonStats } from './load-season'
 import { loadWeeklyStats } from './load-weekly'
-require('dotenv').config({ path: '../.env' })
+import dotenv from 'dotenv'
+
+dotenv.config({ path: '../.env' })
 
 const main = async () => {
 
