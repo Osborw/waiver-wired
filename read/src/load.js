@@ -4,10 +4,11 @@ const fs = require('fs')
 const path = require('path')
 const math = require('mathjs')
 const { promisify, isNullOrUndefined } = require('util')
+require('dotenv').config({ path: '../.env' })
 
 const filePath = path.resolve('files')
 const ELIGIBLE_POSITIONS = ['QB', 'RB', 'WR', 'TE', 'K', 'DEF']
-const MAX_WEEKS = 2 
+const MAX_WEEKS = process.env.WEEK
 
 const parseJSON = filename => {
     const rawdata = fs.readFileSync(`files/${filename}`)
@@ -26,7 +27,7 @@ export const players = async db => {
     })
 }
 
-const getPlayerData = async (url, db) => {
+const getPlayerData = async (url, db) => {  
     let data
     try {
         const response = await fetch(url)
@@ -128,7 +129,7 @@ const getPlayerData = async (url, db) => {
 export const seasonStats = async () => {
     return new Promise(async (res, rej) => {
         console.log('Loading season stats')
-        const URL = 'https://api.sleeper.app/v1/stats/nfl/regular/2023'
+        const URL = `https://api.sleeper.app/v1/stats/nfl/regular/${process.env.YEAR}`
 
         await getSeasonData(URL)
         console.log('Loaded season stats')
@@ -228,7 +229,7 @@ export const weeklyStats = async () => {
     }
 
     return new Promise(async (res, rej) => {
-        const BASE_URL = 'https://api.sleeper.app/v1/stats/nfl/regular/2023/'
+        const BASE_URL = `https://api.sleeper.app/v1/stats/nfl/regular/${process.env.YEAR}/`
 
         await DoAllWeeks(BASE_URL, MAX_WEEKS)
 
@@ -245,7 +246,7 @@ export const weeklyStats = async () => {
 export const rosters = async con => {
     return new Promise(async (res, rej) => {
         console.log('Loading rosters')
-        const URL = `https://api.sleeper.app/v1/league/987823230465503232/rosters`
+        const URL = `https://api.sleeper.app/v1/league/${process.env.SLEEPER_LEAGUE_ID}/rosters`
 
         await getRosterData(URL, con)
         console.log('Loaded rosters')

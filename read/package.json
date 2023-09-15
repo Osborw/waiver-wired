@@ -8,6 +8,7 @@
     "test": "jest --watchAll"
   },
   "dependencies": {
+    "dotenv": "^16.3.1",
     "esm": "3.2.25",
     "fs": "0.0.1-security",
     "mathjs": "11.4.0",
