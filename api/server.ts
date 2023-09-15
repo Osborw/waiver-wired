@@ -2,13 +2,13 @@ import * as Store from './db/store'
 import cors from '@fastify/cors'
 const fastify = require('fastify')({ logger: true })
 
-const MAX_WEEK = 18 
+const MAX_WEEK = 2 
 
 fastify.register(cors, {
   origin: true,
 })
 
-fastify.get('/allSeason/:position', async (request, reply) => {
+fastify.get('/allSeason/:position', async (request: any, reply: any) => {
   console.log('--Call made from', request.hostname, '--')
   const top50 = await Store.getTop50(request.params.position)
   const ret = Promise.all(
@@ -20,7 +20,7 @@ fastify.get('/allSeason/:position', async (request, reply) => {
   return ret
 })
 
-fastify.get('/fiveWeeks/:position', async (request, reply) => {
+fastify.get('/fiveWeeks/:position', async (request: any, reply: any) => {
   console.log('--Call made from', request.hostname, '--')
   const top50 = await Store.getFiveWeekTop50(request.params.position, MAX_WEEK)
   const startWeek = MAX_WEEK - 5 < 1 ? 1 : MAX_WEEK - 4 

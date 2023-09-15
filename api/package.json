@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon -r esm server.js",
+    "start-ts": "ts-node server",
     "build": "tsc"
   },
   "devDependencies": {

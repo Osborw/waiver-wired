@@ -1,18 +1,17 @@
 import { readPlayers, readWeeks, readSeason } from './readFile'
-import math from 'mathjs'
+import { std } from 'mathjs'
+import { isFlexPosition } from '../../shared/common'
+import { Player } from '../../shared/types'
 
-const isFlexPosition = (player) => player.position === 'RB' || player.position === 'WR' || player.position === 'TE'
-
-export const getTop50 = async (position) => {
-  const players = await readPlayers()
+export const getTop50 = async (position: string) => {
+  const players = await readPlayers() as Record<string, Player>
   const season = await readSeason()
 
   let final
 
   if (position === 'FLEX') {
     const flexPlayers = Object.values(players).filter((player) => {
-      console.log({ player })
-      return isFlexPosition(player)
+      return isFlexPosition(player.position)
     })
     const activeFlexPlayers = flexPlayers.filter(
       (player) => season[player.id] && season[player.id]['gms_active'] > 0 && season[player.id]['gp'] > 0
@@ -83,19 +82,18 @@ export const getTop50 = async (position) => {
   return final
 }
 
-export const getFiveWeekTop50 = async (position, max_week) => {
-  const players = await readPlayers()
-  const season = await readSeason()
+export const getFiveWeekTop50 = async (position: string, max_week: number) => {
+  const players = await readPlayers() as Record<string, Player>
   const weeks = await readWeeks()
 
-  const playersRet = {}
-  const fiveWeeks = Object.keys(weeks).filter((weekNumber) => weekNumber > max_week - 5 && weekNumber <= max_week)
+  const playersRet: Record<string, any> = {}
+  const fiveWeeks = Object.keys(weeks).filter((weekNumber) => parseInt(weekNumber) > max_week - 5 && parseInt(weekNumber) <= max_week)
   const relevantWeeks = Object.fromEntries(Object.entries(weeks).filter(([key]) => fiveWeeks.includes(key)))
 
-  Object.entries(relevantWeeks).map(([weekNumber, stats]) => {
+  Object.entries(relevantWeeks).map(([weekNumber, stats]: [string, any]) => {
     console.log('calc week number', weekNumber)
-    Object.entries(stats).map(([id, playersStats]) => {
-      if ((position === 'FLEX' && isFlexPosition(players[id])) || players[id].position === position) {
+    Object.entries(stats).map(([id, playersStats]: [string, any]) => {
+      if ((position === 'FLEX' && isFlexPosition(players[id].position)) || players[id].position === position) {
         if (playersStats.gp) {
           if (playersRet[id]) {
             const incGamesPlayed = playersRet[id].gamesPlayed + 1
@@ -126,13 +124,13 @@ export const getFiveWeekTop50 = async (position, max_week) => {
 
   const withStdDev = limited.map((player) => ({
     ...player,
-    stdDev: math.std(player.pprPointsPerWeek),
+    stdDev: std(player.pprPointsPerWeek),
   }))
 
   return withStdDev
 }
 
-export const getWeeks = async (id, start) => {
+export const getWeeks = async (id: string, start: number) => {
   const weeks = await readWeeks()
 
   const allWeeks = Object.keys(weeks).slice(start - 1)
@@ -141,7 +139,9 @@ export const getWeeks = async (id, start) => {
       if (weeks[week][id]) return { stats: weeks[week][id], weekNumber: week }
     })
     .filter((week) => week !== undefined && week.stats !== undefined)
-  const selected = allWeeksForPlayer.map(({ stats, weekNumber }, idx) => {
+  const selected = allWeeksForPlayer.map((statsObj, idx) => {
+    if (!statsObj) return
+    const { stats, weekNumber } = statsObj
     return {
       ptsPPR: stats['pts_ppr'] || 0,
       weekNumber: parseInt(weekNumber),

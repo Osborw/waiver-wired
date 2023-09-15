@@ -3,23 +3,9 @@ import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
 import { Defense, EligiblePositions, Player, RawPlayer } from '../../shared/types'
-import { isPositive } from 'mathjs'
+import { getPositionFromEnum, isDefense, isEligiblePosition } from '../../shared/common'
 
 const filePath = path.resolve('files')
-
-const isEligiblePosition = (pos: string) => {
-    return Object.keys(EligiblePositions).includes(pos)
-}
-
-const isDefense = (pos: string | null) => {
-    return pos === EligiblePositions[EligiblePositions.DEF]
-}
-
-const getPositionFromEnum = (position: string) => {
-  const keyName = Object.keys(EligiblePositions).find(key => key === position);
-  if(!keyName) return EligiblePositions.NA
-  return EligiblePositions[keyName as keyof typeof EligiblePositions] 
-}
 
 // READ IN PLAYERS
 export const loadPlayers= async () => {
