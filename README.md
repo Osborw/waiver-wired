@@ -1,6 +1,12 @@
 ## Waiver Wired
 A React/JS app for collection and view of weekly fantasy football statistics to improve your waiver wire picks.
 
+### View Players and their Season Trends
+<img src="https://github.com/Osborw/waiver-wired/assets/32249906/c993d0bd-ce65-47fe-bc91-4a9ec714ff4a" width="800">
+
+### Graphical View to Compare Scores
+<img src="https://github.com/Osborw/waiver-wired/assets/32249906/6cc96169-c852-4619-8346-cb538fc93d2b" width="800">
+
 ## Usage
 
 ### Setup
