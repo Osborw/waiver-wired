@@ -9,8 +9,8 @@ In root level of the project, create a .env file with the following
 .env
 ```
 SLEEPER_LEAGUE_ID=<sleeper-id> #Not Required - 18-digit id for your Sleepr league. This lets you see which players are taken or available
-YEAR=2023 #Required Current season (latest 2023)
-WEEK=2 #Required Latest week with stats (update this weekly)
+YEAR=2023 #Required - Current season (latest 2023)
+WEEK=2 #Required - Latest week with stats (update this weekly)
 ```
 
 ### Read
