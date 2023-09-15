@@ -13,7 +13,7 @@ const parseJSON = (filename: string) => {
 }
 
 // READ IN Weekly STATS
-export const loadWeeklyStats = async (maxWeeks: number) => {
+export const loadWeeklyStats = async (maxWeeks: number, year: number) => {
 
     console.log('Loading weekly stats')
     const playersObj: Record<string, any> = {}
@@ -57,7 +57,7 @@ export const loadWeeklyStats = async (maxWeeks: number) => {
         console.log(`done querying week ${week}`)
     }
 
-    const BASE_URL = 'https://api.sleeper.app/v1/stats/nfl/regular/2023/'
+    const BASE_URL = `https://api.sleeper.app/v1/stats/nfl/regular/${year}/`
 
     await DoAllWeeks(BASE_URL, maxWeeks)
 

@@ -4,9 +4,9 @@ import path from 'path'
 
 const filePath = path.resolve('files')
 
-export const loadRosters = async () => {
+export const loadRosters = async (leagueId: string) => {
     console.log('Loading rosters')
-    const URL = `https://api.sleeper.app/v1/league/987823230465503232/rosters`
+    const URL = `https://api.sleeper.app/v1/league/${leagueId}/rosters`
 
     await getRosterData(URL)
     console.log('Loaded rosters')

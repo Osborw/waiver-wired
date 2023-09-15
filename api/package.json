@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r esm server.js",
-    "start-ts": "ts-node server",
+    "start": "ts-node server",
     "build": "tsc"
   },
   "devDependencies": {
@@ -14,6 +13,7 @@
   },
   "dependencies": {
     "@fastify/cors": "8.2.0",
+    "dotenv": "^16.3.1",
     "esm": "3.2.25",
     "fastify": "4.10.2",
     "fastify-autoload": "3.13.0",

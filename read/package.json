@@ -4,8 +4,7 @@
   "description": "read in data",
   "main": "main.js",
   "scripts": {
-    "start": "node -r esm src/main",
-    "start-ts": "ts-node src/main",
+    "start": "ts-node src/main",
     "test": "jest --watchAll"
   },
   "dependencies": {

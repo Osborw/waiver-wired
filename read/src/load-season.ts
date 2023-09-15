@@ -12,9 +12,9 @@ const parseJSON = (filename: string) => {
 }
 
 // READ IN SEASON STATS
-export const loadSeasonStats = async () => {
+export const loadSeasonStats = async (year: number) => {
     console.log('Loading season stats')
-    const URL = 'https://api.sleeper.app/v1/stats/nfl/regular/2023'
+    const URL = `https://api.sleeper.app/v1/stats/nfl/regular/${year}`
 
     await getSeasonData(URL)
     console.log('Loaded season stats')

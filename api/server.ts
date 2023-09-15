@@ -1,6 +1,7 @@
 import * as Store from './db/store'
 import cors from '@fastify/cors'
 const fastify = require('fastify')({ logger: true })
+require('dotenv').config({ path: '../.env' })
 
 const MAX_WEEK = process.env.WEEK
 
