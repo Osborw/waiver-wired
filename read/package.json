@@ -8,15 +8,15 @@
     "test": "jest --watchAll"
   },
   "dependencies": {
-    "dotenv": "^16.3.1",
+    "dotenv": "16.3.1",
     "esm": "3.2.25",
     "fs": "0.0.1-security",
     "mathjs": "11.4.0",
-    "node-fetch": "2.6.7",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.2.2"
+    "node-fetch": "3.3.2",
+    "ts-node": "10.9.1",
+    "typescript": "5.2.2"
   },
   "devDependencies": {
-    "@types/node-fetch": "^2.6.4"
+    "@types/node-fetch": "2.6.4"
   }
 }
