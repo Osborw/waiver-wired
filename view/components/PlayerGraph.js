@@ -9,14 +9,14 @@ import {
 } from 'recharts'
 import { Top50GraphTooltip } from './GraphTooltip'
 
-export default ({ players, position }) => {
+export default ({ players, position, myOwnerId }) => {
 
   const isFlexPosition = () => {
     return position === 'FLEX'
   }
 
   const determineColor = ownerId => {
-    if (ownerId === '471674442926256128') return 'green'
+    if (ownerId === myOwnerId) return 'green'
     else if (ownerId) return 'black'
     else return 'blue'
   }

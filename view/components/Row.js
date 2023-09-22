@@ -61,19 +61,19 @@ export const TitleRow = ({ position, timeFrame, view, toggleAllVisible }) => {
   )
 }
 
-const ownedButNotByMe = ownerId => {
-  return ownerId && ownerId !== '471674442926256128'
+const ownedButNotByMe = (ownerId, myOwnerId) => {
+  return ownerId && ownerId !== myOwnerId 
 }
 
-const NameField = ({ name, ownerId }) => {
+const NameField = ({ name, ownerId, myOwnerId }) => {
   return (
     <div>
-      {ownerId === '471674442926256128' && (
+      {ownerId === myOwnerId && (
         <Cell inputcolor='green' inputsize={NameFieldLength}>
           {name}
         </Cell>
       )}
-      {ownedButNotByMe(ownerId) && (
+      {ownedButNotByMe(ownerId, myOwnerId) && (
         <Cell inputsize={NameFieldLength}>{name}</Cell>
       )}
       {!ownerId && (
@@ -97,6 +97,7 @@ export const Row = ({
   stdDev,
   allVisible,
   timeFrame,
+  myOwnerId,
 }) => {
   const [individualGraphVisible, toggleIndividualGraphVisibility] = useState(
     false,
@@ -114,7 +115,7 @@ export const Row = ({
       <Cells>
         <Cell>{rank}</Cell>
         {selectedPosition === 'FLEX' && <Cell>{position}</Cell>}
-        <NameField name={name} ownerId={ownerId} />
+        <NameField name={name} ownerId={ownerId} myOwnerId={myOwnerId} />
         {gamesPlayed && <Cell>{gamesPlayed}</Cell>}
         <Cell inputsize={AvgPPRFieldLength}>{avg ? avg.toFixed(2) : 0}</Cell>
         <Cell inputsize={AvgPPRFieldLength}>

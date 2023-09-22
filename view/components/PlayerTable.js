@@ -1,7 +1,7 @@
 import { Row, TitleRow } from './Row'
 import { useState, useEffect } from 'react'
 
-export default ({ players, position, timeFrame, view }) => {
+export default ({ players, position, timeFrame, view, myOwnerId }) => {
   const [allVisible, toggleAllVisible] = useState(true)
 
   //Resets visibility of indv graphs when players change
@@ -28,6 +28,7 @@ export default ({ players, position, timeFrame, view }) => {
             stdDev={p.stdDev}
             allVisible={allVisible}
             timeFrame={timeFrame}
+            myOwnerId={myOwnerId}
           />
         )
       })}

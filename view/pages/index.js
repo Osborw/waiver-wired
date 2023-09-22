@@ -9,6 +9,7 @@ import * as Get from '../server/getIndex'
 
 const Index = () => {
   const [players, setPlayers] = useState([])
+  const [ownerId, setOwnerId] = useState('')
   const [timeFrame, setTimeFrame] = useState(TimeFrame.allSeason)
   const [position, setPosition] = useState('QB')
   const [view, setView] = useState(View.table)
@@ -26,12 +27,14 @@ const Index = () => {
 
   const getAllSeasonTop50 = async position => {
     const ret = await Get.top50(position)
-    setPlayers(ret)
+    setPlayers(ret.top50)
+    setOwnerId(ret.ownerId)
   }
 
   const getFiveWeeksTop50 = async position => {
     const ret = await Get.fiveWeekTop50(position)
-    setPlayers(ret)
+    setPlayers(ret.top50)
+    setOwnerId(ret.ownerId)
   }
 
   const setNewTimeFrame = async newTimeFrame => {
@@ -58,8 +61,8 @@ const Index = () => {
         }`}
       </h2>
       <ViewSelector onClick={setView} />
-      {view === View.table && <PlayerTable players={players} position={position} timeFrame={timeFrame} view={view} />}
-      {view === View.graph && <PlayerGraph players={players} position={position} />}
+      {(view === View.table && players.length > 0) && <PlayerTable players={players} position={position} timeFrame={timeFrame} view={view} myOwnerId={ownerId} />}
+      {view === View.graph && <PlayerGraph players={players} position={position} myOwnerId={ownerId}/>}
     </Layout>
   )
 }
