@@ -1,3 +1,5 @@
+import React from 'react'
+import { ContentType } from 'recharts/types/component/Tooltip'
 import styled from 'styled-components'
 
 const Tooltip = styled.div`
@@ -9,7 +11,7 @@ const Words = styled.div`
   padding: 10px;
 `
 
-export const IndividualGraphTooltip = props => {
+export const IndividualGraphTooltip: ContentType<> = (props: {payload: any, active: boolean}) => {
   if (!props.active) {
     return null
   }

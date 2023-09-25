@@ -6,12 +6,13 @@ import { ViewSelector, View } from '../components/ViewSelector'
 import PlayerTable from '../components/PlayerTable'
 import PlayerGraph from '../components/PlayerGraph'
 import * as Get from '../server/getIndex'
+import { EligiblePositions } from '../../shared/types'
 
 const Index = () => {
   const [players, setPlayers] = useState([])
   const [ownerId, setOwnerId] = useState('')
   const [timeFrame, setTimeFrame] = useState(TimeFrame.allSeason)
-  const [position, setPosition] = useState('QB')
+  const [position, setPosition] = useState(EligiblePositions.QB)
   const [view, setView] = useState(View.table)
 
   useEffect(() => {
@@ -25,25 +26,25 @@ const Index = () => {
     setNewPosition(position)
   }, [timeFrame])
 
-  const getAllSeasonTop50 = async position => {
+  const getAllSeasonTop50 = async (position: EligiblePositions) => {
     const ret = await Get.top50(position)
     setPlayers(ret.top50)
     setOwnerId(ret.ownerId)
   }
 
-  const getFiveWeeksTop50 = async position => {
+  const getFiveWeeksTop50 = async (position: EligiblePositions) => {
     const ret = await Get.fiveWeekTop50(position)
     setPlayers(ret.top50)
     setOwnerId(ret.ownerId)
   }
 
-  const setNewTimeFrame = async newTimeFrame => {
+  const setNewTimeFrame = async (newTimeFrame: TimeFrame) => {
     if (newTimeFrame !== timeFrame) {
       setTimeFrame(newTimeFrame)
     }
   }
 
-  const setNewPosition = async newPosition => {
+  const setNewPosition = async (newPosition: EligiblePositions) => {
     setPosition(newPosition)
     timeFrame === TimeFrame.fiveWeeks
       ? getFiveWeeksTop50(newPosition)
@@ -68,7 +69,7 @@ const Index = () => {
 }
 
 const setInitialList = async () => {
-  const initialPos = 'QB'
+  const initialPos = EligiblePositions.QB 
   const ret = await Get.top50(initialPos)
   return ret
 }

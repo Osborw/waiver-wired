@@ -29,6 +29,10 @@
     "styled-components": "6.0.8"
   },
   "devDependencies": {
-    "babel-plugin-styled-components": "2.1.4"
+    "@types/node": "20.6.4",
+    "@types/react": "18.2.22",
+    "@types/recharts": "^1.8.24",
+    "babel-plugin-styled-components": "2.1.4",
+    "typescript": "5.2.2"
   }
 }

@@ -5,9 +5,9 @@ const linkStyle = {
   textDecoration: 'underline'
 };
 
-export const TimeFrame = {
-  allSeason: 0,
-  fiveWeeks: 1
+export enum TimeFrame {
+  allSeason,
+  fiveWeeks
 }
 
 export const TimeFrameSelector = ({onClick}) => (
