@@ -1,8 +1,7 @@
 import fs from 'fs'
 import path from 'path'
+import { Player, SleeperUnit } from '../../shared/types'
 
 const filePath = path.resolve('../read/files')
 
-export const readUnits = async () => JSON.parse((await fs.promises.readFile(`${filePath}/units.json`)).toString())
-export const readPlayers = async () => JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
-export const readSeason = async () => JSON.parse((await fs.promises.readFile(`${filePath}/season.json`)).toString())
+export const readPlayers = async (): Promise<Record<string, Player>> => JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
