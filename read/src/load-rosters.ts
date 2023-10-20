@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
+import { Player, SleeperUnit } from '../../shared/types'
 
 const filePath = path.resolve('files')
 
@@ -24,18 +25,18 @@ const getRosterData = async (url: string) => {
         data = []
     }
 
-    let allPlayers = JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
+    const allPlayersObj: Record<string, Player> = JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
 
-    await Promise.all(data.map(async (user: any) => {
-        const id = user.owner_id
-        const players = user.players
-        await Promise.all(players.map(async (p: any) => {
-            if (allPlayers[p]) {
-                allPlayers[p] = { ...allPlayers[p], owner_id: id }
+    data.forEach(async (roster : any) => {
+        const id = roster.owner_id
+        const players = roster.players
+        players.forEach(async (p: any) => {
+            if (allPlayersObj[p]) {
+                allPlayersObj[p].ownerId = id
             }
-        }))
-    }))
+        })
+    })
 
-    const allPlayersString = JSON.stringify(allPlayers)
+    const allPlayersString = JSON.stringify(allPlayersObj)
     fs.writeFileSync(`${filePath}/players.json`, allPlayersString, 'utf8')
 }

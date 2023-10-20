@@ -1,58 +1,56 @@
 import {round, std} from 'mathjs'
 import fs from 'fs'
 import path from 'path'
-import { EligiblePositions } from '../../shared/types'
+import { EligiblePositions, FantasyStats } from '../../shared/types'
 
 const filePath = path.resolve('files')
 
-export const calculatePPR = (data: any) => {
+export const calculatePPR = (data: Partial<FantasyStats>) => {
 
     let ptsPPR = 
-    (data.pass_yd || 0) * .04 +
-    (data.pass_td || 0) * 4 +
-    (data.pass_2pt || 0) * 2 +
-    (data.pass_int || 0) * -1 +
-    (data.rush_yd || 0) * .1 +
-    (data.rush_td || 0) * 6 +
-    (data.rush_2pt || 0) * 2 +
+    (data.passYd || 0) * .04 +
+    (data.passTd || 0) * 4 +
+    (data.pass2pt || 0) * 2 +
+    (data.passInt || 0) * -1 +
+    (data.rushYd || 0) * .1 +
+    (data.rushTd || 0) * 6 +
+    (data.rush2pt || 0) * 2 +
     (data.rec || 0) * 1 +
-    (data.rec_yd || 0) * .1 +
-    (data.rec_td || 0) * 6 +
-    (data.rec_2pt || 0) * 2 +
-    (data.fgm_0_19 || 0) * 3 +
-    (data.fgm_20_29 || 0) * 3 +
-    (data.fgm_30_39 || 0) * 3 +
-    (data.fgm_40_49 || 0) * 4 +
-    (data.fgm_50p || 0) * 5 +
+    (data.recYd || 0) * .1 +
+    (data.recTd || 0) * 6 +
+    (data.rec2pt || 0) * 2 +
+    (data.fgm0_19 || 0) * 3 +
+    (data.fgm20_29 || 0) * 3 +
+    (data.fgm30_39 || 0) * 3 +
+    (data.fgm40_49 || 0) * 4 +
+    (data.fgm50p || 0) * 5 +
     (data.xpm || 0) * 1 +
-    (data.fgmiss || 0) * -1 +
-    (data.xpmiss || 0) * -1 +
+    (data.fgMiss || 0) * -1 +
+    (data.xpMiss || 0) * -1 +
     (data.fum || 0) * -1
 
     ptsPPR = round((ptsPPR + Number.EPSILON) * 100) / 100
     return ptsPPR
 }
 
-export const calculateDefPPR = async (data: any) => {
+export const calculateDefPPR = (data: Partial<FantasyStats>) => {
 
     let ptsPPR = 
-    (data.pts_allow_0 || 0) * 10 + 
-    (data.pts_allow_1_6 || 0) * 7 + 
-    (data.pts_allow_7_13 || 0) * 4 + 
-    (data.pts_allow_14_20 || 0) + 
-    (data.pts_allow_28_34 || 0) * -1 + 
-    (data.pts_allow_35p || 0) * -4 + 
-    (data.def_st_ff || 0) +
+    (data.ptsAllow0 || 0) * 10 + 
+    (data.ptsAllow1_6 || 0) * 7 + 
+    (data.ptsAllow7_13 || 0) * 4 + 
+    (data.ptsAllow14_20 || 0) + 
+    (data.ptsAllow28_34 || 0) * -1 + 
+    (data.ptsAllow35p || 0) * -4 + 
+    (data.defStFF || 0) +
     (data.ff || 0) + 
-    (data.fum_rec || 0) * 2 + 
+    (data.fumRec || 0) * 2 + 
     (data.int || 0) * 2 + 
     (data.sack || 0) + 
-    (data.def_pr_td || 0) * 6 + 
-    (data.def_st_td || 0) * 6 + 
-    (data.def_td || 0) * 6 + 
-    (data.def_kr_td || 0) * 6 + 
+    (data.defTd || 0) * 6 + 
+    (data.defStTd|| 0) * 6 + 
     (data.safe || 0) * 2 + 
-    (data.def_2pt || 0) * 2
+    (data.def2Pt || 0) * 2
 
     return ptsPPR
 }

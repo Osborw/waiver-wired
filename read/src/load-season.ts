@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
-import { EligiblePositions } from '../../shared/types'
+import { EligiblePositions, Player, SleeperPlayer, SleeperPosition, SleeperUnit } from '../../shared/types'
 import { calculateDefPPR, calculatePPR } from './calculators'
 
 const filePath = path.resolve('files')
@@ -34,26 +34,26 @@ const getSeasonData = async (url: string) => {
 
     const allPlayersObj: Record<string, any> = {}
 
-    const allPlayers = JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
-    const ids = Object.keys(allPlayers)
+    const allUnitsObj: Record<string, SleeperUnit> = JSON.parse((await fs.promises.readFile(`${filePath}/units.json`)).toString())
 
-    ids.map(async id => {
+    const ids = Object.keys(allUnitsObj)
+
+    ids.map(async (id: string) => {
         if (data[id]) {
             try {
-                let player
-                if (allPlayers[id].position === EligiblePositions.DEF) {
-                    player = {
-                        ...data[id],
-                        pts_ppr: calculateDefPPR(data[id]),
-                        gms_active: data[id]['gp']
-                    }
+                const sleeperPlayer = allUnitsObj[id]
+                let player: Player = {
+                    id,
+                    fullName: sleeperPlayer.fullName,
+                    firstName: sleeperPlayer.firstName,
+                    lastName: sleeperPlayer.lastName,
+                    team: sleeperPlayer.team,
+                    fantasyPositions: sleeperPlayer.fantasyPositions,
+                    injuryStatus: sleeperPlayer.injuryStatus,
+                    ownerId: null,
+                    weeklyStats: []
                 }
-                else {
-                    player = {
-                        ...data[id],
-                        pts_ppr: calculatePPR(data[id])
-                    }
-                }
+
                 allPlayersObj[id] = player
             } catch (err) {
                 console.log(err)
