@@ -1,8 +1,7 @@
 import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
-import { Defense, EligiblePositions, Player, RawPlayer } from '../../shared/types'
-import { getPositionFromEnum, isDefense, isEligiblePosition } from '../../shared/common'
+import { SleeperInjuryStatus, SleeperPlayer, SleeperPosition, SleeperUnit } from '../../shared/types'
 
 const filePath = path.resolve('files')
 
@@ -27,86 +26,70 @@ const getPlayerData = async (url: string) => {
         console.log('ERROR', error)
     }
 
-    const allPlayersObj: Record<string, any> = {}
+    const allUnitsObj: Record<string, SleeperUnit> = {}
+    const allPlayersObj: Record<string, SleeperPlayer> = {}
+    const allDefObj: Record<string, SleeperUnit> = {}
 
-    let allPlayerKeys = new Set()
+    Object.keys(data).forEach(async (id: string) => {
+        const player = data[id]
+        const active: boolean = player.active
 
-    Object.keys(data).map(async (id: string) => {
-        const player: RawPlayer = data[id]
+        if(!active) return
+
         const position = player.position
-        if (isDefense(position)) {
-            Object.keys(player).map(key => {
-                allPlayerKeys.add(key)
-            })
+        const firstName: string = player.first_name.replace(`'`, `\\'`)
+        const lastName: string = player.last_name.replace(`'`, `\\'`)
+        const fullName: string = `${firstName} ${lastName}` 
+        const team: string = player.team || 'FA'
+        const injuryStatus: SleeperInjuryStatus | null = player.injury_status
+        const fantasyPositions: SleeperPosition[] = player.fantasy_positions
+
+        if(position === SleeperPosition.DEF) {
+            const defense: SleeperUnit = {
+                id,
+                position,
+                fantasyPositions,
+                firstName,
+                lastName,
+                fullName,
+                team,
+                active,
+                injuryStatus,
+            }
+            allUnitsObj[id] = defense
+            allDefObj[id] = defense
+            return
         }
 
-        const name = player.full_name ? player.full_name.replace(`'`, `\\'`) : (isDefense(position) ? `${player.first_name} ${player.last_name}` : 'NA_Name')
-        const team = player.team || 'FA'
-        const status = player.status
-        const injury_status = player.injury_status
-        const active = player.active || false
-        const age = player.age || -1
-        const years_exp = player.years_exp === null ? -1 : player.years_exp
-        const number = player.number || -1
-        const height = player.height ? player.height.replace(`'`, `\\'`) : null
-        const weight = player.weight || null 
-        const depth_chart_position = player.depth_chart_position
-        const depth_chart_order = player.depth_chart_order
-        const fantasy_data_id =
-            player.fantasy_data_id === null ? -1 : player.fantasy_data_id
-        const stats_id = player.stats_id === null ? -1 : player.stats_id
-        const espn_id = player.espn_id === null ? -1 : player.espn_id
-        const search_rank = player.search_rank === null ? -1 : player.search_rank
-        const fantasy_positions = player.fantasy_positions || ['NA']
-        if (position && !isDefense(position) && active && isEligiblePosition(position)) {
-            fantasy_positions.map(async (p: string) => {
-                try {
-                    const playerObj: Player = {
-                        id,
-                        name,
-                        team,
-                        position: getPositionFromEnum(position),
-                        fantasy_position: getPositionFromEnum(p),
-                        status,
-                        injury_status,
-                        active,
-                        age,
-                        years_exp,
-                        number,
-                        height,
-                        weight,
-                        depth_chart_position: depth_chart_position as unknown as EligiblePositions,
-                        depth_chart_order,
-                        search_rank,
-                        fantasy_data_id,
-                        stats_id,
-                        espn_id,
-                        owner_id: ''
-                    }
-                    allPlayersObj[id] = playerObj
-                } catch (err) {
-                    console.log(err)
-                }
-            })
+        const age = player.age
+        const yearsExperience = player.years_exp
+        const number = player.number
+        const height = player.height.replace(`'`, `\\'`)
+        const weight = player.weight
+        const depthChartOrder = player.depth_chart_order
+
+        const sleeperPlayer: SleeperPlayer = {
+            id,
+            fullName,
+            firstName,
+            lastName,
+            yearsExperience,
+            team,
+            position,
+            fantasyPositions,
+            injuryStatus,
+            active,
+            age,
+            number,
+            height,
+            weight,
+            depthChartOrder,
         }
-        else if (isDefense(position) && active) {
-            try {
-                const playerObj: Defense = {
-                    id,
-                    name,
-                    team,
-                    position: EligiblePositions.DEF,
-                    fantasy_position: EligiblePositions.DEF,
-                    active,
-                }
-                allPlayersObj[id] = playerObj
-            } catch (err) {
-                console.log(err)
-            }
-        }
+        allPlayersObj[id] = sleeperPlayer 
+        allUnitsObj[id] = sleeperPlayer
     })
 
-    console.log('num players loaded:', Object.keys(allPlayersObj).length)
-    const allPlayersString = JSON.stringify(allPlayersObj)
-    fs.writeFileSync(`${filePath}/players.json`, allPlayersString, 'utf8')
+    console.log('num players loaded:', Object.keys(allUnitsObj).length)
+    const allUnitsString = JSON.stringify(allUnitsObj)
+    fs.writeFileSync(`${filePath}/units.json`, allUnitsString, 'utf8')
 }

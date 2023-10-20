@@ -14,17 +14,18 @@ export default ({ players, position, timeFrame, view, myOwnerId }) => {
     <div>
       <TitleRow position={position} timeFrame={timeFrame} view={view} toggleAllVisible={() => toggleAllVisible(!allVisible)} />
       {players.map((p, idx) => {
+        const displayPosition = position === 'FLEX' ? p.fantasyPositions[0] : position
         return (
           <Row
             selectedPosition={position}
             key={idx + 1}
             rank={idx + 1}
-            name={p.name}
-            position={p.position}
-            gamesPlayed={p.gamesPlayed}
+            name={p.fullName}
+            position={displayPosition}
+            gamesPlayed={p.gp}
             avg={p.avgPoints}
             ownerId={p.ownerId}
-            weeks={p.weeks}
+            weeks={p.weeklyStats}
             stdDev={p.stdDev}
             allVisible={allVisible}
             timeFrame={timeFrame}

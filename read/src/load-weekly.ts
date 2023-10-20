@@ -1,9 +1,9 @@
 import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
-import { isNullOrUndefined } from 'util'
-import { EligiblePositions } from '../../shared/types'
+import { FantasyStats, Player, SleeperPosition, SleeperUnit, WeeklyStats } from '../../shared/types'
 import { calculateDefPPR, calculatePPR } from './calculators'
+import { mapWeekDataToFantasyStats } from './mapper'
 
 const filePath = path.resolve('files')
 
@@ -14,18 +14,16 @@ const parseJSON = (filename: string) => {
 
 // READ IN Weekly STATS
 export const loadWeeklyStats = async (maxWeeks: number, year: number) => {
-
     console.log('Loading weekly stats')
-    const playersObj: Record<string, any> = {}
 
-    const DoAllWeeks = async (url: string, max_weeks: number) => {
-        let i: number
-        for (i = 1; i <= max_weeks; i++) {
-            await getWeeklyData(`${url}${i}`, i, maxWeeks)
-        }
-    }
+    const baseUrl = `https://api.sleeper.app/v1/stats/nfl/regular/${year}`
 
-    const getWeeklyData = async (url: string, week: number, maxWeeks: number) => {
+    const playerObj: Record<string, Player> = {}
+
+    let week: number
+    for (week = 1; week <= maxWeeks; week++) {
+        const url = `${baseUrl}/${week}`
+
         let data: any
         try {
             const response = await fetch(url)
@@ -34,35 +32,53 @@ export const loadWeeklyStats = async (maxWeeks: number, year: number) => {
             console.log(`Retrieved JSON for week ${week}`)
         } catch (error) {
             console.log('ERROR', error)
-            data = parseJSON('season.json')
+            return
         }
 
-        playersObj[week] = {}
+        const allUnitsObj: Record<string, SleeperUnit> = JSON.parse((await fs.promises.readFile(`${filePath}/units.json`)).toString())
 
-        const allPlayers = JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
-        const ids = Object.keys(allPlayers)
+        const ids = Object.keys(allUnitsObj)
 
-        await Promise.all(ids.map(async id => {
-            if (data[id] && (isNullOrUndefined(data[id]['gp']) || data[id]['gp'] > -1)) {
-                //For defenses
-                if (allPlayers[id].position === EligiblePositions.DEF) {
-                    playersObj[week][id] = { ...data[id], gp: 1, gms_active: 1, pts_ppr: calculateDefPPR(data[id]) }
+        ids.forEach(async id => {
+            if (!data[id]) return
+            const weekData = mapWeekDataToFantasyStats(data[id])
+            if (weekData && weekData.gp != undefined && weekData.gp >= 1) {
+
+                const isDefense = allUnitsObj[id].position === SleeperPosition.DEF
+
+                const weeklyStats: WeeklyStats = {
+                    id,
+                    weekNumber: week,
+                    gp: 1,
+                    ptsPPR: isDefense ? calculateDefPPR(weekData) : calculatePPR(weekData)
                 }
-                else {
-                    playersObj[week][id] = { ...data[id], pts_ppr: calculatePPR(data[id]) }
+
+                if (!playerObj[id]) {
+                    const unit = allUnitsObj[id]
+
+                    const player: Player = {
+                        id,
+                        fullName: unit.fullName,
+                        firstName: unit.firstName,
+                        lastName: unit.lastName,
+                        fantasyPositions: unit.fantasyPositions,
+                        injuryStatus: unit.injuryStatus,
+                        team: unit.team,
+                        ownerId: null,
+                        weeklyStats: [weeklyStats]
+                    }
+                    playerObj[id] = player
+                } else {
+                    playerObj[id].weeklyStats.push(weeklyStats)
                 }
             }
-        }))
+        })
 
         console.log(`done querying week ${week}`)
     }
 
-    const BASE_URL = `https://api.sleeper.app/v1/stats/nfl/regular/${year}/`
-
-    await DoAllWeeks(BASE_URL, maxWeeks)
-
-    const allPlayersString = JSON.stringify(playersObj)
-    fs.writeFileSync(`${filePath}/weeks.json`, allPlayersString, 'utf8')
+    const allPlayersString = JSON.stringify(playerObj)
+    fs.writeFileSync(`${filePath}/players.json`, allPlayersString, 'utf8')
 
     console.log('Loaded weekly stats')
 

@@ -1,5 +1,6 @@
-import * as Store from './db/store'
 import cors from '@fastify/cors'
+import { getTopPlayers } from './db/store'
+import { TopPlayerReturn } from '../shared/api-types'
 const fastify = require('fastify')({ logger: true })
 require('dotenv').config({ path: '../.env' })
 
@@ -15,33 +16,23 @@ fastify.register(cors, {
   origin: true,
 })
 
-fastify.get('/allSeason/:position', async (request: any, reply: any) => {
+fastify.get('/allSeason/:position', async (request: any, reply: any): Promise<TopPlayerReturn> => {
   console.log('--Call made from', request.hostname, '--')
-  const top50 = await Store.getTop50(request.params.position)
-  const ret = await Promise.all(
-    top50.map(async p => ({
-      weeks: await Store.getWeeks(p.id, 1),
-      ...p,
-    })),
-  )
+  const topPlayers = await getTopPlayers(request.params.position, 1, WEEK)
+
   return {
-    top50: ret,
+    players: topPlayers,
     ownerId: OWNER_ID
   }
 })
 
-fastify.get('/fiveWeeks/:position', async (request: any, reply: any) => {
+fastify.get('/fiveWeeks/:position', async (request: any, reply: any): Promise<TopPlayerReturn> => {
   console.log('--Call made from', request.hostname, '--')
-  const top50 = await Store.getFiveWeekTop50(request.params.position, WEEK)
   const startWeek = WEEK - 5 < 1 ? 1 : WEEK - 4 
-  const ret = await Promise.all(
-    top50.map(async p => ({
-      weeks: await Store.getWeeks(p.id, startWeek),
-      ...p,
-    })),
-  )
+  const topPlayers = await getTopPlayers(request.params.position, startWeek, WEEK)
+
   return {
-    top50: ret,
+    players: topPlayers,
     ownerId: OWNER_ID
   } 
 })

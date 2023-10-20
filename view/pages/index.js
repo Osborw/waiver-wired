@@ -27,13 +27,13 @@ const Index = () => {
 
   const getAllSeasonTop50 = async position => {
     const ret = await Get.top50(position)
-    setPlayers(ret.top50)
+    setPlayers(ret.players)
     setOwnerId(ret.ownerId)
   }
 
   const getFiveWeeksTop50 = async position => {
     const ret = await Get.fiveWeekTop50(position)
-    setPlayers(ret.top50)
+    setPlayers(ret.players)
     setOwnerId(ret.ownerId)
   }
 
