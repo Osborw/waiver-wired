@@ -1,7 +1,7 @@
 import { readPlayers } from './readFile'
 import { CalculatedPlayer, Player, SearchPosition, SleeperPosition } from '../../shared/types'
 import { calculateAvgPoints, calculateGP, calculateStdDev } from './calculators'
-import { getPlayersByPosition } from './position-logic'
+import { getPlayersByPosition } from '../../shared/position-logic'
 
 export const getTopPlayers = async (position: SearchPosition, startWeek: number, endWeek: number) => {
   const players = await readPlayers()
@@ -22,6 +22,7 @@ export const getTopPlayers = async (position: SearchPosition, startWeek: number,
 
     calculatedPlayers.push({
       ...p,
+      fantasyPositions: p.fantasyPositions as SleeperPosition[],
       avgPoints,
       stdDev,
       gp,
