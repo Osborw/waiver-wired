@@ -1,4 +1,5 @@
-import { Player, SearchPosition, SleeperPosition } from "../../shared/types"
+import { Player, SearchPosition, SleeperPosition } from "./types"
+
 const playerPlaysPosition = (p: Player, position: SearchPosition) => {
   if(position === SearchPosition.FLEX){
     if(p.fantasyPositions?.includes(SleeperPosition.RB)) return true
@@ -17,4 +18,14 @@ const playerPlaysPosition = (p: Player, position: SearchPosition) => {
 export const getPlayersByPosition = (players: Record<string, Player>, position: SearchPosition) => {
   const allPlayers = Object.values(players)
   return allPlayers.filter(p => playerPlaysPosition(p, position))
+}
+
+export const convertSearchPositionToSleeperPosition = (pos: SearchPosition) => {
+  if(pos === SearchPosition.QB) return SleeperPosition.QB
+  if(pos === SearchPosition.RB) return SleeperPosition.RB
+  if(pos === SearchPosition.WR) return SleeperPosition.WR
+  if(pos === SearchPosition.TE) return SleeperPosition.TE
+  if(pos === SearchPosition.K) return SleeperPosition.K
+  if(pos === SearchPosition.DEF) return SleeperPosition.DEF
+  return SleeperPosition.QB
 }

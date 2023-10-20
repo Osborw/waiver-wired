@@ -1,4 +1,4 @@
-import { ReactElement } from 'react';
+import { PropsWithChildren } from 'react';
 import Header from './Header';
 
 const layoutStyle = {
@@ -8,7 +8,7 @@ const layoutStyle = {
   paddingRight: 20,
 };
 
-const Layout = (props: ReactElement) => (
+const Layout = (props: PropsWithChildren) => (
   <div style={layoutStyle}>
     <Header />
     {props && props.children}

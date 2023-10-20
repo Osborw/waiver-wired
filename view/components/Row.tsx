@@ -1,6 +1,9 @@
 import IndividualGraph from './IndividualGraph'
 import styled from 'styled-components'
 import { useState, useEffect } from 'react'
+import { SearchPosition, SleeperPosition, WeeklyStats } from '../../shared/types'
+import { TimeFrame } from './TimeFrameSelector'
+import { View } from './ViewSelector'
 
 const NameFieldLength = '200px'
 const AvgPPRFieldLength = '120px'
@@ -31,7 +34,7 @@ const Graph = styled.div`
   flex-direction: column;
 `
 
-const Cell = styled.div`
+const Cell = styled.div<{ inputsize?: string, inputcolor?: string }>`
   margintop: 2px;
   marginbottom: 2px;
   marginleft: 10px;
@@ -41,7 +44,14 @@ const Cell = styled.div`
   text-align: center;
 `
 
-export const TitleRow = ({ position, timeFrame, view, toggleAllVisible }) => {
+interface TitleRowProps {
+  position: SearchPosition
+  timeFrame: TimeFrame
+  view: View
+  toggleAllVisible: () => void
+}
+
+export const TitleRow = ({ position, timeFrame, view, toggleAllVisible }: TitleRowProps) => {
   return (
     <TitleRowComponent>
       <Cell>{'Rank'}</Cell>
@@ -61,11 +71,17 @@ export const TitleRow = ({ position, timeFrame, view, toggleAllVisible }) => {
   )
 }
 
-const ownedButNotByMe = (ownerId, myOwnerId) => {
-  return ownerId && ownerId !== myOwnerId 
+const ownedButNotByMe = (ownerId: string | null, myOwnerId?: string) => {
+  return ownerId && ownerId !== myOwnerId
 }
 
-const NameField = ({ name, ownerId, myOwnerId }) => {
+interface NameFieldProps {
+  name: string
+  ownerId: string | null
+  myOwnerId?: string
+}
+
+const NameField = ({ name, ownerId, myOwnerId }: NameFieldProps) => {
   return (
     <div>
       {ownerId === myOwnerId && (
@@ -85,6 +101,21 @@ const NameField = ({ name, ownerId, myOwnerId }) => {
   )
 }
 
+interface RowProps {
+  selectedPosition: SearchPosition
+  rank: number
+  name: string
+  position: SleeperPosition
+  gamesPlayed: number
+  avg: number
+  ownerId: string | null
+  weeks: WeeklyStats[]
+  stdDev: number
+  allVisible: boolean
+  timeFrame: TimeFrame
+  myOwnerId?: string
+}
+
 export const Row = ({
   selectedPosition,
   rank,
@@ -98,7 +129,7 @@ export const Row = ({
   allVisible,
   timeFrame,
   myOwnerId,
-}) => {
+}: RowProps) => {
   const [individualGraphVisible, toggleIndividualGraphVisibility] = useState(
     false,
   )
@@ -114,9 +145,9 @@ export const Row = ({
     >
       <Cells>
         <Cell>{rank}</Cell>
-        {selectedPosition === 'FLEX' && <Cell>{position}</Cell>}
+        {selectedPosition === SearchPosition.FLEX && <Cell>{position}</Cell>}
         <NameField name={name} ownerId={ownerId} myOwnerId={myOwnerId} />
-        {gamesPlayed && <Cell>{gamesPlayed}</Cell>}
+        <Cell>{gamesPlayed}</Cell>
         <Cell inputsize={AvgPPRFieldLength}>{avg ? avg.toFixed(2) : 0}</Cell>
         <Cell inputsize={AvgPPRFieldLength}>
           {(gamesPlayed > 1 && stdDev) ? stdDev.toFixed(2) : '------'}
@@ -129,7 +160,7 @@ export const Row = ({
             <IndividualGraph
               weeks={weeks}
               avg={avg}
-              stdDev={gamesPlayed > 1 ? stdDev : null}
+              stdDev={stdDev}
               position={selectedPosition}
               timeFrame={timeFrame}
             />

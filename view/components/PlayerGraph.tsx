@@ -7,15 +7,22 @@ import {
   Scatter,
   Cell,
 } from 'recharts'
-import { Top50GraphTooltip } from './GraphTooltip'
+import { TopPlayersGraphTooltip } from './GraphTooltip'
+import { CalculatedPlayer, SearchPosition } from '../../shared/types'
 
-export default ({ players, position, myOwnerId }) => {
+interface PlayerGraphProps {
+  players: CalculatedPlayer[]
+  position: SearchPosition
+  myOwnerId?: string
+}
+
+export default ({ players, position, myOwnerId }: PlayerGraphProps) => {
 
   const isFlexPosition = () => {
-    return position === 'FLEX'
+    return position === SearchPosition.FLEX 
   }
 
-  const determineColor = ownerId => {
+  const determineColor = (ownerId: string | null) => {
     if (ownerId === myOwnerId) return 'green'
     else if (ownerId) return 'black'
     else return 'blue'
@@ -41,7 +48,7 @@ export default ({ players, position, myOwnerId }) => {
         <XAxis dataKey='x' name='rank' domain={isFlexPosition() ? [0, 100] : [0,50]}/>
         <YAxis dataKey='y' name='avgPoints' interval={'preserveStartEnd'}/>
         <Tooltip
-          content={Top50GraphTooltip}
+          content={TopPlayersGraphTooltip}
         />
         <Scatter name='Players' data={datum} fill='#8884d8'>
           {datum.map((entry, index) => {

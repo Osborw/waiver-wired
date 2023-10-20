@@ -2,14 +2,24 @@ import React from 'react'
 import { Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ComposedChart } from 'recharts'
 import { IndividualGraphTooltip } from './GraphTooltip'
 import { TimeFrame } from './TimeFrameSelector'
+import { SearchPosition, SleeperPosition, WeeklyStats } from '../../shared/types'
 
-const weekExists = (weeks, i) => {
-  const matchingWeek = weeks.filter(week => week.weekNumber === i)
-  if (matchingWeek[0]) return matchingWeek[0].ptsPPR
+const weekExists = (weeks: WeeklyStats[], weekNumber: number) => {
+  const matchingWeek = weeks.find(week => week.weekNumber === weekNumber)
+  if (matchingWeek) return matchingWeek.ptsPPR
   else return null
 }
 
-const IndividualGraph = ({ weeks, avg, stdDev, position, timeFrame }) => {
+interface IndividualGraphProps {
+  weeks: WeeklyStats[]
+  avg: number
+  stdDev: number
+  position: SearchPosition 
+  timeFrame: TimeFrame
+
+}
+
+const IndividualGraph = ({ weeks, avg, stdDev, position, timeFrame }: IndividualGraphProps) => {
 
   const datum = []
   let i

@@ -10,9 +10,13 @@ export enum TimeFrame {
   fiveWeeks
 }
 
-export const TimeFrameSelector = ({onClick}) => (
-  <div style={{marginBottom: '16px',}}>
-      <a style={linkStyle} onClick={() => onClick(TimeFrame.allSeason)}>All Season</a>
-      <a style={linkStyle} onClick={() => onClick(TimeFrame.fiveWeeks)}>Last 5 Weeks</a>
+interface TimeFrameSelectorProps {
+  onClick: (newTimeFrame: TimeFrame) => Promise<void>
+}
+
+export const TimeFrameSelector = ({ onClick }: TimeFrameSelectorProps) => (
+  <div style={{ marginBottom: '16px', }}>
+    <a style={linkStyle} onClick={() => onClick(TimeFrame.allSeason)}>All Season</a>
+    <a style={linkStyle} onClick={() => onClick(TimeFrame.fiveWeeks)}>Last 5 Weeks</a>
   </div>
 )

@@ -11,7 +11,7 @@ const Words = styled.div`
   padding: 10px;
 `
 
-export const IndividualGraphTooltip: ContentType<> = (props: {payload: any, active: boolean}) => {
+export const IndividualGraphTooltip = (props: any) => {
   if (!props.active) {
     return null
   }
@@ -32,7 +32,7 @@ export const IndividualGraphTooltip: ContentType<> = (props: {payload: any, acti
   )
 }
 
-export const Top50GraphTooltip = props => {
+export const TopPlayersGraphTooltip = (props: any) => {
   if (!props.active) {
     return null
   }

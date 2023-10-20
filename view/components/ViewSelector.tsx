@@ -5,12 +5,16 @@ const linkStyle = {
   textDecoration: 'underline'
 };
 
-export const View = {
-  table: 0,
-  graph: 1,
+export enum View {
+  table,
+  graph
 }
 
-export const ViewSelector = ({onClick}) => (
+interface ViewSelectorProps {
+  onClick: React.Dispatch<React.SetStateAction<View>>
+}
+
+export const ViewSelector = ({onClick}: ViewSelectorProps) => (
   <div style={{marginBottom: '16px',}}>
       <a style={linkStyle} onClick={() => onClick(View.table)}>Table</a>
       <a style={linkStyle} onClick={() => onClick(View.graph)}>Graph</a>

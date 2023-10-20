@@ -69,6 +69,7 @@ export interface WeeklyStats {
 }
 
 export interface CalculatedPlayer extends Player {
+  fantasyPositions: SleeperPosition[]
   avgPoints: number
   stdDev: number
   gp: number

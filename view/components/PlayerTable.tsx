@@ -1,7 +1,19 @@
+import { CalculatedPlayer, SearchPosition } from '../../shared/types'
+import { convertSearchPositionToSleeperPosition } from '../../shared/position-logic'
 import { Row, TitleRow } from './Row'
 import { useState, useEffect } from 'react'
+import { TimeFrame } from './TimeFrameSelector'
+import { View } from './ViewSelector'
 
-export default ({ players, position, timeFrame, view, myOwnerId }) => {
+interface PlayerTableProps {
+  players: CalculatedPlayer[]
+  position: SearchPosition
+  timeFrame: TimeFrame
+  view: View
+  myOwnerId?: string
+}
+
+export default ({ players, position, timeFrame, view, myOwnerId }: PlayerTableProps) => {
   const [allVisible, toggleAllVisible] = useState(true)
 
   //Resets visibility of indv graphs when players change
@@ -14,7 +26,7 @@ export default ({ players, position, timeFrame, view, myOwnerId }) => {
     <div>
       <TitleRow position={position} timeFrame={timeFrame} view={view} toggleAllVisible={() => toggleAllVisible(!allVisible)} />
       {players.map((p, idx) => {
-        const displayPosition = position === 'FLEX' ? p.fantasyPositions[0] : position
+        const displayPosition = position === SearchPosition.FLEX ? p.fantasyPositions[0] : convertSearchPositionToSleeperPosition(position)
         return (
           <Row
             selectedPosition={position}
