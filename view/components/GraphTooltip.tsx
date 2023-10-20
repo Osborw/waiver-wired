@@ -1,3 +1,5 @@
+import React from 'react'
+import { ContentType } from 'recharts/types/component/Tooltip'
 import styled from 'styled-components'
 
 const Tooltip = styled.div`
@@ -9,7 +11,7 @@ const Words = styled.div`
   padding: 10px;
 `
 
-export const IndividualGraphTooltip = props => {
+export const IndividualGraphTooltip = (props: any) => {
   if (!props.active) {
     return null
   }
@@ -30,7 +32,7 @@ export const IndividualGraphTooltip = props => {
   )
 }
 
-export const Top50GraphTooltip = props => {
+export const TopPlayersGraphTooltip = (props: any) => {
   if (!props.active) {
     return null
   }

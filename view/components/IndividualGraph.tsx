@@ -1,14 +1,25 @@
+import React from 'react'
 import { Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ComposedChart } from 'recharts'
 import { IndividualGraphTooltip } from './GraphTooltip'
 import { TimeFrame } from './TimeFrameSelector'
+import { SearchPosition, SleeperPosition, WeeklyStats } from '../../shared/types'
 
-const weekExists = (weeks, i) => {
-  const matchingWeek = weeks.filter(week => week.weekNumber === i)
-  if (matchingWeek[0]) return matchingWeek[0].ptsPPR
+const weekExists = (weeks: WeeklyStats[], weekNumber: number) => {
+  const matchingWeek = weeks.find(week => week.weekNumber === weekNumber)
+  if (matchingWeek) return matchingWeek.ptsPPR
   else return null
 }
 
-const IndividualGraph = ({ weeks, avg, stdDev, position, timeFrame }) => {
+interface IndividualGraphProps {
+  weeks: WeeklyStats[]
+  avg: number
+  stdDev: number
+  position: SearchPosition 
+  timeFrame: TimeFrame
+
+}
+
+const IndividualGraph = ({ weeks, avg, stdDev, position, timeFrame }: IndividualGraphProps) => {
 
   const datum = []
   let i
@@ -47,34 +58,3 @@ const IndividualGraph = ({ weeks, avg, stdDev, position, timeFrame }) => {
 }
 
 export default IndividualGraph
-// export default ({ weeks }) => {
-
-//   return (
-//     <div style={{ width: '20%' }}>
-//       <VictoryChart
-//         domain={{ x: [0, 17], y: [-2, 50] }}
-//         style={{
-//           data: { strokeWidth: 3, fillOpacity: 0.4 }
-//         }}
-//       >
-//         <VictoryArea
-//           labelComponent={<VictoryTooltip />}
-//           style={{
-//             data: { fill: "pink", stroke: "red" }
-//             // labels: {
-//             //   fontSize: 15,
-//             //   fill: ({ datum }) => datum.color,
-//             // }
-//           }}
-//           size={2.5}
-//           data={weeks.map((week, idx) => {
-//             return {
-//               x: week.weekNumber,
-//               y: week.ptsPPR,
-//             }
-//           })}
-//         />
-//       </VictoryChart>
-//     </div>
-//   )
-// }

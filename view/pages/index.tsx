@@ -6,17 +6,18 @@ import { ViewSelector, View } from '../components/ViewSelector'
 import PlayerTable from '../components/PlayerTable'
 import PlayerGraph from '../components/PlayerGraph'
 import * as Get from '../server/getIndex'
+import { CalculatedPlayer, SearchPosition } from '../../shared/types'
 
 const Index = () => {
-  const [players, setPlayers] = useState([])
-  const [ownerId, setOwnerId] = useState('')
+  const [players, setPlayers] = useState<CalculatedPlayer[]>([])
+  const [ownerId, setOwnerId] = useState<string | undefined>()
   const [timeFrame, setTimeFrame] = useState(TimeFrame.allSeason)
-  const [position, setPosition] = useState('QB')
+  const [position, setPosition] = useState(SearchPosition.QB)
   const [view, setView] = useState(View.table)
 
   useEffect(() => {
     const init = async () => {
-      setPlayers(await setInitialList())
+      await getAllSeasonTopPlayers(SearchPosition.QB)
     }
     init()
   }, [])
@@ -25,29 +26,29 @@ const Index = () => {
     setNewPosition(position)
   }, [timeFrame])
 
-  const getAllSeasonTop50 = async position => {
-    const ret = await Get.top50(position)
+  const getAllSeasonTopPlayers = async (position: SearchPosition) => {
+    const ret = await Get.topPlayers(position)
     setPlayers(ret.players)
     setOwnerId(ret.ownerId)
   }
 
-  const getFiveWeeksTop50 = async position => {
-    const ret = await Get.fiveWeekTop50(position)
+  const getFiveWeeksTopPlayers = async (position: SearchPosition) => {
+    const ret = await Get.fiveWeekTopPlayers(position)
     setPlayers(ret.players)
     setOwnerId(ret.ownerId)
   }
 
-  const setNewTimeFrame = async newTimeFrame => {
+  const setNewTimeFrame = async (newTimeFrame: TimeFrame) => {
     if (newTimeFrame !== timeFrame) {
       setTimeFrame(newTimeFrame)
     }
   }
 
-  const setNewPosition = async newPosition => {
+  const setNewPosition = async (newPosition: SearchPosition) => {
     setPosition(newPosition)
     timeFrame === TimeFrame.fiveWeeks
-      ? getFiveWeeksTop50(newPosition)
-      : getAllSeasonTop50(newPosition)
+      ? getFiveWeeksTopPlayers(newPosition)
+      : getAllSeasonTopPlayers(newPosition)
   }
 
   
@@ -65,12 +66,6 @@ const Index = () => {
       {view === View.graph && <PlayerGraph players={players} position={position} myOwnerId={ownerId}/>}
     </Layout>
   )
-}
-
-const setInitialList = async () => {
-  const initialPos = 'QB'
-  const ret = await Get.top50(initialPos)
-  return ret
 }
 
 export default Index
