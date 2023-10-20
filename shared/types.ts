@@ -7,6 +7,16 @@ export enum SleeperPosition {
   DEF = 'DEF',
 }
 
+export enum SearchPosition {
+    QB = 'QB',
+    RB = 'RB',
+    WR = 'WR',
+    TE = 'TE',
+    K = 'K',
+    DEF = 'DEF',
+    FLEX = 'FLEX',
+}
+
 export enum SleeperInjuryStatus {
   IR = 'IR',
   Out = "Out",
@@ -51,15 +61,16 @@ export interface Player {
   ownerId: string | null
 }
 
-export interface Week {
-  weekNumber: number
-  pts: number
-}
-
 export interface WeeklyStats {
   id: string
   weekNumber: number
   ptsPPR: number
+  gp: number
+}
+
+export interface CalculatedPlayer extends Player {
+  avgPoints: number
+  stdDev: number
   gp: number
 }
 
@@ -305,42 +316,4 @@ export interface FantasyStats {
   fanPtsAllowRB: number
   fanPtsAllowTE: number
   fanPtsAllowWR: number
-}
-
-/////////////////////////////////////////////////////////////////////////////////
-
-export enum EligiblePositions {
-    QB = 'QB',
-    RB = 'RB',
-    WR = 'WR',
-    TE = 'TE',
-    K = 'K',
-    DEF = 'DEF',
-    FLEX = 'FLEX',
-    NA = 'NA'
-}
-
-enum Status {
-    Active,
-    Inactive,
-    Injured_Reserve
-}
-
-enum InjuryStatus {
-    Questionable,
-    Doubtful,
-    Out,
-    IR,
-    PUP,
-    Sus,
-    NA,
-}
-
-export interface Defense {
-  id: string
-  name: string,
-  team: string,
-  position: EligiblePositions,
-  fantasy_position: EligiblePositions,
-  active: boolean,
 }
