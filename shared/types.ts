@@ -54,7 +54,7 @@ export interface Player {
   firstName: string
   lastName: string
   team: string
-  fantasyPositions: SleeperPosition[]
+  fantasyPositions: SleeperPosition[] | null
   injuryStatus: SleeperInjuryStatus | null
 
   weeklyStats: WeeklyStats[]
