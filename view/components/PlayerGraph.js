@@ -25,7 +25,7 @@ export default ({ players, position, myOwnerId }) => {
     return {
       x: idx + 1,
       y: p.avgPoints,
-      label: p.name,
+      label: p.fullName,
       color: determineColor(p.ownerId),
     }
   })

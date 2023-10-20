@@ -55,6 +55,7 @@ export const loadWeeklyStats = async (maxWeeks: number, year: number) => {
 
                 if (!playerObj[id]) {
                     const unit = allUnitsObj[id]
+
                     const player: Player = {
                         id,
                         fullName: unit.fullName,
