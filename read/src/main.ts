@@ -1,7 +1,5 @@
-import { calculateData } from './calculators'
 import { loadPlayers } from './load-players'
 import { loadRosters } from './load-rosters'
-import { loadSeasonStats } from './load-season'
 import { loadWeeklyStats } from './load-weekly'
 import dotenv from 'dotenv'
 
@@ -19,10 +17,8 @@ const main = async () => {
     if (!LEAGUE_ID) console.warn('No SLEEPER_LEAGUE_ID provided, please include a .env file with SLEEPER_LEAGUE_ID if you want to use the roster feature')
 
     await loadPlayers()
-    await loadSeasonStats(YEAR)
     await loadWeeklyStats(WEEK, YEAR)
     if (LEAGUE_ID) await loadRosters(LEAGUE_ID)
-    await calculateData(WEEK)
 }
 
 main()
