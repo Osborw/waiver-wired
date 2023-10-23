@@ -6,14 +6,30 @@ import {
   Tooltip,
   Scatter,
   Cell,
+  Dot,
 } from 'recharts'
 import { TopPlayersGraphTooltip } from './GraphTooltip'
 import { CalculatedPlayer, SearchPosition } from '../../shared/types'
+import { ScatterCustomizedShape } from 'recharts/types/cartesian/Scatter'
+import { styled } from 'styled-components'
+
+const GraphDiv = styled.div`
+  max-width: 850px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+`
 
 interface PlayerGraphProps {
   players: CalculatedPlayer[]
   position: SearchPosition
   myOwnerId?: string
+}
+
+const determineWidth = (players: CalculatedPlayer[]) => {
+  const width = 650
+  const playersWidth = players.length * 8
+
+  return width < playersWidth ? playersWidth : width
 }
 
 export default ({ players, position, myOwnerId }: PlayerGraphProps) => {
@@ -38,9 +54,9 @@ export default ({ players, position, myOwnerId }: PlayerGraphProps) => {
   })
 
   return (
-    <div>
+    <GraphDiv>
       <ScatterChart
-        width={isFlexPosition() ? 1300 : 650}
+        width={determineWidth(players)}
         height={400}
         margin={{ top: 20, right: 20, bottom: 10, left: 10 }}
       >
@@ -50,17 +66,14 @@ export default ({ players, position, myOwnerId }: PlayerGraphProps) => {
         <Tooltip
           content={TopPlayersGraphTooltip}
         />
-        <Scatter name='Players' data={datum} fill='#8884d8'>
-          {datum.map((entry, index) => {
-            return (
-              <Cell
-                key={`cell-${index}`}
-                fill={entry.color}
-              />
-            )
-          })}
-        </Scatter>
+        <Scatter name='Players' data={datum} fill='#8884d8' shape={RenderDot}></Scatter>
       </ScatterChart>
-    </div>
+    </GraphDiv>
+  )
+}
+
+const RenderDot: ScatterCustomizedShape = ({ cx, cy, payload }) => {
+  return (
+    <Dot cx={cx} cy={cy} fill={payload.color} r={4} />
   )
 }
