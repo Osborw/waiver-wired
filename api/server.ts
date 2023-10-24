@@ -20,10 +20,12 @@ fastify.get('/allSeason/:position', async (request: any, reply: any): Promise<To
   console.log('--Call made from', request.hostname, '--')
   const topPlayers = await getTopPlayers(request.params.position, 1, WEEK)
 
-  return {
+  const ret: TopPlayerReturn = {
     players: topPlayers,
     ownerId: OWNER_ID
   }
+
+  return ret
 })
 
 fastify.get('/fiveWeeks/:position', async (request: any, reply: any): Promise<TopPlayerReturn> => {

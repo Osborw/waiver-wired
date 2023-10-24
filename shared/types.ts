@@ -73,6 +73,13 @@ export interface CalculatedPlayer extends Player {
   avgPoints: number
   stdDev: number
   gp: number
+  tier?: number
+  tierDiff?: number
+}
+
+export interface TieredPlayer extends CalculatedPlayer {
+  tier: number
+  tierDiff?: number
 }
 
 export interface FantasyStats {

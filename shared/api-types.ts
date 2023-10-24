@@ -1,6 +1,6 @@
-import { CalculatedPlayer } from './types'
+import { CalculatedPlayer, TieredPlayer } from './types'
 
 export interface TopPlayerReturn {
-    players: CalculatedPlayer[]
+    players: TieredPlayer[]
     ownerId?: string
 }

@@ -1,4 +1,4 @@
-import { CalculatedPlayer, SearchPosition } from '../../shared/types'
+import { TieredPlayer, SearchPosition } from '../../shared/types'
 import { convertSearchPositionToSleeperPosition } from '../../shared/position-logic'
 import { Row, TitleRow } from './Row'
 import { useState, useEffect } from 'react'
@@ -6,7 +6,7 @@ import { TimeFrame } from './TimeFrameSelector'
 import { View } from './ViewSelector'
 
 interface PlayerTableProps {
-  players: CalculatedPlayer[]
+  players: TieredPlayer[]
   position: SearchPosition
   timeFrame: TimeFrame
   view: View
@@ -42,6 +42,8 @@ export default ({ players, position, timeFrame, view, myOwnerId }: PlayerTablePr
             allVisible={allVisible}
             timeFrame={timeFrame}
             myOwnerId={myOwnerId}
+            tier={p.tier}
+            tierDiff={p.tierDiff}
           />
         )
       })}

@@ -1,6 +1,6 @@
 import { readPlayers } from './readFile'
 import { CalculatedPlayer, Player, SearchPosition, SleeperPosition } from '../../shared/types'
-import { calculateAvgPoints, calculateGP, calculateStdDev } from './calculators'
+import { calculateAvgPoints, calculateGP, calculateStdDev, calculateTiers } from './calculators'
 import { getPlayersByPosition } from '../../shared/position-logic'
 
 export const getTopPlayers = async (position: SearchPosition, startWeek: number, endWeek: number) => {
@@ -33,5 +33,7 @@ export const getTopPlayers = async (position: SearchPosition, startWeek: number,
   const numPlayersToShow = position === SearchPosition.FLEX ? 200 : 100
   const limited = ordered.slice(0, numPlayersToShow)
 
-  return limited
+  const tiered = calculateTiers(limited)
+
+  return tiered 
 }

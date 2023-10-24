@@ -9,7 +9,7 @@ import {
   Dot,
 } from 'recharts'
 import { TopPlayersGraphTooltip } from './GraphTooltip'
-import { CalculatedPlayer, SearchPosition } from '../../shared/types'
+import { TieredPlayer, SearchPosition } from '../../shared/types'
 import { ScatterCustomizedShape } from 'recharts/types/cartesian/Scatter'
 import { styled } from 'styled-components'
 
@@ -20,12 +20,12 @@ const GraphDiv = styled.div`
 `
 
 interface PlayerGraphProps {
-  players: CalculatedPlayer[]
+  players: TieredPlayer[]
   position: SearchPosition
   myOwnerId?: string
 }
 
-const determineWidth = (players: CalculatedPlayer[]) => {
+const determineWidth = (players: TieredPlayer[]) => {
   const width = 650
   const playersWidth = players.length * 8
 

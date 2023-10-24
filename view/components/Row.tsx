@@ -22,12 +22,13 @@ const RowComponent = styled.div`
   cursor: pointer;
 `
 
-const Cells = styled.div`
+const Cells = styled.div<{ color?: string }>`
   display: flex;
   flex-direction: row;
   border-bottom: 0.5px solid #c7c7c7;
   margin-top: 0.5px;
   margin-bottom: 0.5px;
+  background: ${props => props.color || 'white'}
 `
 const Graph = styled.div`
   display: flex;
@@ -60,6 +61,7 @@ export const TitleRow = ({ position, timeFrame, view, toggleAllVisible }: TitleR
       <Cell>{'Games Played'}</Cell>
       <Cell inputsize={AvgPPRFieldLength}>{'Average PPR'}</Cell>
       <Cell inputsize={AvgPPRFieldLength}>{'Standard Deviation'}</Cell>
+      <Cell inputsize={AvgPPRFieldLength}>{'Tier'}</Cell>
       <Cell>
         <button
           onClick={() => toggleAllVisible()}
@@ -101,6 +103,11 @@ const NameField = ({ name, ownerId, myOwnerId }: NameFieldProps) => {
   )
 }
 
+const determineTierColor = (tier: number) => {
+  if(tier % 2 === 0) return 'white'
+  if(tier % 2 === 1) return '#f2f2f2'
+}
+
 interface RowProps {
   selectedPosition: SearchPosition
   rank: number
@@ -114,6 +121,8 @@ interface RowProps {
   allVisible: boolean
   timeFrame: TimeFrame
   myOwnerId?: string
+  tier: number
+  tierDiff?: number
 }
 
 export const Row = ({
@@ -129,6 +138,8 @@ export const Row = ({
   allVisible,
   timeFrame,
   myOwnerId,
+  tier,
+  tierDiff
 }: RowProps) => {
   const [individualGraphVisible, toggleIndividualGraphVisibility] = useState(
     false,
@@ -143,7 +154,9 @@ export const Row = ({
     <RowComponent
       onClick={() => toggleIndividualGraphVisibility(!individualGraphVisible)}
     >
-      <Cells>
+      <Cells 
+        color={determineTierColor(tier)} 
+      >
         <Cell>{rank}</Cell>
         {selectedPosition === SearchPosition.FLEX && <Cell>{position}</Cell>}
         <NameField name={name} ownerId={ownerId} myOwnerId={myOwnerId} />
@@ -152,6 +165,7 @@ export const Row = ({
         <Cell inputsize={AvgPPRFieldLength}>
           {(gamesPlayed > 1 && stdDev) ? stdDev.toFixed(2) : '------'}
         </Cell>
+        <Cell inputsize={AvgPPRFieldLength}> {tierDiff ? -tierDiff.toFixed(0): ''} </Cell>
         <Cell>{individualGraphVisible ? ' ˄ ' : ' ˅ '}</Cell>
       </Cells>
       {individualGraphVisible && (

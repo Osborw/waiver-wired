@@ -6,10 +6,10 @@ import { ViewSelector, View } from '../components/ViewSelector'
 import PlayerTable from '../components/PlayerTable'
 import PlayerGraph from '../components/PlayerGraph'
 import * as Get from '../server/getIndex'
-import { CalculatedPlayer, SearchPosition } from '../../shared/types'
+import { TieredPlayer, SearchPosition } from '../../shared/types'
 
 const Index = () => {
-  const [players, setPlayers] = useState<CalculatedPlayer[]>([])
+  const [players, setPlayers] = useState<TieredPlayer[]>([])
   const [ownerId, setOwnerId] = useState<string | undefined>()
   const [timeFrame, setTimeFrame] = useState(TimeFrame.allSeason)
   const [position, setPosition] = useState(SearchPosition.QB)
