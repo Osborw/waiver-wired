@@ -1,4 +1,4 @@
-import { CalculatedPlayer, Roster, TieredPlayer } from './types'
+import { CalculatedPlayer, Roster, TieredPlayer, Trade } from './types'
 
 export interface TopPlayerReturn {
     players: TieredPlayer[]
@@ -7,5 +7,6 @@ export interface TopPlayerReturn {
 
 export interface RostersReturn {
     rosters: Roster[]
+    trades: Trade[]
     ownerId?: string
 }

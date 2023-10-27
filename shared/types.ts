@@ -117,6 +117,15 @@ export interface Roster {
   
 }
 
+export interface Trade {
+  team1Owner: string
+  team2Owner: string
+  team1Players: CalculatedPlayer[],
+  team2Players: CalculatedPlayer[]
+  team1Improvement: number
+  team2Improvement: number
+}
+
 export interface FantasyStats {
   rankStd: number
   rankPPR: number

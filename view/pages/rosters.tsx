@@ -23,6 +23,7 @@ const Index = () => {
     const ret = await Get.getRosters()
     setRosters(ret.rosters)
     console.log(ret.rosters)
+    console.log(ret.trades)
     setOwnerId(ret.ownerId)
   }
   

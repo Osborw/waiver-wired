@@ -1,5 +1,5 @@
 import { readPlayers } from './readFile'
-import { Player, Roster, SearchPosition } from '../../shared/types'
+import { Player, Roster, SearchPosition, Trade } from '../../shared/types'
 import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
 import { getPlayersByPosition } from '../../shared/position-logic'
 import { createStartingLineup, fillInRosterRanks, rosterSumAvgStats, rosterSumStdDev } from './roster-logic'
@@ -90,4 +90,44 @@ export const getRosters = async (startWeek: number, endWeek: number) => {
   //Add ranks of each roster after sorting
   fillInRosterRanks(rosters)
   return rosters
+}
+
+export const getTrades = (rosters: Roster[], ownerId?: string) => {
+  const myRoster = rosters.find(r => r.ownerId === ownerId)
+
+  if(!ownerId || !myRoster) return []
+
+  const trades: Trade[] = []
+  rosters.forEach((oppRoster) => {
+    myRoster.fullRoster.forEach((myPlayer, myIdx) => {
+      oppRoster.fullRoster.forEach((oppPlayer, oppIdx) => {
+        const myFullRoster = myRoster.fullRoster.slice(0)
+        myFullRoster.splice(myIdx, 1)
+        const oppFullRoster = oppRoster.fullRoster.slice(0)
+        oppFullRoster.splice(oppIdx, 1)
+
+        myFullRoster.push(oppPlayer)
+        oppFullRoster.push(myPlayer)
+
+        const myNewStartingLineup = createStartingLineup(myFullRoster)
+        const oppNewStartingLineup = createStartingLineup(oppFullRoster)
+
+        const myNewAvgPoints = rosterSumAvgStats(myNewStartingLineup)
+        const oppNewAvgPoints = rosterSumAvgStats(oppNewStartingLineup)
+
+        if(myNewAvgPoints - myRoster.avgPoints.startingStatSum > 1 && oppNewAvgPoints - oppRoster.avgPoints.startingStatSum > 1){
+          trades.push({
+            team1Owner: myRoster.ownerName,
+            team2Owner: oppRoster.ownerName,
+            team1Players: [myPlayer],
+            team2Players: [oppPlayer],
+            team1Improvement: myNewAvgPoints - myRoster.avgPoints.startingStatSum,
+            team2Improvement: oppNewAvgPoints - oppRoster.avgPoints.startingStatSum,
+          })
+        }
+      })
+    })
+  })
+  trades.sort((a,b) => b.team1Improvement - a.team1Improvement)
+  return trades
 }
