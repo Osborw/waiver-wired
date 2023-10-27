@@ -19,15 +19,26 @@ const sortByPoints = (a: CalculatedPlayer, b: CalculatedPlayer) => {
 
 export const createStartingLineup = (players: CalculatedPlayer[]) => {
   const playersCopy = players.slice(0).sort(sortByPoints)
+  
+  const qb = grabBestPlayer(SearchPosition.QB, playersCopy)
+  const rb1 = grabBestPlayer(SearchPosition.RB, playersCopy)
+  const rb2 = grabBestPlayer(SearchPosition.RB, playersCopy)
+  const wr1 = grabBestPlayer(SearchPosition.WR, playersCopy)
+  const wr2 = grabBestPlayer(SearchPosition.WR, playersCopy)
+  const te = grabBestPlayer(SearchPosition.TE, playersCopy)
+  const flex1 = grabBestPlayer(SearchPosition.FLEX, playersCopy)
+  const flex2 = grabBestPlayer(SearchPosition.FLEX, playersCopy)
+  const k = grabBestPlayer(SearchPosition.K, playersCopy)
+  const def = grabBestPlayer(SearchPosition.DEF, playersCopy)
 
   const startingLineup: Lineup = {
-    QB: grabBestPlayer(SearchPosition.QB, playersCopy),
-    RB: grabBestPlayer(SearchPosition.RB, playersCopy),
-    WR: grabBestPlayer(SearchPosition.WR, playersCopy),
-    TE: grabBestPlayer(SearchPosition.TE, playersCopy),
-    FLEX: grabBestPlayer(SearchPosition.FLEX, playersCopy),
-    K: grabBestPlayer(SearchPosition.K, playersCopy),
-    DEF: grabBestPlayer(SearchPosition.DEF, playersCopy),
+    QB: [qb].filter(p => p !== undefined) as CalculatedPlayer[],
+    RB: [rb1, rb2].filter(p => p !== undefined) as CalculatedPlayer[],
+    WR: [wr1, wr2].filter(p => p !== undefined) as CalculatedPlayer[],
+    TE: [te].filter(p => p !== undefined) as CalculatedPlayer[],
+    FLEX: [flex1, flex2].filter(p => p !== undefined) as CalculatedPlayer[],
+    K: [k].filter(p => p !== undefined) as CalculatedPlayer[],
+    DEF: [def].filter(p => p !== undefined) as CalculatedPlayer[],
   }
 
   return startingLineup
@@ -45,35 +56,41 @@ const grabBestPlayer = (pos: SearchPosition, players: CalculatedPlayer[]) => {
   else if(pos === SearchPosition.K) idx = players.findIndex((p) => isK(p))
   else if(pos === SearchPosition.DEF) idx = players.findIndex((p) => isDEF(p))
   
-  if(idx === -1) return []
+  if(idx === -1) return
 
   const p = players.splice(idx, 1)
-  return p
+  return p[0]
 
 }
 
 export const rosterSumAvgStats = (startingLineup: Lineup, pos?: SearchPosition) => {
 
-  if(pos === SearchPosition.QB) return startingLineup.QB.reduce((acc,p) => acc + p.avgPoints, 0)
-  else if(pos === SearchPosition.RB) return startingLineup.RB.reduce((acc,p) => acc + p.avgPoints, 0)
-  else if(pos === SearchPosition.WR) return startingLineup.WR.reduce((acc,p) => acc + p.avgPoints, 0)
-  else if(pos === SearchPosition.TE) return startingLineup.TE.reduce((acc,p) => acc + p.avgPoints, 0)
-  else if(pos === SearchPosition.FLEX) return startingLineup.FLEX.reduce((acc,p) => acc + p.avgPoints, 0)
-  else if(pos === SearchPosition.K) return startingLineup.K.reduce((acc,p) => acc + p.avgPoints, 0)
-  else if(pos === SearchPosition.DEF) return startingLineup.DEF.reduce((acc,p) => acc + p.avgPoints, 0)
-  else return 0
+  let sum = 0
+
+  if(pos === SearchPosition.QB || !pos) sum = sum + startingLineup.QB.reduce((acc,p) => acc + p.avgPoints, 0)
+  if(pos === SearchPosition.RB || ! pos) sum = sum + startingLineup.RB.reduce((acc,p) => acc + p.avgPoints, 0)
+  if(pos === SearchPosition.WR || !pos) sum = sum + startingLineup.WR.reduce((acc,p) => acc + p.avgPoints, 0)
+  if(pos === SearchPosition.TE || !pos) sum = sum + startingLineup.TE.reduce((acc,p) => acc + p.avgPoints, 0)
+  if(pos === SearchPosition.FLEX || !pos) sum = sum + startingLineup.FLEX.reduce((acc,p) => acc + p.avgPoints, 0)
+  if(pos === SearchPosition.K || !pos) sum = sum + startingLineup.K.reduce((acc,p) => acc + p.avgPoints, 0)
+  if(pos === SearchPosition.DEF || !pos) sum = sum + startingLineup.DEF.reduce((acc,p) => acc + p.avgPoints, 0)
+
+  return sum
 }
 
 export const rosterSumStdDev = (startingLineup: Lineup, pos?: SearchPosition) => {
 
-  if(pos === SearchPosition.QB) return startingLineup.QB.reduce((acc,p) => acc + p.stdDev, 0)
-  else if(pos === SearchPosition.RB) return startingLineup.RB.reduce((acc,p) => acc + p.stdDev, 0)
-  else if(pos === SearchPosition.WR) return startingLineup.WR.reduce((acc,p) => acc + p.stdDev, 0)
-  else if(pos === SearchPosition.TE) return startingLineup.TE.reduce((acc,p) => acc + p.stdDev, 0)
-  else if(pos === SearchPosition.FLEX) return startingLineup.FLEX.reduce((acc,p) => acc + p.stdDev, 0)
-  else if(pos === SearchPosition.K) return startingLineup.K.reduce((acc,p) => acc + p.stdDev, 0)
-  else if(pos === SearchPosition.DEF) return startingLineup.DEF.reduce((acc,p) => acc + p.stdDev, 0)
-  else return 0
+  let sum = 0
+
+  if(pos === SearchPosition.QB || !pos) sum = sum + startingLineup.QB.reduce((acc,p) => acc + p.stdDev, 0)
+  if(pos === SearchPosition.RB || !pos) sum = sum + startingLineup.RB.reduce((acc,p) => acc + p.stdDev, 0)
+  if(pos === SearchPosition.WR || !pos) sum = sum +startingLineup.WR.reduce((acc,p) => acc + p.stdDev, 0)
+  if(pos === SearchPosition.TE || !pos) sum = sum + startingLineup.TE.reduce((acc,p) => acc + p.stdDev, 0)
+  if(pos === SearchPosition.FLEX || !pos) sum = sum + startingLineup.FLEX.reduce((acc,p) => acc + p.stdDev, 0)
+  if(pos === SearchPosition.K || !pos) sum = sum + startingLineup.K.reduce((acc,p) => acc + p.stdDev, 0)
+  if(pos === SearchPosition.DEF || !pos) sum = sum + startingLineup.DEF.reduce((acc,p) => acc + p.stdDev, 0)
+
+  return sum
 }
 
 export const fillInRosterRanks = (rosters: Roster[]) => {

@@ -100,6 +100,7 @@ export interface Lineup {
 export interface Roster {
 
   ownerId: string
+  ownerName: string
   startingLineup: Lineup 
   fullRoster: CalculatedPlayer[]
 

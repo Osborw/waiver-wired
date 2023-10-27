@@ -3,6 +3,7 @@ import { Player, Roster, SearchPosition } from '../../shared/types'
 import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
 import { getPlayersByPosition } from '../../shared/position-logic'
 import { createStartingLineup, fillInRosterRanks, rosterSumAvgStats, rosterSumStdDev } from './roster-logic'
+import { getOwnerName } from './external-calls'
 
 export const getTopPlayers = async (position: SearchPosition, startWeek: number, endWeek: number) => {
   const players = await readPlayers()
@@ -27,17 +28,20 @@ export const getRosters = async (startWeek: number, endWeek: number) => {
 
   const calculatedOwnedPlayers = calculateBasicStatsForPlayers(ownedPlayers, startWeek, endWeek)
 
-  const owners = new Set(calculatedOwnedPlayers.map((p) => p.ownerId)) as Set<string>
+  const owners = Array.from(new Set(calculatedOwnedPlayers.map((p) => p.ownerId)) as Set<string>)
+
+  const ownerNames = await Promise.all(owners.map(async (ownerId) => await getOwnerName(ownerId)))
 
   const rosters: Roster[] = []
 
-  owners.forEach((ownerId) => {
+  owners.map(async (ownerId, idx) => {
     const fullRoster = calculatedOwnedPlayers.filter((p) => p.ownerId === ownerId)
     const startingLineup = createStartingLineup(fullRoster)
 
     //For each owner id create a Roster object
     const roster: Roster = {
       ownerId,
+      ownerName: ownerNames[idx],
       fullRoster,
       startingLineup,
       avgPoints: {
