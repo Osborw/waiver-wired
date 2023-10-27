@@ -82,6 +82,40 @@ export interface TieredPlayer extends CalculatedPlayer {
   tierDiff?: number
 }
 
+interface RosterStat {
+  startingStatSum: number
+  rank: number
+}
+
+export interface Lineup {
+  QB: CalculatedPlayer[]
+  RB: CalculatedPlayer[]
+  WR: CalculatedPlayer[]
+  TE: CalculatedPlayer[]
+  FLEX: CalculatedPlayer[]
+  K: CalculatedPlayer[]
+  DEF: CalculatedPlayer[]
+}
+
+export interface Roster {
+
+  ownerId: string
+  startingLineup: Lineup 
+  fullRoster: CalculatedPlayer[]
+
+  avgPoints: RosterStat
+  stdDev: RosterStat
+
+  QB: RosterStat
+  RB: RosterStat
+  WR: RosterStat
+  TE: RosterStat
+  FLEX: RosterStat
+  K: RosterStat
+  DEF: RosterStat
+  
+}
+
 export interface FantasyStats {
   rankStd: number
   rankPPR: number
