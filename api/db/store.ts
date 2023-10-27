@@ -1,5 +1,5 @@
 import { readPlayers } from './readFile'
-import { Player, Roster, SearchPosition, Trade } from '../../shared/types'
+import { Player, Roster, SearchPosition, SleeperPosition, Trade } from '../../shared/types'
 import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
 import { getPlayersByPosition } from '../../shared/position-logic'
 import { createStartingLineup, fillInRosterRanks, rosterSumAvgStats, rosterSumStdDev } from './roster-logic'
@@ -127,7 +127,8 @@ export const getTrades = (rosters: Roster[], ownerId?: string) => {
             if (
               myNewAvgPoints - myRoster.avgPoints.startingStatSum > 2 &&
               oppNewAvgPoints - oppRoster.avgPoints.startingStatSum > 2 &&
-              myTradePlayers.filter(p => p.fullName === 'Logan Thomas').length > 0
+              myTradePlayers.filter(p => p.fullName === 'Kirk Cousins').length > 0 &&
+              oppTradePlayers.filter(p => p.fantasyPositions.includes(SleeperPosition.QB)).length > 0
             ) {
               trades.push({
                 team1Owner: myRoster.ownerName,

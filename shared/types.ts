@@ -82,7 +82,7 @@ export interface TieredPlayer extends CalculatedPlayer {
   tierDiff?: number
 }
 
-interface RosterStat {
+export interface RosterStat {
   startingStatSum: number
   rank: number
 }
