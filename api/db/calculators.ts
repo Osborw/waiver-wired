@@ -1,23 +1,43 @@
 import { std } from "mathjs"
-import { CalculatedPlayer, Player, TieredPlayer } from "../../shared/types"
+import { CalculatedPlayer, Player, SleeperPosition, TieredPlayer } from "../../shared/types"
 
 export const calculateAverage = (array: number[]) => {
   return array.reduce((a,b) => a + b) / array.length
 }
 
-export const calculateAvgPoints = (player: Player, startWeek: number, endWeek: number) => {
+export const calculateBasicStatsForPlayers = (players: Player[], startWeek: number, endWeek: number) => {
+  const calculatedPlayers: CalculatedPlayer[] = []
+
+  players.forEach(p => {
+    const avgPoints = calculateAvgPoints(p, startWeek, endWeek) 
+    const stdDev = calculateStdDev(p, startWeek, endWeek)
+    const gp = calculateGP(p, startWeek, endWeek)
+
+    calculatedPlayers.push({
+      ...p,
+      fantasyPositions: p.fantasyPositions as SleeperPosition[],
+      avgPoints,
+      stdDev,
+      gp,
+    })
+  })
+
+  return calculatedPlayers
+}
+
+const calculateAvgPoints = (player: Player, startWeek: number, endWeek: number) => {
   const relevantWeeks = player.weeklyStats.filter(w => w.weekNumber >= startWeek && w.weekNumber <= endWeek)
   if(relevantWeeks.length === 0) return 0
   return calculateAverage(relevantWeeks.map(w => w.ptsPPR))
 }
 
-export const calculateStdDev = (player: Player, startWeek: number, endWeek: number) => {
+const calculateStdDev = (player: Player, startWeek: number, endWeek: number) => {
   const relevantWeeks = player.weeklyStats.filter(w => w.weekNumber >= startWeek && w.weekNumber <= endWeek)
   if(relevantWeeks.length === 0) return 0
   return Number(std(relevantWeeks.map(w => w.ptsPPR)))
 }
 
-export const calculateGP = (player: Player, startWeek: number, endWeek: number) => {
+const calculateGP = (player: Player, startWeek: number, endWeek: number) => {
   const relevantWeeks = player.weeklyStats.filter(w => w.weekNumber >= startWeek && w.weekNumber <= endWeek)
   if(relevantWeeks.length === 0) return 0
   return relevantWeeks.length 

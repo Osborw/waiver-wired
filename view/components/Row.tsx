@@ -1,7 +1,7 @@
 import IndividualGraph from './IndividualGraph'
 import styled from 'styled-components'
 import { useState, useEffect } from 'react'
-import { SearchPosition, SleeperPosition, WeeklyStats } from '../../shared/types'
+import { CalculatedPlayer, Roster, SearchPosition, SleeperPosition, WeeklyStats } from '../../shared/types'
 import { TimeFrame } from './TimeFrameSelector'
 import { View } from './ViewSelector'
 
@@ -177,6 +177,81 @@ export const Row = ({
               stdDev={stdDev}
               position={selectedPosition}
               timeFrame={timeFrame}
+            />
+          }
+        </Graph>
+      )}
+    </RowComponent>
+  )
+}
+
+
+interface RosterTitleRowProps {
+  toggleAllVisible: () => void
+}
+
+export const RosterTitleRow = ({ toggleAllVisible }: RosterTitleRowProps) => {
+  return (
+    <TitleRowComponent>
+      <Cell>{'Position'}</Cell>
+      <Cell inputsize={NameFieldLength}>{'Name'}</Cell>
+      <Cell>{'Games Played'}</Cell>
+      <Cell inputsize={AvgPPRFieldLength}>{'Average PPR'}</Cell>
+      <Cell inputsize={AvgPPRFieldLength}>{'Standard Deviation'}</Cell>
+      <Cell>
+        <button
+          onClick={() => toggleAllVisible()}
+        >
+          ^ Close All ^
+        </button>
+      </Cell>
+    </TitleRowComponent>
+  )
+}
+
+interface RosterRowProps {
+  player: CalculatedPlayer 
+  position: SearchPosition
+  allVisible: boolean
+}
+
+export const RosterRow = ({
+  player,
+  position,
+  allVisible,
+}: RosterRowProps) => {
+  const [individualGraphVisible, toggleIndividualGraphVisibility] = useState(
+    false,
+  )
+
+  //all Visible changes when someone click the close all button
+  useEffect(() => {
+    toggleIndividualGraphVisibility(false)
+  }, [allVisible])
+
+  return (
+    <RowComponent
+      onClick={() => toggleIndividualGraphVisibility(!individualGraphVisible)}
+    >
+      <Cells>
+        <Cell>{position}</Cell>
+        <Cell inputsize={NameFieldLength}>{player.fullName}</Cell>
+        <Cell>{player.gp}</Cell>
+        <Cell inputsize={AvgPPRFieldLength}>{player.avgPoints ? player.avgPoints.toFixed(2) : 0}</Cell>
+        <Cell inputsize={AvgPPRFieldLength}>
+          {(player.gp > 1 && player.stdDev) ? player.stdDev.toFixed(2) : '------'}
+        </Cell>
+        <Cell>{individualGraphVisible ? ' ˄ ' : ' ˅ '}</Cell>
+      </Cells>
+      {individualGraphVisible && (
+        <Graph>
+          {
+            <IndividualGraph
+              weeks={player.weeklyStats}
+              avg={player.avgPoints}
+              stdDev={player.stdDev}
+              position={position}
+              timeFrame={TimeFrame.fiveWeeks}
             />
           }
         </Graph>

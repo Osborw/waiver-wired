@@ -1,6 +1,6 @@
 import cors from '@fastify/cors'
-import { getTopPlayers } from './db/store'
-import { TopPlayerReturn } from '../shared/api-types'
+import { getRosters, getTopPlayers, getTrades } from './db/store'
+import { RostersReturn, TopPlayerReturn, TradesReturn } from '../shared/api-types'
 const fastify = require('fastify')({ logger: true })
 require('dotenv').config({ path: '../.env' })
 
@@ -11,6 +11,9 @@ const WEEK = parseInt(MAX_WEEK)
 
 const OWNER_ID = process.env.OWNER_ID
 if(!OWNER_ID) console.info('No OWNER_ID provided, please include a .env file with OWNER_ID if you would like to use that feature.')
+
+const LEAGUE_ID = process.env.SLEEPER_LEAGUE_ID
+if (!LEAGUE_ID) console.info('No SLEEPER_LEAGUE_ID provided, please include a .env file with SLEEPER_LEAGUE_ID if you want to use the roster feature')
 
 fastify.register(cors, {
   origin: true,
@@ -35,6 +38,31 @@ fastify.get('/fiveWeeks/:position', async (request: any, reply: any): Promise<To
 
   return {
     players: topPlayers,
+    ownerId: OWNER_ID
+  } 
+})
+
+fastify.get('/rosters', async (request: any, reply: any): Promise<RostersReturn> => {
+  console.log('--Call made from', request.hostname, '--')
+  const startWeek = WEEK - 5 < 1 ? 1 : WEEK - 4 
+  const rosters = await getRosters(startWeek, WEEK)
+  const trades = getTrades(rosters, OWNER_ID)
+
+  return {
+    rosters,
+    ownerId: OWNER_ID
+  } 
+})
+
+fastify.get('/trades', async (request: any, reply: any): Promise<TradesReturn> => {
+  console.log('--Call made from', request.hostname, '--')
+  const startWeek = WEEK - 5 < 1 ? 1 : WEEK - 4 
+  const rosters = await getRosters(startWeek, WEEK)
+  const trades = getTrades(rosters, OWNER_ID)
+
+  return {
+    rosters,
+    trades,
     ownerId: OWNER_ID
   } 
 })
