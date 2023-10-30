@@ -125,8 +125,8 @@ export const getTrades = (rosters: Roster[], ownerId?: string) => {
             const oppNewAvgPoints = rosterSumAvgStats(oppNewStartingLineup)
 
             if (
-              myNewAvgPoints - myRoster.avgPoints.startingStatSum > 2 &&
-              oppNewAvgPoints - oppRoster.avgPoints.startingStatSum > 2
+              myNewAvgPoints - myRoster.avgPoints.startingStatSum > 1 &&
+              oppNewAvgPoints - oppRoster.avgPoints.startingStatSum > 1
             ) {
               trades.push({
                 team1Owner: myRoster.ownerName,
