@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../components/MyLayout'
-import PositionSelector from '../components/PositionSelector'
-import { TimeFrameSelector, TimeFrame } from '../components/TimeFrameSelector'
-import { ViewSelector, View } from '../components/ViewSelector'
-import PlayerTable, { RosterTable } from '../components/PlayerTable'
-import PlayerGraph from '../components/PlayerGraph'
+import { RosterTable } from '../components/PlayerTable'
 import * as Get from '../server/getIndex'
-import { SearchPosition, Roster, RosterStat } from '../../shared/types'
+import { Roster, RosterStat } from '../../shared/types'
 import { styled } from 'styled-components'
 
 const niceRank = (rank: number) => {
@@ -81,7 +77,6 @@ const Index = () => {
     const ret = await Get.getRosters()
     setRosters(ret.rosters)
     console.log(ret.rosters)
-    console.log(ret.trades)
     setOwnerId(ret.ownerId)
   }
 

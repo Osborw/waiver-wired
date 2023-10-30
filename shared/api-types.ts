@@ -7,6 +7,11 @@ export interface TopPlayerReturn {
 
 export interface RostersReturn {
     rosters: Roster[]
+    ownerId?: string
+}
+
+export interface TradesReturn {
+    rosters: Roster[]
     trades: Trade[]
     ownerId?: string
 }

@@ -1,6 +1,6 @@
 import cors from '@fastify/cors'
 import { getRosters, getTopPlayers, getTrades } from './db/store'
-import { RostersReturn, TopPlayerReturn } from '../shared/api-types'
+import { RostersReturn, TopPlayerReturn, TradesReturn } from '../shared/api-types'
 const fastify = require('fastify')({ logger: true })
 require('dotenv').config({ path: '../.env' })
 
@@ -43,6 +43,18 @@ fastify.get('/fiveWeeks/:position', async (request: any, reply: any): Promise<To
 })
 
 fastify.get('/rosters', async (request: any, reply: any): Promise<RostersReturn> => {
+  console.log('--Call made from', request.hostname, '--')
+  const startWeek = WEEK - 5 < 1 ? 1 : WEEK - 4 
+  const rosters = await getRosters(startWeek, WEEK)
+  const trades = getTrades(rosters, OWNER_ID)
+
+  return {
+    rosters,
+    ownerId: OWNER_ID
+  } 
+})
+
+fastify.get('/trades', async (request: any, reply: any): Promise<TradesReturn> => {
   console.log('--Call made from', request.hostname, '--')
   const startWeek = WEEK - 5 < 1 ? 1 : WEEK - 4 
   const rosters = await getRosters(startWeek, WEEK)

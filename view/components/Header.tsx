@@ -12,6 +12,9 @@ const Header = () => (
     <Link href="/rosters" style={linkStyle}>
       Rosters 
     </Link>
+    <Link href="/trades" style={linkStyle}>
+      Trades 
+    </Link>
     <Link href="/about" style={linkStyle}>
       About
     </Link>
