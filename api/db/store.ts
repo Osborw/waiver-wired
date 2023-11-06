@@ -86,7 +86,7 @@ export const getRosters = async (startWeek: number, endWeek: number) => {
   })
 
   fillInRosterRanks(rosters)
-  rosters.sort((a,b) => b.avgPoints.startingStatSum - a.avgPoints.startingStatSum)
+  rosters.sort((a, b) => b.avgPoints.startingStatSum - a.avgPoints.startingStatSum)
   return rosters
 }
 
@@ -107,10 +107,10 @@ export const getTrades = (rosters: Roster[], ownerId?: string) => {
             if (l !== oppRoster.fullRoster.length) oppTradePlayers.push(oppRoster.fullRoster[l])
 
             const myFullRoster = myRoster.fullRoster.slice(0)
-            if(j !== myRoster.fullRoster.length) myFullRoster.splice(j, 1)
+            if (j !== myRoster.fullRoster.length) myFullRoster.splice(j, 1)
             myFullRoster.splice(i, 1)
             const oppFullRoster = oppRoster.fullRoster.slice(0)
-            if(l !== oppRoster.fullRoster.length) oppFullRoster.splice(l, 1)
+            if (l !== oppRoster.fullRoster.length) oppFullRoster.splice(l, 1)
             oppFullRoster.splice(k, 1)
 
             myFullRoster.push(...oppTradePlayers)
@@ -122,18 +122,20 @@ export const getTrades = (rosters: Roster[], ownerId?: string) => {
             const myNewAvgPoints = rosterSumAvgStats(myNewStartingLineup)
             const oppNewAvgPoints = rosterSumAvgStats(oppNewStartingLineup)
 
+            const trade: Trade = {
+              team1Owner: myRoster.ownerName,
+              team2Owner: oppRoster.ownerName,
+              team1Players: myTradePlayers,
+              team2Players: oppTradePlayers,
+              team1Improvement: myNewAvgPoints - myRoster.avgPoints.startingStatSum,
+              team2Improvement: oppNewAvgPoints - oppRoster.avgPoints.startingStatSum,
+            }
+
             if (
               myNewAvgPoints - myRoster.avgPoints.startingStatSum > 2 &&
               oppNewAvgPoints - oppRoster.avgPoints.startingStatSum > 2
             ) {
-              trades.push({
-                team1Owner: myRoster.ownerName,
-                team2Owner: oppRoster.ownerName,
-                team1Players: myTradePlayers,
-                team2Players: oppTradePlayers,
-                team1Improvement: myNewAvgPoints - myRoster.avgPoints.startingStatSum,
-                team2Improvement: oppNewAvgPoints - oppRoster.avgPoints.startingStatSum,
-              })
+              trades.push(trade)
             }
           }
         }
