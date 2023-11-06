@@ -1,4 +1,4 @@
-import { TieredPlayer, SearchPosition, Roster, Lineup } from '../../shared/types'
+import { TieredPlayer, SearchPosition, Roster } from '../../shared/types'
 import { convertSearchPositionToSleeperPosition } from '../../shared/position-logic'
 import { RosterRow, RosterTitleRow, Row, TitleRow } from './Row'
 import { useState, useEffect } from 'react'

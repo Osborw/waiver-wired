@@ -1,5 +1,5 @@
 import { readPlayers } from './readFile'
-import { Player, Roster, SearchPosition, SleeperPosition, Trade } from '../../shared/types'
+import { Player, Roster, SearchPosition, Trade } from '../../shared/types'
 import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
 import { getPlayersByPosition } from '../../shared/position-logic'
 import { createStartingLineup, fillInRosterRanks, rosterSumAvgStats, rosterSumStdDev } from './roster-logic'
