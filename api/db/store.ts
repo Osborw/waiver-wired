@@ -99,12 +99,10 @@ export const getTrades = (rosters: Roster[], ownerId?: string) => {
   rosters.forEach((oppRoster) => {
     for (let i = 0; i < myRoster.fullRoster.length; i++) {
       for (let j = i + 1; j < myRoster.fullRoster.length + 1; j++) {
-      // for (let j = myRoster.fullRoster.length; j < myRoster.fullRoster.length + 1; j++) {
         const myTradePlayers = [myRoster.fullRoster[i]]
         if (j !== myRoster.fullRoster.length) myTradePlayers.push(myRoster.fullRoster[j])
         for (let k = 0; k < oppRoster.fullRoster.length; k++) {
           for (let l = k + 1; l < oppRoster.fullRoster.length + 1; l++) {
-          // for (let l = oppRoster.fullRoster.length; l < oppRoster.fullRoster.length + 1; l++) {
             const oppTradePlayers = [oppRoster.fullRoster[k]]
             if (l !== oppRoster.fullRoster.length) oppTradePlayers.push(oppRoster.fullRoster[l])
 
@@ -125,8 +123,8 @@ export const getTrades = (rosters: Roster[], ownerId?: string) => {
             const oppNewAvgPoints = rosterSumAvgStats(oppNewStartingLineup)
 
             if (
-              myNewAvgPoints - myRoster.avgPoints.startingStatSum > 1 &&
-              oppNewAvgPoints - oppRoster.avgPoints.startingStatSum > 1
+              myNewAvgPoints - myRoster.avgPoints.startingStatSum > 2 &&
+              oppNewAvgPoints - oppRoster.avgPoints.startingStatSum > 2
             ) {
               trades.push({
                 team1Owner: myRoster.ownerName,

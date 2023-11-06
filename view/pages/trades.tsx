@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../components/MyLayout'
-import { RosterTable } from '../components/PlayerTable'
 import * as Get from '../server/getIndex'
-import { Roster, RosterStat, SleeperPosition, Trade } from '../../shared/types'
+import { Roster, SleeperPosition, Trade } from '../../shared/types'
 import { styled } from 'styled-components'
-import exp from 'constants'
 
 const TradeDiv = styled.div`
   display: flex;
@@ -88,7 +86,6 @@ const Index = () => {
       copyExpanded.splice(idx, 1)
       setExpanded(copyExpanded)
     } else {
-      console.log('toggline')
       setExpanded([...expanded, ownerId])
     }
   }
@@ -107,8 +104,7 @@ const Index = () => {
       <div>
         {owners.map((ownerId) => {
           const isExpanded = expanded.includes(ownerId)
-          const size = isExpanded ? 10 : 1
-          console.log({ size })
+          const size = isExpanded ? 100 : 1
           return (
             <div>
               <OwnerIdDiv>
