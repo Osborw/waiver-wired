@@ -15,12 +15,8 @@
     "@fastify/cors": "8.3.0",
     "@types/node-fetch": "^2.6.7",
     "dotenv": "16.3.1",
-    "esm": "3.2.25",
     "fastify": "4.23.2",
-    "fastify-autoload": "3.13.0",
-    "fs": "0.0.1-security",
     "mathjs": "11.11.0",
-    "node-fetch": "2.6.7",
-    "uuid": "9.0.0"
+    "node-fetch": "2.6.7"
   }
 }
