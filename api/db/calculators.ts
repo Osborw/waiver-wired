@@ -1,7 +1,7 @@
 import { std } from "mathjs"
 import { CalculatedPlayer, Player, SleeperPosition, TieredPlayer } from "../../shared/types"
 
-export const calculateAverage = (array: number[]) => {
+const calculateAverage = (array: number[]) => {
   return array.reduce((a,b) => a + b) / array.length
 }
 
