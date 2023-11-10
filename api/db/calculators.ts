@@ -11,6 +11,7 @@ export const calculateBasicStatsForPlayers = (players: Player[], startWeek: numb
   players.forEach(p => {
     const avgPoints = calculateAvgPoints(p, startWeek, endWeek) 
     const stdDev = calculateStdDev(p, startWeek, endWeek)
+    const opponentCorrelation = calculateOpponentCorrelation(p, startWeek, endWeek)
     const gp = calculateGP(p, startWeek, endWeek)
 
     calculatedPlayers.push({
@@ -18,6 +19,7 @@ export const calculateBasicStatsForPlayers = (players: Player[], startWeek: numb
       fantasyPositions: p.fantasyPositions as SleeperPosition[],
       avgPoints,
       stdDev,
+      opponentCorrelation,
       gp,
     })
   })
@@ -35,6 +37,10 @@ const calculateStdDev = (player: Player, startWeek: number, endWeek: number) => 
   const relevantWeeks = player.weeklyStats.filter(w => w.weekNumber >= startWeek && w.weekNumber <= endWeek)
   if(relevantWeeks.length === 0) return 0
   return Number(std(relevantWeeks.map(w => w.ptsPPR)))
+}
+
+const calculateOpponentCorrelation = (player: Player, startWeek: number, endWeek: number) => {
+
 }
 
 const calculateGP = (player: Player, startWeek: number, endWeek: number) => {

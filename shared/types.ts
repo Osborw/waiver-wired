@@ -66,12 +66,50 @@ export interface WeeklyStats {
   weekNumber: number
   ptsPPR: number
   gp: number
+  opponentId: string
+}
+
+export interface SleeperGame {
+  id: string
+  away: string
+  home: string
+  teams: string[]
+  week: number
+  date: string
+  status: GameStatus
+}
+
+export enum GameStatus {
+  Complete = 'Complete',
+  PreGame = 'PreGame'
+}
+
+export interface FantasyPtsAllowedWeeklyStats {
+  id: string
+  weekNumber: number
+  fantasyPtsAllowedQB: number
+  fantasyPtsAllowedRB: number
+  fantasyPtsAllowedWR: number
+  fantasyPtsAllowedTE: number
+  fantasyPtsAllowedK: number
+  opponentId: string
+}
+
+export interface TeamRanks {
+  id: string
+  weeks: FantasyPtsAllowedWeeklyStats
+  avgFantasyPtsAllowedQB: number
+  avgFantasyPtsAllowedRB: number
+  avgFantasyPtsAllowedWR: number
+  avgFantasyPtsAllowedTE: number
+  avgFantasyPtsAllowedK: number
 }
 
 export interface CalculatedPlayer extends Player {
   fantasyPositions: SleeperPosition[]
   avgPoints: number
   stdDev: number
+  opponentCorrelation: number
   gp: number
   tier?: number
   tierDiff?: number
