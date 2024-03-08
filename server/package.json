@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node server",
-    "build": "tsc"
+    "start-api": "ts-node api/server",
+    "start-read": "ts-node read/main"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",

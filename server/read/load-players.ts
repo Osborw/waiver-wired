@@ -90,6 +90,8 @@ const getPlayerData = async (url: string) => {
     })
 
     console.log('num players loaded:', Object.keys(allUnitsObj).length)
+    
+    //write it to db
     const allUnitsString = JSON.stringify(allUnitsObj)
     fs.writeFileSync(`${filePath}/units.json`, allUnitsString, 'utf8')
 }

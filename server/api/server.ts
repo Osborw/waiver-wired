@@ -1,6 +1,6 @@
 import cors from '@fastify/cors'
-import { getRosters, getTopPlayers, getTrades } from './db/store'
-import { RostersReturn, TopPlayerReturn, TradesReturn } from '../shared/api-types'
+import { getRosters, getTopPlayers, getTrades } from './store'
+import { RostersReturn, TopPlayerReturn, TradesReturn } from '../../shared/api-types'
 const fastify = require('fastify')({ logger: true })
 require('dotenv').config({ path: '../.env' })
 
