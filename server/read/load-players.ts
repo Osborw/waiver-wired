@@ -1,9 +1,6 @@
 import fetch from 'node-fetch'
-import fs from 'fs'
-import path from 'path'
 import { SleeperInjuryStatus, SleeperPlayer, SleeperPosition, SleeperUnit } from '../../shared/types'
-
-const filePath = path.resolve('files')
+import { writeUnits } from './db-write'
 
 // READ IN PLAYERS
 export const loadPlayers= async () => {
@@ -92,6 +89,5 @@ const getPlayerData = async (url: string) => {
     console.log('num players loaded:', Object.keys(allUnitsObj).length)
     
     //write it to db
-    const allUnitsString = JSON.stringify(allUnitsObj)
-    fs.writeFileSync(`${filePath}/units.json`, allUnitsString, 'utf8')
+    writeUnits(allUnitsObj)
 }

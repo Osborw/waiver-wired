@@ -1,4 +1,3 @@
-import { sort } from 'mathjs'
 import {
   CalculatedPlayer,
   Lineup,

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-api": "ts-node api/server",
+    "start-api": "ts-node api/main",
     "start-read": "ts-node read/main",
     "build-api": "node build.mjs -api",
     "build-read": "node build.mjs -read"

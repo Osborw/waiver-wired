@@ -1,7 +1,8 @@
 import fetch from 'node-fetch'
 import fs from 'fs'
 import path from 'path'
-import { Player, SleeperUnit } from '../../shared/types'
+import { Player } from '../../shared/types'
+import { writePlayers } from './db-write'
 
 const filePath = path.resolve('files')
 
@@ -37,6 +38,5 @@ const getRosterData = async (url: string) => {
         })
     })
 
-    const allPlayersString = JSON.stringify(allPlayersObj)
-    fs.writeFileSync(`${filePath}/players.json`, allPlayersString, 'utf8')
+    writePlayers(allPlayersObj)
 }

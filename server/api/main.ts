@@ -46,7 +46,6 @@ fastify.get('/rosters', async (request: any, reply: any): Promise<RostersReturn>
   console.log('--Call made from', request.hostname, '--')
   const startWeek = WEEK - 5 < 1 ? 1 : WEEK - 4 
   const rosters = await getRosters(startWeek, WEEK)
-  const trades = getTrades(rosters, OWNER_ID)
 
   return {
     rosters,
