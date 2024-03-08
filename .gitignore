@@ -2,3 +2,4 @@ node_modules
 .next
 read/files/*
 .env
+build/
