@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { SleeperInjuryStatus, SleeperPlayer, SleeperPosition, SleeperUnit } from '../../shared/types'
-import { writeUnits } from './db-write'
+import { writeUnits } from '../dbs/main'
 
 // READ IN PLAYERS
 export const loadPlayers= async () => {

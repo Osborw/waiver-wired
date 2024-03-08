@@ -1,10 +1,5 @@
 import fetch from 'node-fetch'
-import fs from 'fs'
-import path from 'path'
-import { Player } from '../../shared/types'
-import { writePlayers } from './db-write'
-
-const filePath = path.resolve('files')
+import { readPlayers, writePlayers } from '../dbs/main'
 
 export const loadRosters = async (leagueId: string) => {
     console.log('Loading rosters')
@@ -26,7 +21,7 @@ const getRosterData = async (url: string) => {
         data = []
     }
 
-    const allPlayersObj: Record<string, Player> = JSON.parse((await fs.promises.readFile(`${filePath}/players.json`)).toString())
+    const allPlayersObj = await readPlayers() 
 
     data.forEach(async (roster : any) => {
         const id = roster.owner_id
