@@ -1,5 +1,5 @@
 ## Waiver Wired
-A React/JS app for collection and view of weekly fantasy football statistics to improve your waiver wire picks.
+A React/TS app for collection and view of weekly fantasy football statistics to improve your waiver wire picks.
 
 ### View Players and their Season Trends
 <img src="https://github.com/Osborw/waiver-wired/assets/32249906/c993d0bd-ce65-47fe-bc91-4a9ec714ff4a" width="800">
@@ -24,17 +24,16 @@ WEEK=2 #Required - Latest week with stats (update this weekly)
 This collects player statistics for the season to calculate PPR scoring and stores them locally to be used by the app.
 
 ```
-mkdir files
-cd read
+cd server 
 npm i
-npm run start
+npm run start-read
 ```
 
-### Server
+### API 
 ```
-cd api
+cd server 
 npm i
-npm run start
+npm run start-api 
 ```
 
 ### UI
