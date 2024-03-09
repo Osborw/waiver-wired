@@ -1,9 +1,9 @@
-import { readPlayers } from './readFile'
 import { Player, Roster, SearchPosition, Trade } from '../../shared/types'
 import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
 import { getPlayersByPosition } from '../../shared/position-logic'
 import { createStartingLineup, fillInRosterRanks, rosterSumAvgStats, rosterSumStdDev } from './roster-logic'
 import { getOwnerName } from './external-calls'
+import { readPlayers } from '../dbs/main'
 
 export const getTopPlayers = async (position: SearchPosition, startWeek: number, endWeek: number) => {
   const players = await readPlayers()

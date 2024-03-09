@@ -4,10 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node server",
-    "build": "tsc"
+    "start-api": "ts-node api/main",
+    "start-read": "ts-node read/main",
+    "build-api": "node build.mjs -api",
+    "build-read": "node build.mjs -read"
+  },
+  "prettier": {
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
   },
   "devDependencies": {
+    "esbuild": "^0.20.1",
+    "prettier": "^3.2.5",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },

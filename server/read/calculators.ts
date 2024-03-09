@@ -1,4 +1,4 @@
-import {round, std} from 'mathjs'
+import { round } from 'mathjs'
 import { FantasyStats } from '../../shared/types'
 
 export const calculatePPR = (data: Partial<FantasyStats>) => {

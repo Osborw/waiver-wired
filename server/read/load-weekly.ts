@@ -1,16 +1,8 @@
 import fetch from 'node-fetch'
-import fs from 'fs'
-import path from 'path'
-import { FantasyStats, Player, SleeperPosition, SleeperUnit, WeeklyStats } from '../../shared/types'
+import { Player, SleeperPosition, WeeklyStats } from '../../shared/types'
 import { calculateDefPPR, calculatePPR } from './calculators'
 import { mapWeekDataToFantasyStats } from './mapper'
-
-const filePath = path.resolve('files')
-
-const parseJSON = (filename: string) => {
-    const rawdata = fs.readFileSync(`files/${filename}`).toString()
-    return JSON.parse(rawdata)
-}
+import { readUnits, writePlayers } from '../dbs/main'
 
 // READ IN Weekly STATS
 export const loadWeeklyStats = async (maxWeeks: number, year: number) => {
@@ -35,7 +27,7 @@ export const loadWeeklyStats = async (maxWeeks: number, year: number) => {
             return
         }
 
-        const allUnitsObj: Record<string, SleeperUnit> = JSON.parse((await fs.promises.readFile(`${filePath}/units.json`)).toString())
+        const allUnitsObj = await readUnits()
 
         const ids = Object.keys(allUnitsObj)
 
@@ -77,8 +69,8 @@ export const loadWeeklyStats = async (maxWeeks: number, year: number) => {
         console.log(`done querying week ${week}`)
     }
 
-    const allPlayersString = JSON.stringify(playerObj)
-    fs.writeFileSync(`${filePath}/players.json`, allPlayersString, 'utf8')
+    //write to DB
+    writePlayers(playerObj)
 
     console.log('Loaded weekly stats')
 
