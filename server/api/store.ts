@@ -2,8 +2,12 @@ import { Player, Roster, SearchPosition, Trade } from '../../shared/types'
 import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
 import { getPlayersByPosition } from '../../shared/position-logic'
 import { createStartingLineup, fillInRosterRanks, rosterSumAvgStats, rosterSumStdDev } from './roster-logic'
-import { getOwnerName } from './external-calls'
 import { readPlayers } from '../dbs/main'
+import { getLeaguePositionsFromExternal, getOwnerName } from './data-mappers'
+
+export const getLeaguePositions = async (leagueId: string) => {
+  return await getLeaguePositionsFromExternal(leagueId)
+}
 
 export const getTopPlayers = async (position: SearchPosition, startWeek: number, endWeek: number) => {
   const players = await readPlayers()
@@ -20,11 +24,11 @@ export const getTopPlayers = async (position: SearchPosition, startWeek: number,
   return tiered
 }
 
-export const getRosters = async (startWeek: number, endWeek: number) => {
+export const getRosters = async (startWeek: number, endWeek: number, ownerId: string) => {
   const playersObj = await readPlayers()
   const players = Object.values(playersObj)
 
-  const ownedPlayers = players.filter((p) => !!p.ownerId)
+  const ownedPlayers = players.filter((p) => !!ownerId)
 
   const calculatedOwnedPlayers = calculateBasicStatsForPlayers(ownedPlayers, startWeek, endWeek)
 
@@ -34,6 +38,7 @@ export const getRosters = async (startWeek: number, endWeek: number) => {
 
   const rosters: Roster[] = []
 
+  //TODO: This object has to be more generic and better
   owners.map(async (ownerId, idx) => {
     const fullRoster = calculatedOwnedPlayers.filter((p) => p.ownerId === ownerId)
     const startingLineup = createStartingLineup(fullRoster)

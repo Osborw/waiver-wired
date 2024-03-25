@@ -8,22 +8,22 @@ export enum SleeperPosition {
 }
 
 export enum SearchPosition {
-    QB = 'QB',
-    RB = 'RB',
-    WR = 'WR',
-    TE = 'TE',
-    K = 'K',
-    DEF = 'DEF',
-    FLEX = 'FLEX',
+  QB = 'QB',
+  RB = 'RB',
+  WR = 'WR',
+  TE = 'TE',
+  K = 'K',
+  DEF = 'DEF',
+  FLEX = 'FLEX',
 }
 
 export enum SleeperInjuryStatus {
   IR = 'IR',
-  Out = "Out",
-  Questionable = "Questionable",
+  Out = 'Out',
+  Questionable = 'Questionable',
   NA = 'NA',
   PUP = 'PUP',
-  Sus = 'SUS'
+  Sus = 'SUS',
 }
 
 export interface SleeperUnit {
@@ -58,14 +58,17 @@ export interface Player {
   injuryStatus: SleeperInjuryStatus | null
 
   weeklyStats: WeeklyStats[]
-  ownerId: string | null
 }
 
 export interface WeeklyStats {
   id: string
   weekNumber: number
-  ptsPPR: number
   gp: number
+  weekStats: Partial<FantasyStats>
+}
+
+export interface CalculatedWeeklyStats extends WeeklyStats {
+  fantasyPoints: number
 }
 
 export interface CalculatedPlayer extends Player {
@@ -73,6 +76,7 @@ export interface CalculatedPlayer extends Player {
   avgPoints: number
   stdDev: number
   gp: number
+  ownerId: string | null
   tier?: number
   tierDiff?: number
 }
@@ -98,10 +102,9 @@ export interface Lineup {
 }
 
 export interface Roster {
-
   ownerId: string
   ownerName: string
-  startingLineup: Lineup 
+  startingLineup: Lineup
   fullRoster: CalculatedPlayer[]
 
   avgPoints: RosterStat
@@ -114,13 +117,12 @@ export interface Roster {
   FLEX: RosterStat
   K: RosterStat
   DEF: RosterStat
-  
 }
 
 export interface Trade {
   team1Owner: string
   team2Owner: string
-  team1Players: CalculatedPlayer[],
+  team1Players: CalculatedPlayer[]
   team2Players: CalculatedPlayer[]
   team1Improvement: number
   team2Improvement: number
@@ -281,7 +283,7 @@ export interface FantasyStats {
   stTd: number
   stTklSolo: number
   xpBlkd: number
-  
+
   anytimeTds: number
   ff: number
   ffMisc: number
