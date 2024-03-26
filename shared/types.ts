@@ -91,32 +91,15 @@ export interface RosterStat {
   rank: number
 }
 
-export interface Lineup {
-  QB: CalculatedPlayer[]
-  RB: CalculatedPlayer[]
-  WR: CalculatedPlayer[]
-  TE: CalculatedPlayer[]
-  FLEX: CalculatedPlayer[]
-  K: CalculatedPlayer[]
-  DEF: CalculatedPlayer[]
-}
-
 export interface Roster {
   ownerId: string
   ownerName: string
-  startingLineup: Lineup
+  calculatedStarters: CalculatedPlayer[] 
+  starters: CalculatedPlayer[]
   fullRoster: CalculatedPlayer[]
 
   avgPoints: RosterStat
   stdDev: RosterStat
-
-  QB: RosterStat
-  RB: RosterStat
-  WR: RosterStat
-  TE: RosterStat
-  FLEX: RosterStat
-  K: RosterStat
-  DEF: RosterStat
 }
 
 export interface Trade {

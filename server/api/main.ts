@@ -24,7 +24,7 @@ fastify.get('/league/:userid/:leagueid', async (request: any, reply: any): Promi
   console.log('--Call made from', request.hostname, '--')
 
   //TODO: Value sanitization/checking
-  const userId = request.params.userId
+  const ownerId = request.params.userId
   const leagueId = request.params.leagueId
 
   const startWeek = WEEK - 5 < 1 ? 1 : WEEK - 4 
@@ -57,7 +57,7 @@ fastify.get('/league/:userid/:leagueid', async (request: any, reply: any): Promi
   })
 
   //get rosters
-  const rosters = await getRosters(startWeek, WEEK) //not sure why we need startweek here
+  const rosters = await getRosters(startWeek, WEEK, ownerId, positions) //not sure why we need startweek here
   //get trades
   const trades = getTrades(rosters, userId)
 

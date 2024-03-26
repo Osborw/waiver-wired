@@ -1,5 +1,5 @@
-import { SearchPosition } from "../../shared/types"
-import { getLeague, getOwner } from "./external-calls"
+import { Roster, SearchPosition } from "../../shared/types"
+import { getLeague, getOwner, getRosters } from "./external-calls"
 
 //TOOD: add error checking
 export const getOwnerName = async (ownerId: string): Promise<string> => {
@@ -27,4 +27,15 @@ export const getLeaguePositionsFromExternal = async (leagueId: string): Promise<
   }
 
   return validSearchPositions
+}
+
+export const getRostersFromExternal = async (leagueId: string): Promise<Roster[]> => {
+  const rosterData = await getRosters(leagueId)
+
+  //sanitize and validate
+  const starters = rosterData.starters as string[]
+  const ownerId = rosterData.owner_id as string 
+  const players = rosterData.players as string[]
+
+  return 
 }

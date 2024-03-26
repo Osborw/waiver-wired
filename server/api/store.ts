@@ -3,7 +3,7 @@ import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
 import { getPlayersByPosition } from '../../shared/position-logic'
 import { createStartingLineup, fillInRosterRanks, rosterSumAvgStats, rosterSumStdDev } from './roster-logic'
 import { readPlayers } from '../dbs/main'
-import { getLeaguePositionsFromExternal, getOwnerName } from './data-mappers'
+import { getLeaguePositionsFromExternal, getOwnerName, getRostersFromExternal } from './data-mappers'
 
 export const getLeaguePositions = async (leagueId: string) => {
   return await getLeaguePositionsFromExternal(leagueId)
@@ -24,13 +24,15 @@ export const getTopPlayers = async (position: SearchPosition, startWeek: number,
   return tiered
 }
 
-export const getRosters = async (startWeek: number, endWeek: number, ownerId: string) => {
+export const getRosters = async (startWeek: number, endWeek: number, ownerId: string, leagueId: string, positions: SearchPosition[]) => {
   const playersObj = await readPlayers()
   const players = Object.values(playersObj)
 
-  const ownedPlayers = players.filter((p) => !!ownerId)
+  const rostersFromExternal = await getRostersFromExternal(leagueId)
 
-  const calculatedOwnedPlayers = calculateBasicStatsForPlayers(ownedPlayers, startWeek, endWeek)
+  const ownedPlayers = players.filter((p) => !!p.)
+
+  const calculatedOwnedPlayers = calculateBasicStatsForPlayers(ownedPlayers, startWeek, endWeek, ownerId)
 
   const owners = Array.from(new Set(calculatedOwnedPlayers.map((p) => p.ownerId)) as Set<string>)
 

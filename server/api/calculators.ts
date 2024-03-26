@@ -5,7 +5,7 @@ const calculateAverage = (array: number[]) => {
   return array.reduce((a,b) => a + b) / array.length
 }
 
-export const calculateBasicStatsForPlayers = (players: Player[], startWeek: number, endWeek: number) => {
+export const calculateBasicStatsForPlayers = (players: Player[], startWeek: number, endWeek: number, ownerId: string) => {
   const calculatedPlayers: CalculatedPlayer[] = []
 
   players.forEach(p => {
@@ -15,6 +15,7 @@ export const calculateBasicStatsForPlayers = (players: Player[], startWeek: numb
 
     calculatedPlayers.push({
       ...p,
+      ownerId,
       fantasyPositions: p.fantasyPositions as SleeperPosition[],
       avgPoints,
       stdDev,
