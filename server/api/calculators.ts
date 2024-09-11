@@ -1,4 +1,4 @@
-import math, { std } from "mathjs"
+import { std, max } from "mathjs"
 import { FantasyStats, CalculatedPlayer, Player, SleeperPosition, TieredPlayer, WeekWindow } from "../../shared/types"
 
 const calculateAverage = (array: number[]) => {
@@ -20,7 +20,7 @@ export const calculateBasicStatsForPlayers = ({
   rosteredPlayers
 }: CalculateBasicStatsForPlayersProps) => {
   const calculatedPlayers: CalculatedPlayer[] = []
-  const fiveWeeksAgo = math.max(endWeek - 5, 1)
+  const fiveWeeksAgo = max(endWeek - 5, 1)
 
   players.forEach(p => {
     calculatePtsPerWeek(p, endWeek, leagueScoringSettings)

@@ -38,6 +38,12 @@ fastify.register(cors, {
 fastify.get(
   '/league/:userid/:leagueid',
   async (request: any, reply: any): Promise<LeagueReturn> => {
+
+    /**
+     * TODO: This call should get a uuid value (perhaps with leagueId, userId)
+     * So that, on any error, we can tell the user to send this UUID to me
+     * and it's easier for me to look through the logs and find the error
+     */
     console.log('--Call made from', request.hostname, '--')
 
     //TODO: Value sanitization/checking
@@ -72,29 +78,24 @@ fastify.get(
     const playersReturn: TopPlayerReturn[] = []
 
     //topX YTD and topX 5weeks
-    leagueValidRosterPositions.map(async (pos) => {
+    leagueValidRosterPositions.map((pos) => {
       //get topPlayers for season
       //get topPlayers for 5 weeks
-      const topPlayersPromise = makeTopPlayers({
+      const topPlayers = makeTopPlayers({
         position: pos,
         players: calculatedPlayers,
         weekWindow: WeekWindow.Season,
       })
-      const top5WeekPlayersPromise = makeTopPlayers({
+      const top5WeekPlayers = makeTopPlayers({
         position: pos,
         players: calculatedPlayers,
         weekWindow: WeekWindow.FiveWeek,
       })
 
-      const promisesComplete = await Promise.all([
-        topPlayersPromise,
-        top5WeekPlayersPromise,
-      ])
-
       const positionsObject: TopPlayerReturn = {
         position: pos,
-        topPlayers: promisesComplete[0],
-        top5WeekPlayers: promisesComplete[1],
+        topPlayers,
+        top5WeekPlayers,
       }
 
       playersReturn.push(positionsObject)

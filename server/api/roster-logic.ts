@@ -24,7 +24,7 @@ const playsPosition = (player: CalculatedPlayer, pos: SearchPosition) => {
 
   let matching = false
   sleeperPositions.forEach((sleeperPosition) => {
-    if (player.fantasyPositions.includes(sleeperPosition)) matching = true
+    if (player.fantasyPositions && player.fantasyPositions.includes(sleeperPosition)) matching = true
   })
 
   return matching

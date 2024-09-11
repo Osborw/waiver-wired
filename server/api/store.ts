@@ -70,7 +70,7 @@ interface GetTopPlayersProps {
   players: CalculatedPlayer[]
 }
 
-export const makeTopPlayers = async ({
+export const makeTopPlayers = ({
   position,
   weekWindow,
   players,
@@ -100,7 +100,7 @@ export const makeRosters = async ({
   leagueValidRosterPositions,
   sleeperUserMetadata,
 }: MakeRostersProps) => {
-  const ownedPlayers = players.filter((p) => !!p)
+  const ownedPlayers = players.filter((p) => !!p.ownerId)
 
   const owners = Array.from(
     new Set(ownedPlayers.map((p) => p.ownerId)) as Set<string>,
@@ -109,7 +109,7 @@ export const makeRosters = async ({
   const rosters: Roster[] = []
 
   //TODO: This object has to be more generic and better
-  owners.map(async (ownerId, idx) => {
+  owners.forEach(async (ownerId) => {
     const fullRoster = ownedPlayers.filter((p) => p.ownerId === ownerId)
     const startingLineup = createStartingLineup(fullRoster, leagueRosterSpots)
     const startingPlayers = Object.values(startingLineup)
@@ -117,8 +117,8 @@ export const makeRosters = async ({
     //For each owner id create a Roster object
     const roster: Roster = {
       ownerId,
-      ownerName: sleeperUserMetadata[ownerId].displayName,
-      teamName: sleeperUserMetadata[ownerId].teamName,
+      ownerName: sleeperUserMetadata[ownerId]?.displayName ?? `Owner ${ownerId}`,
+      teamName: sleeperUserMetadata[ownerId]?.teamName ?? `Team ${ownerId}`,
       fullRoster,
       starters: startingLineup,
       avgPoints: {

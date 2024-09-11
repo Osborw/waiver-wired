@@ -279,10 +279,12 @@ export interface FantasyStats {
   kr: number
   krLng: number
   krYd: number
+  krTd: number
   miscRetYd: number
   pr: number
   prLng: number
   prYd: number
+  prTd: number
   prYpa: number
   puntBlkd: number
   puntIn20: number
@@ -338,11 +340,13 @@ export interface FantasyStats {
   defKr: number
   defKrLng: number
   defKrYd: number
+  defKrTd: number
   defKrYpa: number
   defPassDef: number
   defPr: number
   defPrLng: number
   defPrYd: number
+  defPrTd: number
   defPrYpa: number
   defStFF: number
   defStFumRec: number

@@ -1,4 +1,4 @@
-import { mapWeekDataToFantasyStats } from "../../shared/stats-mapper"
+import { mapWeekDataToFantasyStats, sleeperStatKeys } from "../../shared/stats-mapper"
 import { FantasyStats, SearchPosition } from "../../shared/types"
 import { getLeague, getLeagueUsers, getRosters } from "./external-calls"
 
@@ -44,15 +44,11 @@ const getLeagueScoringSettings = (rawScoringSettings: any, leagueId: string): Pa
   const scoringSettings = mapWeekDataToFantasyStats(rawScoringSettings)
 
   //Error checking
-  const givenScoringKeys = Object.keys(rawScoringSettings)
-  const foundScoringKeys = Object.keys(scoringSettings)
-  const missingKeys: string[] = []
-
-  givenScoringKeys.forEach(given => {
-    if (!foundScoringKeys.includes(given)) missingKeys.push(given)
-  })
+  const sleeperScoringKeys = Object.keys(rawScoringSettings)
+  const missingKeys = sleeperScoringKeys.filter(x => !sleeperStatKeys.includes(x));
 
   if (missingKeys.length > 0){
+    //this should return some error to the console for debugging
     console.error(`Error getting scoring settings with leagueId: ${leagueId}`, `Given unknown keys: ${JSON.stringify(missingKeys)}`)
     throw new Error(`invalid settings recieved from league request with leagueId; ${leagueId}`)
   }
