@@ -1,41 +1,78 @@
-import { std, round } from "mathjs"
-import { FantasyStats, CalculatedPlayer, Player, SleeperPosition, TieredPlayer } from "../../shared/types"
+import math, { std } from "mathjs"
+import { FantasyStats, CalculatedPlayer, Player, SleeperPosition, TieredPlayer, WeekWindow } from "../../shared/types"
 
 const calculateAverage = (array: number[]) => {
   return array.reduce((a,b) => a + b) / array.length
 }
 
-export const calculateBasicStatsForPlayers = (players: Player[], startWeek: number, endWeek: number, ownerId: string) => {
+interface CalculateBasicStatsForPlayersProps {
+  players: Player[],
+  startWeek: number,
+  endWeek: number,
+  leagueScoringSettings: Partial<FantasyStats>
+  rosteredPlayers: Record<string, string>
+}
+
+export const calculateBasicStatsForPlayers = ({
+  players,
+  endWeek,
+  leagueScoringSettings,
+  rosteredPlayers
+}: CalculateBasicStatsForPlayersProps) => {
   const calculatedPlayers: CalculatedPlayer[] = []
+  const fiveWeeksAgo = math.max(endWeek - 5, 1)
 
   players.forEach(p => {
-    const avgPoints = calculateAvgPoints(p, startWeek, endWeek) 
-    const stdDev = calculateStdDev(p, startWeek, endWeek)
-    const gp = calculateGP(p, startWeek, endWeek)
+    calculatePtsPerWeek(p, endWeek, leagueScoringSettings)
 
     calculatedPlayers.push({
       ...p,
-      ownerId,
+      ownerId: rosteredPlayers[p.id] || null,
       fantasyPositions: p.fantasyPositions as SleeperPosition[],
-      avgPoints,
-      stdDev,
-      gp,
+      seasonMetrics: {
+        avgPoints: calculateAvgPoints(p, 1, endWeek), 
+        stdDev: calculateStdDev(p, 1, endWeek),
+        gp: calculateGP(p, 1, endWeek)
+      },
+      fiveWeekMetrics: {
+        avgPoints: calculateAvgPoints(p, fiveWeeksAgo, endWeek), 
+        stdDev: calculateStdDev(p, fiveWeeksAgo, endWeek),
+        gp: calculateGP(p, 1, endWeek)
+      }
     })
   })
 
   return calculatedPlayers
 }
 
+const calculatePtsPerWeek = (player: Player, endWeek: number, leagueScoringSettings: Partial<FantasyStats>) => {
+  const relevantWeeks = player.weeklyStats.filter(w => w.weekNumber >= 1 && w.weekNumber <= endWeek)
+  relevantWeeks.forEach(week => {
+    if(week.gp > 0){
+      const stats = Object.entries(week.weekStats)
+      let totalWeeklyPts = 0
+      stats.forEach(([key, statValue]) => {
+        const keyTyped = key as keyof FantasyStats;
+        const pointValue = leagueScoringSettings[keyTyped] ?? 0 
+        const score = pointValue * statValue 
+        totalWeeklyPts += score
+      })
+
+      week.weekStats.weekScore = totalWeeklyPts
+    }
+  })
+}
+
 const calculateAvgPoints = (player: Player, startWeek: number, endWeek: number) => {
   const relevantWeeks = player.weeklyStats.filter(w => w.weekNumber >= startWeek && w.weekNumber <= endWeek)
   if(relevantWeeks.length === 0) return 0
-  return calculateAverage(relevantWeeks.map(w => w.ptsPPR))
+  return calculateAverage(relevantWeeks.map(w => w.weekStats.weekScore ?? 0))
 }
 
 const calculateStdDev = (player: Player, startWeek: number, endWeek: number) => {
   const relevantWeeks = player.weeklyStats.filter(w => w.weekNumber >= startWeek && w.weekNumber <= endWeek)
   if(relevantWeeks.length === 0) return 0
-  return Number(std(relevantWeeks.map(w => w.ptsPPR)))
+  return Number(std(relevantWeeks.map(w => w.weekStats.weekScore ?? 0)))
 }
 
 const calculateGP = (player: Player, startWeek: number, endWeek: number) => {
@@ -44,7 +81,7 @@ const calculateGP = (player: Player, startWeek: number, endWeek: number) => {
   return relevantWeeks.length 
 }
 
-export const calculateTiers = (players: CalculatedPlayer[]) => {
+export const calculateTiers = (players: CalculatedPlayer[], weekWindow: WeekWindow) => {
   /**
    * I tried to write this so it didn't need documentation, but the algo isn't really readable
    * Algo:
@@ -65,7 +102,10 @@ export const calculateTiers = (players: CalculatedPlayer[]) => {
   let startingIndex = 0
   while(startingIndex < players.length-1) {
     for(let endingIndex = startingIndex; endingIndex < players.length; endingIndex = endingIndex + 1) {
-      const selection = players.slice(startingIndex,endingIndex+1).map(p => p.avgPoints)
+      const selection = players.slice(startingIndex,endingIndex+1).map(p => {
+        if(weekWindow === WeekWindow.FiveWeek) return p.fiveWeekMetrics.avgPoints
+        else return p.seasonMetrics.avgPoints
+      })
       const stdDev = Number(std(selection))
       const avg = selection.reduce((a,b) => a + b) / selection.length
 
@@ -88,56 +128,4 @@ export const calculateTiers = (players: CalculatedPlayer[]) => {
   }
 
   return tiersList
-}
-
-
-
-export const calculatePPR = (data: Partial<FantasyStats>) => {
-
-    let ptsPPR = 
-    (data.passYd || 0) * .04 +
-    (data.passTd || 0) * 4 +
-    (data.pass2pt || 0) * 2 +
-    (data.passInt || 0) * -1 +
-    (data.rushYd || 0) * .1 +
-    (data.rushTd || 0) * 6 +
-    (data.rush2pt || 0) * 2 +
-    (data.rec || 0) * 1 +
-    (data.recYd || 0) * .1 +
-    (data.recTd || 0) * 6 +
-    (data.rec2pt || 0) * 2 +
-    (data.fgm0_19 || 0) * 3 +
-    (data.fgm20_29 || 0) * 3 +
-    (data.fgm30_39 || 0) * 3 +
-    (data.fgm40_49 || 0) * 4 +
-    (data.fgm50p || 0) * 5 +
-    (data.xpm || 0) * 1 +
-    (data.fgMiss || 0) * -1 +
-    (data.xpMiss || 0) * -1 +
-    (data.fum || 0) * -1
-
-    ptsPPR = round((ptsPPR + Number.EPSILON) * 100) / 100
-    return ptsPPR
-}
-
-export const calculateDefPPR = (data: Partial<FantasyStats>) => {
-
-    let ptsPPR = 
-    (data.ptsAllow0 || 0) * 10 + 
-    (data.ptsAllow1_6 || 0) * 7 + 
-    (data.ptsAllow7_13 || 0) * 4 + 
-    (data.ptsAllow14_20 || 0) + 
-    (data.ptsAllow28_34 || 0) * -1 + 
-    (data.ptsAllow35p || 0) * -4 + 
-    (data.defStFF || 0) +
-    (data.ff || 0) + 
-    (data.fumRec || 0) * 2 + 
-    (data.int || 0) * 2 + 
-    (data.sack || 0) + 
-    (data.defTd || 0) * 6 + 
-    (data.defStTd|| 0) * 6 + 
-    (data.safe || 0) * 2 + 
-    (data.def2Pt || 0) * 2
-
-    return ptsPPR
 }

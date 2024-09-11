@@ -17,6 +17,16 @@ export enum SearchPosition {
   FLEX = 'FLEX',
 }
 
+export const SearchPositionToSleeperPositionMapper = {
+  [SearchPosition.QB]: [SleeperPosition.QB],
+  [SearchPosition.RB]: [SleeperPosition.RB],
+  [SearchPosition.WR]: [SleeperPosition.WR],
+  [SearchPosition.TE]: [SleeperPosition.TE],
+  [SearchPosition.DEF]: [SleeperPosition.DEF],
+  [SearchPosition.K]: [SleeperPosition.K],
+  [SearchPosition.FLEX]: [SleeperPosition.RB, SleeperPosition.WR, SleeperPosition.TE],
+}
+
 export enum SleeperInjuryStatus {
   IR = 'IR',
   Out = 'Out',
@@ -24,6 +34,11 @@ export enum SleeperInjuryStatus {
   NA = 'NA',
   PUP = 'PUP',
   Sus = 'SUS',
+}
+
+export enum WeekWindow {
+  Season = 'season',
+  FiveWeek = 'fiveWeek',
 }
 
 export interface SleeperUnit {
@@ -71,14 +86,17 @@ export interface CalculatedWeeklyStats extends WeeklyStats {
   fantasyPoints: number
 }
 
-export interface CalculatedPlayer extends Player {
-  fantasyPositions: SleeperPosition[]
+export interface Metrics {
   avgPoints: number
   stdDev: number
   gp: number
+}
+
+export interface CalculatedPlayer extends Player {
+  fantasyPositions: SleeperPosition[]
+  seasonMetrics: Metrics
+  fiveWeekMetrics: Metrics
   ownerId: string | null
-  tier?: number
-  tierDiff?: number
 }
 
 export interface TieredPlayer extends CalculatedPlayer {
@@ -87,17 +105,26 @@ export interface TieredPlayer extends CalculatedPlayer {
 }
 
 export interface RosterStat {
-  startingStatSum: number
+  totalPoints: number
   rank: number
+}
+
+export interface PositionRosterStat extends RosterStat {
+  position: SearchPosition
+}
+
+export interface LineupSlot {
+  position: SearchPosition,
+  player?: CalculatedPlayer
 }
 
 export interface Roster {
   ownerId: string
   ownerName: string
-  calculatedStarters: CalculatedPlayer[] 
-  starters: CalculatedPlayer[]
+  teamName: string
+  starters: Record<string, LineupSlot> 
   fullRoster: CalculatedPlayer[]
-
+  positionRanks: PositionRosterStat[]
   avgPoints: RosterStat
   stdDev: RosterStat
 }
@@ -112,6 +139,8 @@ export interface Trade {
 }
 
 export interface FantasyStats {
+  weekScore: number
+
   rankStd: number
   rankPPR: number
   rankHalfPPR: number

@@ -1,4 +1,4 @@
-import { FantasyStats } from "../../shared/types"
+import { FantasyStats } from "./types"
 
 //TODO: Self healing mapper
 //1. Looking at all players weeks, are there any FantasyStats that are undefined for all?

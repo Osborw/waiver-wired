@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
 import { Player, WeeklyStats } from '../../shared/types'
-import { mapWeekDataToFantasyStats } from './mapper'
+import { mapWeekDataToFantasyStats } from '../../shared/stats-mapper'
 import { readUnits, writePlayers } from '../dbs/main'
 
 // READ IN Weekly STATS
