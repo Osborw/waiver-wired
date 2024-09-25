@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Layout from '../components/MyLayout'
 import { RosterTable } from '../components/PlayerTable'
 import * as Get from '../server/getIndex'
-import { Roster, RosterStat } from '../../shared/types'
+import { Roster, RosterStat } from '../../../shared/types'
 import { styled } from 'styled-components'
 
 const niceRank = (rank: number) => {
@@ -30,7 +30,7 @@ interface StatProps {
 }
 
 const Stat = ({ stat, name }: StatProps) => {
-  return <StatDiv color={determineRankColor(stat.rank)}>{`${name} - ${stat.startingStatSum.toFixed(2)}(${niceRank(stat.rank)})`}</StatDiv>
+  return <StatDiv color={determineRankColor(stat.rank)}>{`${name} - ${stat.totalPoints.toFixed(2)}(${niceRank(stat.rank)})`}</StatDiv>
 }
 
 const RosterStatsDiv = styled.div`
@@ -47,13 +47,9 @@ const RosterStats = ({ roster }: RosterStatsProps) => {
     <RosterStatsDiv>
       <Stat stat={roster.avgPoints} name={'Avg'} />
       <Stat stat={roster.stdDev} name={'StdDev'} />
-      <Stat stat={roster.QB} name={'QB'} />
-      <Stat stat={roster.RB} name={'RB'} />
-      <Stat stat={roster.WR} name={'WR'} />
-      <Stat stat={roster.TE} name={'TE'} />
-      <Stat stat={roster.FLEX} name={'FLEX'} />
-      <Stat stat={roster.K} name={'K'} />
-      <Stat stat={roster.DEF} name={'DEF'} />
+      {roster.positionRanks.map(pos => (
+        <Stat stat={pos} name={pos.position} />
+      ))}
     </RosterStatsDiv>
   )
 }
@@ -62,26 +58,15 @@ const RosterDiv = styled.div`
   margin-bottom: 20px;
 `
 
-const Index = () => {
-  const [rosters, setRosters] = useState<Roster[]>([])
-  const [ownerId, setOwnerId] = useState<string | undefined>()
+interface RostersProps {
+  rosters: Roster[]
+  ownerId: string
+}
 
-  useEffect(() => {
-    const init = async () => {
-      await getRosters()
-    }
-    init()
-  }, [])
-
-  const getRosters = async () => {
-    const ret = await Get.getRosters()
-    setRosters(ret.rosters)
-    console.log(ret.rosters)
-    setOwnerId(ret.ownerId)
-  }
+export const Rosters = ({rosters, ownerId}: RostersProps) => {
 
   return (
-    <Layout>
+    <div>
       <h2> Rosters </h2>
       <div>
         {rosters.map((r) => {
@@ -94,8 +79,6 @@ const Index = () => {
           )
         })}
       </div>
-    </Layout>
+    </div>
   )
 }
-
-export default Index

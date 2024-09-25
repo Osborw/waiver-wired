@@ -3,6 +3,7 @@ import { FantasyStats, SearchPosition } from "../../shared/types"
 import { getLeague, getLeagueUsers, getRosters } from "./external-calls"
 
 interface LeagueRules {
+  leagueName: string
   leagueRosterSpots: SearchPosition[]
   leagueValidRosterPositions: SearchPosition[]
   leagueScoringSettings: Partial<FantasyStats>
@@ -15,13 +16,17 @@ export const getLeagueRulesFromExternal = async (leagueId: string): Promise<Leag
   //really we should verify that league has the format we're expecting. Or at least, roster positions is.
   const rawRosterPositionsArray = league.roster_positions as any[]
   const validSearchPositions = getLeaguePositions(rawRosterPositionsArray, leagueId)
+  const noDuplicateSearchPositions = new Set(validSearchPositions)
 
   const rawScoringSettings = league.scoring_settings as any
   const validScoringSettings = getLeagueScoringSettings(rawScoringSettings, leagueId)
 
+  const leagueName = league.name as any
+
   return {
+    leagueName,
     leagueRosterSpots: validSearchPositions,
-    leagueValidRosterPositions: validSearchPositions,
+    leagueValidRosterPositions: Array.from(noDuplicateSearchPositions),
     leagueScoringSettings: validScoringSettings
   }
 }

@@ -7,7 +7,7 @@ import {
   SearchPosition,
   SearchPositionToSleeperPositionMapper,
   SleeperInjuryStatus,
-  WeekWindow,
+  TimeFrame,
 } from '../../shared/types'
 
 const isOut = (p: CalculatedPlayer) => {
@@ -33,14 +33,14 @@ const playsPosition = (player: CalculatedPlayer, pos: SearchPosition) => {
 export const sortByPoints = (
   a: CalculatedPlayer,
   b: CalculatedPlayer,
-  weekWindow: WeekWindow,
+  timeFrame: TimeFrame,
 ) => {
   const sort = (a: Metrics, b: Metrics) => {
     if (a.avgPoints === b.avgPoints) return b.stdDev - a.stdDev
     return b.avgPoints - a.avgPoints
   }
 
-  if (weekWindow === WeekWindow.FiveWeek)
+  if (timeFrame === TimeFrame.FiveWeek)
     return sort(a.fiveWeekMetrics, b.fiveWeekMetrics)
   else return sort(a.seasonMetrics, b.seasonMetrics)
 }
@@ -80,7 +80,7 @@ const grabBestPlayer = (
   if (positionPlayers.length === 0) return
 
   const sortedPositionPlayers = positionPlayers.sort((a, b) =>
-    sortByPoints(a, b, WeekWindow.FiveWeek),
+    sortByPoints(a, b, TimeFrame.FiveWeek),
   )
 
   return sortedPositionPlayers[0]

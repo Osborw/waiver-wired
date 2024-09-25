@@ -1,5 +1,5 @@
 import { std, max } from "mathjs"
-import { FantasyStats, CalculatedPlayer, Player, SleeperPosition, TieredPlayer, WeekWindow } from "../../shared/types"
+import { FantasyStats, CalculatedPlayer, Player, SleeperPosition, TieredPlayer, TimeFrame } from "../../shared/types"
 
 const calculateAverage = (array: number[]) => {
   return array.reduce((a,b) => a + b) / array.length
@@ -81,7 +81,7 @@ const calculateGP = (player: Player, startWeek: number, endWeek: number) => {
   return relevantWeeks.length 
 }
 
-export const calculateTiers = (players: CalculatedPlayer[], weekWindow: WeekWindow) => {
+export const calculateTiers = (players: CalculatedPlayer[], timeFrame: TimeFrame) => {
   /**
    * I tried to write this so it didn't need documentation, but the algo isn't really readable
    * Algo:
@@ -103,7 +103,7 @@ export const calculateTiers = (players: CalculatedPlayer[], weekWindow: WeekWind
   while(startingIndex < players.length-1) {
     for(let endingIndex = startingIndex; endingIndex < players.length; endingIndex = endingIndex + 1) {
       const selection = players.slice(startingIndex,endingIndex+1).map(p => {
-        if(weekWindow === WeekWindow.FiveWeek) return p.fiveWeekMetrics.avgPoints
+        if(timeFrame === TimeFrame.FiveWeek) return p.fiveWeekMetrics.avgPoints
         else return p.seasonMetrics.avgPoints
       })
       const stdDev = Number(std(selection))

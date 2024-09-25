@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   ScatterChart,
   CartesianGrid,
@@ -9,7 +10,7 @@ import {
   Dot,
 } from 'recharts'
 import { TopPlayersGraphTooltip } from './GraphTooltip'
-import { TieredPlayer, SearchPosition } from '../../shared/types'
+import { TieredPlayer, SearchPosition, TimeFrame } from '../../../shared/types'
 import { ScatterCustomizedShape } from 'recharts/types/cartesian/Scatter'
 import { styled } from 'styled-components'
 
@@ -21,6 +22,7 @@ const GraphDiv = styled.div`
 
 interface PlayerGraphProps {
   players: TieredPlayer[]
+  timeFrame: TimeFrame
   position: SearchPosition
   myOwnerId?: string
 }
@@ -32,7 +34,7 @@ const determineWidth = (players: TieredPlayer[]) => {
   return width < playersWidth ? playersWidth : width
 }
 
-export default ({ players, position, myOwnerId }: PlayerGraphProps) => {
+export default ({ players, timeFrame, position, myOwnerId }: PlayerGraphProps) => {
 
   const isFlexPosition = () => {
     return position === SearchPosition.FLEX 
@@ -47,7 +49,7 @@ export default ({ players, position, myOwnerId }: PlayerGraphProps) => {
   const datum = players.map((p, idx) => {
     return {
       x: idx + 1,
-      y: p.avgPoints,
+      y: timeFrame === TimeFrame.FiveWeek ? p.fiveWeekMetrics.avgPoints : p.seasonMetrics.avgPoints,
       label: p.fullName,
       color: determineColor(p.ownerId),
     }

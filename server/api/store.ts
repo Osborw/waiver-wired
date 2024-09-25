@@ -6,7 +6,7 @@ import {
   SearchPosition,
   // SleeperPosition,
   // Trade,
-  WeekWindow,
+  TimeFrame,
 } from '../../shared/types'
 import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
 import {
@@ -66,23 +66,23 @@ export const makePlayers = async ({
 
 interface GetTopPlayersProps {
   position: SearchPosition
-  weekWindow: WeekWindow
+  timeFrame: TimeFrame
   players: CalculatedPlayer[]
 }
 
 export const makeTopPlayers = ({
   position,
-  weekWindow,
+  timeFrame,
   players,
 }: GetTopPlayersProps) => {
   const positionPlayers = getPlayersByPosition(players, position)
 
-  const ordered = positionPlayers.sort((a, b) => sortByPoints(a, b, weekWindow))
+  const ordered = positionPlayers.sort((a, b) => sortByPoints(a, b, timeFrame))
 
   const numPlayersToShow = isFlexPosition(position) ? 200 : 100
   const limited = ordered.slice(0, numPlayersToShow)
 
-  const tiered = calculateTiers(limited, weekWindow)
+  const tiered = calculateTiers(limited, timeFrame)
 
   return tiered
 }

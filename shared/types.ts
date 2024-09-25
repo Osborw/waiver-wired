@@ -15,6 +15,7 @@ export enum SearchPosition {
   K = 'K',
   DEF = 'DEF',
   FLEX = 'FLEX',
+  SUPER_FLEX = 'SUPER_FLEX'
 }
 
 export const SearchPositionToSleeperPositionMapper = {
@@ -25,6 +26,7 @@ export const SearchPositionToSleeperPositionMapper = {
   [SearchPosition.DEF]: [SleeperPosition.DEF],
   [SearchPosition.K]: [SleeperPosition.K],
   [SearchPosition.FLEX]: [SleeperPosition.RB, SleeperPosition.WR, SleeperPosition.TE],
+  [SearchPosition.SUPER_FLEX]: [SleeperPosition.RB, SleeperPosition.WR, SleeperPosition.TE, SleeperPosition.QB],
 }
 
 export enum SleeperInjuryStatus {
@@ -36,7 +38,7 @@ export enum SleeperInjuryStatus {
   Sus = 'SUS',
 }
 
-export enum WeekWindow {
+export enum TimeFrame {
   Season = 'season',
   FiveWeek = 'fiveWeek',
 }
@@ -116,6 +118,13 @@ export interface PositionRosterStat extends RosterStat {
 export interface LineupSlot {
   position: SearchPosition,
   player?: CalculatedPlayer
+}
+
+export interface LeagueInfo {
+  leagueId: string
+  leagueName: string
+  rosterSpots: SearchPosition[] 
+  validRosterPositions: SearchPosition[] 
 }
 
 export interface Roster {
@@ -218,6 +227,7 @@ export interface FantasyStats {
   rushRecYd: number
   rushRZAtt: number
   rushTd: number
+  rushFd: number
   rushTd40p: number
   rushTd50p: number
   rushTdLng: number

@@ -1,7 +1,8 @@
-import { Roster, SearchPosition, TieredPlayer, Trade } from './types'
+import { LeagueInfo, Roster, SearchPosition, TieredPlayer, Trade } from './types'
 
 export interface LeagueReturn {
     players: TopPlayerReturn[]
+    league: LeagueInfo
     rosters: Roster[] 
     trades: Trade[]
 }

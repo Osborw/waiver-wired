@@ -1,14 +1,14 @@
-import { TieredPlayer, SearchPosition, Roster } from '../../shared/types'
-import { convertSearchPositionToSleeperPosition } from '../../shared/position-logic'
+import React from 'react'
+import { TieredPlayer, SearchPosition, Roster, TimeFrame } from '../../../shared/types'
+import { convertSearchPositionToSleeperPosition } from '../../../shared/position-logic'
 import { RosterRow, RosterTitleRow, Row, TitleRow } from './Row'
 import { useState, useEffect } from 'react'
-import { TimeFrame } from './TimeFrameSelector'
 import { View } from './ViewSelector'
 
 interface PlayerTableProps {
   players: TieredPlayer[]
   position: SearchPosition
-  timeFrame: TimeFrame
+  timeFrame: TimeFrame 
   view: View
   myOwnerId?: string
 }
@@ -32,6 +32,8 @@ export default ({ players, position, timeFrame, view, myOwnerId }: PlayerTablePr
       {players.map((p, idx) => {
         const displayPosition =
           position === SearchPosition.FLEX ? p.fantasyPositions[0] : convertSearchPositionToSleeperPosition(position)
+        const metrics = timeFrame === TimeFrame.FiveWeek ? p.fiveWeekMetrics : p.seasonMetrics
+
         return (
           <Row
             selectedPosition={position}
@@ -39,11 +41,11 @@ export default ({ players, position, timeFrame, view, myOwnerId }: PlayerTablePr
             rank={idx + 1}
             name={p.fullName}
             position={displayPosition}
-            gamesPlayed={p.gp}
-            avg={p.avgPoints}
+            gamesPlayed={metrics.gp}
+            avg={metrics.avgPoints}
             ownerId={p.ownerId}
             weeks={p.weeklyStats}
-            stdDev={p.stdDev}
+            stdDev={metrics.stdDev}
             allVisible={allVisible}
             timeFrame={timeFrame}
             myOwnerId={myOwnerId}
@@ -68,29 +70,14 @@ export const RosterTable = ({ roster }: RosterTableProps) => {
     toggleAllVisible(!allVisible)
   }, [roster])
 
+  const cat = () => {
+  }
+
   return (
     <div>
       <RosterTitleRow toggleAllVisible={() => toggleAllVisible(!allVisible)} />
-      {roster.startingLineup.QB.map((player) => {
-        return <RosterRow key={player.id} player={player} position={SearchPosition.QB} allVisible={allVisible} />
-      })}
-      {roster.startingLineup.RB.map((player) => {
-        return <RosterRow key={player.id} player={player} position={SearchPosition.RB} allVisible={allVisible} />
-      })}
-      {roster.startingLineup.WR.map((player) => {
-        return <RosterRow key={player.id} player={player} position={SearchPosition.WR} allVisible={allVisible} />
-      })}
-      {roster.startingLineup.TE.map((player) => {
-        return <RosterRow key={player.id} player={player} position={SearchPosition.TE} allVisible={allVisible} />
-      })}
-      {roster.startingLineup.FLEX.map((player) => {
-        return <RosterRow key={player.id} player={player} position={SearchPosition.FLEX} allVisible={allVisible} />
-      })}
-      {roster.startingLineup.K.map((player) => {
-        return <RosterRow key={player.id} player={player} position={SearchPosition.K} allVisible={allVisible} />
-      })}
-      {roster.startingLineup.DEF.map((player) => {
-        return <RosterRow key={player.id} player={player} position={SearchPosition.DEF} allVisible={allVisible} />
+      {Object.values(roster.starters).map(slot => {
+        return <RosterRow rosterSlot={slot} allVisible={allVisible} />
       })}
     </div>
   )

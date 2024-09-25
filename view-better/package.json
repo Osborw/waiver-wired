@@ -1,0 +1,27 @@
+{
+  "name": "view-better",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node build-ci.mjs",
+    "start": "node local-dev-server.mjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "esbuild": "0.24.0",
+    "typescript": "^5.6.2",
+    "@types/node": "20.8.7",
+    "@types/recharts": "1.8.26"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "2.9.0",
+    "styled-components": "6.1.0"
+  }
+}

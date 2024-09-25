@@ -9,7 +9,7 @@ import {
 } from './store'
 import { LeagueReturn, TopPlayerReturn } from '../../shared/api-types'
 import { readPlayers } from '../dbs/main'
-import { WeekWindow } from '../../shared/types'
+import { LeagueInfo, TimeFrame } from '../../shared/types'
 const fastify = require('fastify')({ logger: true })
 require('dotenv').config({ path: '../.env' })
 
@@ -36,7 +36,7 @@ fastify.register(cors, {
 })
 
 fastify.get(
-  '/league/:userid/:leagueid',
+  '/league/:leagueid/:userid',
   async (request: any, reply: any): Promise<LeagueReturn> => {
 
     /**
@@ -59,10 +59,18 @@ fastify.get(
       ])
 
     const {
+      leagueName,
       leagueRosterSpots,
       leagueValidRosterPositions,
       leagueScoringSettings,
     } = sleeperRules
+
+    const leagueInfo: LeagueInfo = {
+      leagueId,
+      leagueName,
+      rosterSpots: leagueRosterSpots,
+      validRosterPositions: leagueValidRosterPositions
+    }
 
     /*****************************
      * Form more complex objects *
@@ -84,12 +92,12 @@ fastify.get(
       const topPlayers = makeTopPlayers({
         position: pos,
         players: calculatedPlayers,
-        weekWindow: WeekWindow.Season,
+        timeFrame: TimeFrame.Season,
       })
       const top5WeekPlayers = makeTopPlayers({
         position: pos,
         players: calculatedPlayers,
-        weekWindow: WeekWindow.FiveWeek,
+        timeFrame: TimeFrame.FiveWeek,
       })
 
       const positionsObject: TopPlayerReturn = {
@@ -114,6 +122,7 @@ fastify.get(
 
     const ret: LeagueReturn = {
       players: playersReturn,
+      league: leagueInfo,
       rosters,
       trades: [],
     }
