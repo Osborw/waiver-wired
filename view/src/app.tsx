@@ -35,6 +35,7 @@ export const App = () => {
 
   const getLeagueInfo = async (leagueId: string, userId: string) => {
     const ret = await getLeague(leagueId, userId)
+    ret.players.map(p => console.log(p.position, p.topPlayers.length))
     setPlayers(ret.players)
     setOwnerId(userId)
     setLeagueId(leagueId)

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 import { CalculatedPlayer, Roster, SearchPosition, SleeperPosition, TimeFrame, WeeklyStats } from '../../../shared/types'
 import { View } from './ViewSelector'
 import { LineupSlot } from '../../../shared/types'
+import { isFlexPosition } from '../../../shared/position-logic'
 
 const NameFieldLength = '200px'
 const AvgPPRFieldLength = '120px'
@@ -159,7 +160,7 @@ export const Row = ({
         color={determineTierColor(tier)} 
       >
         <Cell>{rank}</Cell>
-        {selectedPosition === SearchPosition.FLEX && <Cell>{position}</Cell>}
+        {isFlexPosition(selectedPosition) && <Cell>{position}</Cell>}
         <NameField name={name} ownerId={ownerId} myOwnerId={myOwnerId} />
         <Cell>{gamesPlayed}</Cell>
         <Cell inputsize={AvgPPRFieldLength}>{avg ? avg.toFixed(2) : 0}</Cell>

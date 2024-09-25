@@ -7,6 +7,13 @@ const playerPlaysPosition = (p: Player, position: SearchPosition) => {
     if(p.fantasyPositions?.includes(SleeperPosition.TE)) return true
     return false
   }
+  if(position === SearchPosition.SUPER_FLEX){
+    if(p.fantasyPositions?.includes(SleeperPosition.QB)) return true
+    if(p.fantasyPositions?.includes(SleeperPosition.RB)) return true
+    if(p.fantasyPositions?.includes(SleeperPosition.WR)) return true
+    if(p.fantasyPositions?.includes(SleeperPosition.TE)) return true
+    return false
+  }
   else if(position === SearchPosition.DEF) return p.fantasyPositions?.includes(SleeperPosition.DEF)
   else if(position === SearchPosition.QB) return p.fantasyPositions?.includes(SleeperPosition.QB)
   else if(position === SearchPosition.RB) return p.fantasyPositions?.includes(SleeperPosition.RB)
@@ -21,8 +28,7 @@ export const getPlayersByPosition = (players: CalculatedPlayer[], position: Sear
 }
 
 export const isFlexPosition = (position: SearchPosition) => {
-  //TODO: add superflex spot and any other flex spots
-  return position === SearchPosition.FLEX
+  return position === SearchPosition.FLEX || position === SearchPosition.SUPER_FLEX
 }
 
 export const convertSearchPositionToSleeperPosition = (pos: SearchPosition) => {

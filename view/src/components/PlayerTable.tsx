@@ -1,6 +1,6 @@
 import React from 'react'
 import { TieredPlayer, SearchPosition, Roster, TimeFrame } from '../../../shared/types'
-import { convertSearchPositionToSleeperPosition } from '../../../shared/position-logic'
+import { convertSearchPositionToSleeperPosition, isFlexPosition } from '../../../shared/position-logic'
 import { RosterRow, RosterTitleRow, Row, TitleRow } from './Row'
 import { useState, useEffect } from 'react'
 import { View } from './ViewSelector'
@@ -31,7 +31,7 @@ export default ({ players, position, timeFrame, view, myOwnerId }: PlayerTablePr
       />
       {players.map((p, idx) => {
         const displayPosition =
-          position === SearchPosition.FLEX ? p.fantasyPositions[0] : convertSearchPositionToSleeperPosition(position)
+          isFlexPosition(position) ? p.fantasyPositions[0] : convertSearchPositionToSleeperPosition(position)
         const metrics = timeFrame === TimeFrame.FiveWeek ? p.fiveWeekMetrics : p.seasonMetrics
 
         return (
