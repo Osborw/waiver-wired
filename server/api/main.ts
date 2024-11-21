@@ -6,6 +6,7 @@ import {
   getUserMetatdata,
   makePlayers,
   makeRosters,
+  getTrades,
 } from './store'
 import { LeagueReturn, TopPlayerReturn } from '../../shared/api-types'
 import { readPlayers } from '../dbs/main'
@@ -48,6 +49,7 @@ fastify.get(
 
     //TODO: Value sanitization/checking
     const leagueId = request.params.leagueid
+    const userId = request.params.userid
 
     //Make all network calls and form primitive objects
     const [sleeperRules, sleeperPlayers, sleeperRosters, sleeperUserMetadata] =
@@ -118,13 +120,13 @@ fastify.get(
     })
 
     //get trades
-    // const trades = getTrades(rosters, userId)
+    const trades = getTrades(rosters, leagueRosterSpots, userId)
 
     const ret: LeagueReturn = {
       players: playersReturn,
       league: leagueInfo,
       rosters,
-      trades: [],
+      trades,
     }
 
     return ret

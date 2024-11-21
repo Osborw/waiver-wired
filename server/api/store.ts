@@ -5,7 +5,7 @@ import {
   Roster,
   SearchPosition,
   // SleeperPosition,
-  // Trade,
+  Trade,
   TimeFrame,
 } from '../../shared/types'
 import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
@@ -145,63 +145,63 @@ export const makeRosters = async ({
   return rosters
 }
 
-// export const getTrades = (rosters: Roster[], ownerId?: string) => {
-//   const myRoster = rosters.find((r) => r.ownerId === ownerId)
+export const getTrades = (rosters: Roster[], leagueRosterSpots: SearchPosition[], ownerId?: string) => {
+  const myRoster = rosters.find((r) => r.ownerId === ownerId)
 
-//   if (!ownerId || !myRoster) return []
+  if (!ownerId || !myRoster) return []
 
-//   const trades: Trade[] = []
-//   rosters.forEach((oppRoster) => {
-//     for (let i = 0; i < myRoster.fullRoster.length; i++) {
-//       for (let j = i + 1; j < myRoster.fullRoster.length + 1; j++) {
-//         const myTradePlayers = [myRoster.fullRoster[i]]
-//         if (j !== myRoster.fullRoster.length)
-//           myTradePlayers.push(myRoster.fullRoster[j])
-//         for (let k = 0; k < oppRoster.fullRoster.length; k++) {
-//           for (let l = k + 1; l < oppRoster.fullRoster.length + 1; l++) {
-//             const oppTradePlayers = [oppRoster.fullRoster[k]]
-//             if (l !== oppRoster.fullRoster.length)
-//               oppTradePlayers.push(oppRoster.fullRoster[l])
+  const trades: Trade[] = []
+  rosters.forEach((oppRoster) => {
+    for (let i = 0; i < myRoster.fullRoster.length; i++) {
+      for (let j = i + 1; j < myRoster.fullRoster.length + 1; j++) {
+        const myTradePlayers = [myRoster.fullRoster[i]]
+        if (j !== myRoster.fullRoster.length)
+          myTradePlayers.push(myRoster.fullRoster[j])
+        for (let k = 0; k < oppRoster.fullRoster.length; k++) {
+          for (let l = k + 1; l < oppRoster.fullRoster.length + 1; l++) {
+            const oppTradePlayers = [oppRoster.fullRoster[k]]
+            if (l !== oppRoster.fullRoster.length)
+              oppTradePlayers.push(oppRoster.fullRoster[l])
 
-//             const myFullRoster = myRoster.fullRoster.slice(0)
-//             if (j !== myRoster.fullRoster.length) myFullRoster.splice(j, 1)
-//             myFullRoster.splice(i, 1)
-//             const oppFullRoster = oppRoster.fullRoster.slice(0)
-//             if (l !== oppRoster.fullRoster.length) oppFullRoster.splice(l, 1)
-//             oppFullRoster.splice(k, 1)
+            const myFullRoster = myRoster.fullRoster.slice(0)
+            if (j !== myRoster.fullRoster.length) myFullRoster.splice(j, 1)
+            myFullRoster.splice(i, 1)
+            const oppFullRoster = oppRoster.fullRoster.slice(0)
+            if (l !== oppRoster.fullRoster.length) oppFullRoster.splice(l, 1)
+            oppFullRoster.splice(k, 1)
 
-//             myFullRoster.push(...oppTradePlayers)
-//             oppFullRoster.push(...myTradePlayers)
+            myFullRoster.push(...oppTradePlayers)
+            oppFullRoster.push(...myTradePlayers)
 
-//             const myNewStartingLineup = createStartingLineup(myFullRoster)
-//             const oppNewStartingLineup = createStartingLineup(oppFullRoster)
+            const myNewStartingLineup = createStartingLineup(myFullRoster, leagueRosterSpots)
+            const oppNewStartingLineup = createStartingLineup(oppFullRoster, leagueRosterSpots)
 
-//             const myNewAvgPoints = rosterSumAvgStats(myNewStartingLineup)
-//             const oppNewAvgPoints = rosterSumAvgStats(oppNewStartingLineup)
+            const myNewAvgPoints = rosterSumAvgStats(Object.values(myNewStartingLineup))
+            const oppNewAvgPoints = rosterSumAvgStats(Object.values(oppNewStartingLineup))
 
-//             const trade: Trade = {
-//               team1Owner: myRoster.ownerName,
-//               team2Owner: oppRoster.ownerName,
-//               team1Players: myTradePlayers,
-//               team2Players: oppTradePlayers,
-//               team1Improvement:
-//                 myNewAvgPoints - myRoster.avgPoints.startingStatSum,
-//               team2Improvement:
-//                 oppNewAvgPoints - oppRoster.avgPoints.startingStatSum,
-//             }
+            const trade: Trade = {
+              team1Owner: myRoster.ownerName,
+              team2Owner: oppRoster.ownerName,
+              team1Players: myTradePlayers,
+              team2Players: oppTradePlayers,
+              team1Improvement:
+                myNewAvgPoints - myRoster.avgPoints.totalPoints,
+              team2Improvement:
+                oppNewAvgPoints - oppRoster.avgPoints.totalPoints
+            }
 
-//             if (
-//               myNewAvgPoints - myRoster.avgPoints.startingStatSum > 2 &&
-//               oppNewAvgPoints - oppRoster.avgPoints.startingStatSum > 2
-//             ) {
-//               trades.push(trade)
-//             }
-//           }
-//         }
-//       }
-//     }
-//   })
+            if (
+              myNewAvgPoints - myRoster.avgPoints.totalPoints > 2 &&
+              oppNewAvgPoints - oppRoster.avgPoints.totalPoints > 2
+            ) {
+              trades.push(trade)
+            }
+          }
+        }
+      }
+    }
+  })
 
-//   trades.sort((a, b) => b.team1Improvement - a.team1Improvement)
-//   return trades
-// }
+  trades.sort((a, b) => b.team1Improvement - a.team1Improvement)
+  return trades
+}

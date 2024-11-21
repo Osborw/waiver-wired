@@ -20,7 +20,7 @@ export const calculateBasicStatsForPlayers = ({
   rosteredPlayers
 }: CalculateBasicStatsForPlayersProps) => {
   const calculatedPlayers: CalculatedPlayer[] = []
-  const fiveWeeksAgo = max(endWeek - 5, 1)
+  const fiveWeeksAgo = max(endWeek - 4, 1)
 
   players.forEach(p => {
     calculatePtsPerWeek(p, endWeek, leagueScoringSettings)
@@ -37,7 +37,7 @@ export const calculateBasicStatsForPlayers = ({
       fiveWeekMetrics: {
         avgPoints: calculateAvgPoints(p, fiveWeeksAgo, endWeek), 
         stdDev: calculateStdDev(p, fiveWeeksAgo, endWeek),
-        gp: calculateGP(p, 1, endWeek)
+        gp: calculateGP(p, fiveWeeksAgo, endWeek)
       }
     })
   })

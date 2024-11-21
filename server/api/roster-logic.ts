@@ -132,7 +132,7 @@ export const fillInRosterRanks = (
   rosters.sort((a, b) => b.avgPoints.totalPoints - a.avgPoints.totalPoints)
   rosters.forEach((r, idx) => (r.avgPoints.rank = idx + 1))
   //stddev
-  rosters.sort((a, b) => b.stdDev.totalPoints - a.stdDev.totalPoints)
+  rosters.sort((a, b) => a.stdDev.totalPoints - b.stdDev.totalPoints)
   rosters.forEach((r, idx) => (r.stdDev.rank = idx + 1))
 
   //all positions

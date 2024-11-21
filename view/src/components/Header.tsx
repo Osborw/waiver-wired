@@ -20,7 +20,7 @@ const Header = ({leagueName, setPage}: HeaderProps) => (
       <a onClick={() => setPage(Page.ROSTERS)} style={linkStyle}>
         Rosters 
       </a>
-      <a style={linkStyle}>
+      <a onClick={() => setPage(Page.TRADES)} style={linkStyle}>
         Trades 
       </a>
     </div>

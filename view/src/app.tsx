@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import Layout from './components/MyLayout'
 import { getLeague } from './server/getIndex'
-import { TimeFrame, LeagueInfo, Roster } from '../../shared/types'
+import { TimeFrame, LeagueInfo, Roster, Trade } from '../../shared/types'
 import { TopPlayerReturn } from '../../shared/api-types'
 import { Players } from './pages/players'
 import { Rosters } from './pages/rosters'
+import { Trades } from './pages/trades'
+import { Spinner } from './components/Spinner'
 
 export enum Page {
   PLAYERS,
   ROSTERS,
+  TRADES
 }
 
 export const App = () => {
   const [page, setPage] = useState<Page>(Page.PLAYERS)
   const [players, setPlayers] = useState<TopPlayerReturn[]>([])
   const [rosters, setRosters] = useState<Roster[]>([])
+  const [trades, setTrades] = useState<Trade[]>([])
   const [leagueInfo, setLeagueInfo] = useState<LeagueInfo>()
   const [leagueId, setLeagueId] = useState<string>()
   const [ownerId, setOwnerId] = useState<string>()
@@ -41,6 +45,7 @@ export const App = () => {
     setLeagueId(leagueId)
     setRosters(ret.rosters)
     setLeagueInfo(ret.league)
+    setTrades(ret.trades)
     const websiteTitle = document.getElementById('title')
     if(websiteTitle) websiteTitle.innerText = `${ret.league.leagueName} Waiver Wired`
   }
@@ -51,9 +56,10 @@ export const App = () => {
         <Layout leagueName={leagueInfo.leagueName} setPage={setPage}>
           {page === Page.PLAYERS && <Players players={players} leagueInfo={leagueInfo} ownerId={ownerId} />}
           {page === Page.ROSTERS && <Rosters rosters={rosters} ownerId={ownerId} />}
+          {page === Page.TRADES && <Trades rosters={rosters} trades={trades} ownerId={ownerId} />}
         </Layout>
       ) : (
-        <div>Loading...</div>
+        <Spinner />
       )}
     </div>
   )
