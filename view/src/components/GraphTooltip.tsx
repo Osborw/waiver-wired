@@ -1,5 +1,4 @@
 import React from 'react'
-import { ContentType } from 'recharts/types/component/Tooltip'
 import styled from 'styled-components'
 
 const Tooltip = styled.div`

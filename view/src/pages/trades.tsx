@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import Layout from '../components/MyLayout'
-import * as Get from '../server/getIndex'
-import { Roster, SleeperPosition, Trade } from '../../../shared/types'
+import React, { useState } from 'react'
+import { SleeperPosition, Trade } from '../../../shared/types'
 import { styled } from 'styled-components'
 
 const TradeDiv = styled.div`
@@ -66,12 +64,10 @@ const getOwners = (trades: Trade[]) => {
 }
 
 interface TradesProps {
-  rosters: Roster[]
   trades: Trade[]
-  ownerId: string
 }
 
-export const Trades = ({rosters, trades, ownerId}: TradesProps) => {
+export const Trades = ({trades}: TradesProps) => {
   const filteredTrades = trades.filter(t => !t.team2Players.find(p => p.fantasyPositions[0] === SleeperPosition.DEF))
   const owners = getOwners(filteredTrades)
   const [expanded, setExpanded] = useState<string[]>([])

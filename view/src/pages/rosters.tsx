@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import Layout from '../components/MyLayout'
+import React from 'react'
 import { RosterTable } from '../components/PlayerTable'
-import * as Get from '../server/getIndex'
 import { Roster, RosterStat } from '../../../shared/types'
 import { styled } from 'styled-components'
 
@@ -62,10 +60,9 @@ const RosterDiv = styled.div`
 
 interface RostersProps {
   rosters: Roster[]
-  ownerId: string
 }
 
-export const Rosters = ({rosters, ownerId}: RostersProps) => {
+export const Rosters = ({rosters}: RostersProps) => {
 
   const numRosters = rosters.length
 
