@@ -14,9 +14,7 @@ In root level of the project, create a .env file with the following
 
 .env
 ```
-SLEEPER_LEAGUE_ID=<sleeper-id> #Not Required - 18-digit id for your Sleepr league. This lets you see which players are taken or available
-OWNER_ID=<sleeper_owner_id> #Optional - 18-digit id for your Sleeper user. Set this to use the roster feature
-YEAR=2023 #Required - Current season (latest 2023)
+YEAR=2024 #Required - Current season (latest 2024)
 WEEK=2 #Required - Latest week with stats (update this weekly)
 ```
 
@@ -29,7 +27,7 @@ npm i
 npm run start-read
 ```
 
-### API 
+### API
 ```
 cd server 
 npm i
@@ -45,3 +43,5 @@ npm run dev
 Run the server and UI together to run the app.
 
 By default the app runs on port 3000, so visit localhost:3000 to view locally.
+
+To view your specific league, visit localhost:3000/leagueId/userId. These values can both be found within the Sleeper App settings.
