@@ -1,17 +1,22 @@
-import { Roster, TieredPlayer, Trade } from './types'
+import { LeagueInfo, Roster, SearchPosition, TieredPlayer, Trade } from './types'
+
+export interface LeagueReturn {
+    players: TopPlayerReturn[]
+    league: LeagueInfo
+    rosters: Roster[] 
+    trades: Trade[]
+}
 
 export interface TopPlayerReturn {
-    players: TieredPlayer[]
-    ownerId?: string
+    position: SearchPosition
+    topPlayers: TieredPlayer[]
+    top5WeekPlayers: TieredPlayer[]
 }
 
 export interface RostersReturn {
     rosters: Roster[]
-    ownerId?: string
 }
 
 export interface TradesReturn {
-    rosters: Roster[]
     trades: Trade[]
-    ownerId?: string
 }

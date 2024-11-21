@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Layout from '../components/MyLayout'
 import * as Get from '../server/getIndex'
-import { Roster, SleeperPosition, Trade } from '../../shared/types'
+import { Roster, SleeperPosition, Trade } from '../../../shared/types'
 import { styled } from 'styled-components'
 
 const TradeDiv = styled.div`
@@ -65,19 +65,16 @@ const getOwners = (trades: Trade[]) => {
   return Array.from(new Set(owners))
 }
 
-const Index = () => {
-  const [rosters, setRosters] = useState<Roster[]>([])
-  const [trades, setTrades] = useState<Trade[]>([])
-  const [owners, setOwners] = useState<string[]>([])
-  const [ownerId, setOwnerId] = useState<string | undefined>()
-  const [expanded, setExpanded] = useState<string[]>([])
+interface TradesProps {
+  rosters: Roster[]
+  trades: Trade[]
+  ownerId: string
+}
 
-  useEffect(() => {
-    const init = async () => {
-      await getTrades()
-    }
-    init()
-  }, [])
+export const Trades = ({rosters, trades, ownerId}: TradesProps) => {
+  const filteredTrades = trades.filter(t => !t.team2Players.find(p => p.fantasyPositions[0] === SleeperPosition.DEF))
+  const owners = getOwners(filteredTrades)
+  const [expanded, setExpanded] = useState<string[]>([])
 
   const toggleExpanded = (ownerId: string) => {
     if (expanded.includes(ownerId)) {
@@ -90,16 +87,8 @@ const Index = () => {
     }
   }
 
-  const getTrades = async () => {
-    const ret = await Get.getTrades()
-    setRosters(ret.rosters)
-    setTrades(ret.trades)
-    setOwners(getOwners(ret.trades))
-    setOwnerId(ret.ownerId)
-  }
-
   return (
-    <Layout>
+    <div>
       <h2> Trades </h2>
       <div>
         {owners.map((ownerId) => {
@@ -113,7 +102,7 @@ const Index = () => {
                   <button onClick={() => toggleExpanded(ownerId)}>{isExpanded ? '-' : '+'}</button>
                 </div>
               </OwnerIdDiv>
-              {trades
+              {filteredTrades
                 .filter((t) => t.team2Owner === ownerId)
                 .slice(0, size)
                 .map((t) => {
@@ -127,7 +116,7 @@ const Index = () => {
                               <PositionColor
                                 color={colorByPosition(p.fantasyPositions[0])}
                               >{`${p.fantasyPositions[0]}`}</PositionColor>
-                              {` - ${p.fullName} - ${p.avgPoints.toFixed(2)}`}
+                              {` - ${p.fullName} - ${p.fiveWeekMetrics.avgPoints.toFixed(2)}`}
                             </NameDiv>
                           ))}
                         </PlayerListDiv>
@@ -143,7 +132,7 @@ const Index = () => {
                               <PositionColor
                                 color={colorByPosition(p.fantasyPositions[0])}
                               >{`${p.fantasyPositions[0]}`}</PositionColor>
-                              {` - ${p.fullName} - ${p.avgPoints.toFixed(2)}`}
+                              {` - ${p.fullName} - ${p.fiveWeekMetrics.avgPoints.toFixed(2)}`}
                             </NameDiv>
                           ))}
                         </PlayerListDiv>
@@ -155,8 +144,6 @@ const Index = () => {
           )
         })}
       </div>
-    </Layout>
+    </div>
   )
 }
-
-export default Index

@@ -1,5 +1,4 @@
 import { loadPlayers } from './load-players'
-import { loadRosters } from './load-rosters'
 import { loadWeeklyStats } from './load-weekly'
 import dotenv from 'dotenv'
 
@@ -13,12 +12,9 @@ const main = async () => {
     const envYear = process.env.YEAR
     if (!envYear) throw new Error('No YEAR provided, please include a .env file with YEAR')
     const YEAR = parseInt(envYear)
-    const LEAGUE_ID = process.env.SLEEPER_LEAGUE_ID
-    if (!LEAGUE_ID) console.warn('No SLEEPER_LEAGUE_ID provided, please include a .env file with SLEEPER_LEAGUE_ID if you want to use the roster feature')
 
     await loadPlayers()
     await loadWeeklyStats(WEEK, YEAR)
-    if (LEAGUE_ID) await loadRosters(LEAGUE_ID)
 }
 
 main()

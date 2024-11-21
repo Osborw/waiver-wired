@@ -1,96 +1,151 @@
-import { Player, Roster, SearchPosition, Trade } from '../../shared/types'
+import {
+  CalculatedPlayer,
+  FantasyStats,
+  Player,
+  Roster,
+  SearchPosition,
+  // SleeperPosition,
+  Trade,
+  TimeFrame,
+} from '../../shared/types'
 import { calculateBasicStatsForPlayers, calculateTiers } from './calculators'
-import { getPlayersByPosition } from '../../shared/position-logic'
-import { createStartingLineup, fillInRosterRanks, rosterSumAvgStats, rosterSumStdDev } from './roster-logic'
-import { getOwnerName } from './external-calls'
-import { readPlayers } from '../dbs/main'
+import {
+  getPlayersByPosition,
+  isFlexPosition,
+} from '../../shared/position-logic'
+import {
+  createStartingLineup,
+  fillInRosterRanks,
+  initPositionRanks,
+  rosterSumAvgStats,
+  rosterSumStdDev,
+  sortByPoints,
+} from './roster-logic'
+import {
+  SleeperUser,
+  getLeagueRulesFromExternal,
+  getRosteredPlayersFromExternal,
+  getUserMetatdataFromExternal,
+} from './data-mappers'
 
-export const getTopPlayers = async (position: SearchPosition, startWeek: number, endWeek: number) => {
-  const players = await readPlayers()
+export const getLeagueRules = async (leagueId: string) => {
+  return await getLeagueRulesFromExternal(leagueId)
+}
 
-  const positionPlayers: Player[] = getPlayersByPosition(players, position)
-  const calculatedPlayers = calculateBasicStatsForPlayers(positionPlayers, startWeek, endWeek)
+export const getRosters = async (leagueId: string) => {
+  return await getRosteredPlayersFromExternal(leagueId)
+}
 
-  const ordered = calculatedPlayers.sort((a, b) => b.avgPoints - a.avgPoints)
-  const numPlayersToShow = position === SearchPosition.FLEX ? 200 : 100
+export const getUserMetatdata = async (leagueId: string) => {
+  return await getUserMetatdataFromExternal(leagueId)
+}
+
+interface MakeTopPlayersProps {
+  endWeek: number
+  players: Record<string, Player>
+  leagueScoringSettings: Partial<FantasyStats>
+  rosteredPlayers: Record<string, string>
+}
+
+export const makePlayers = async ({
+  endWeek,
+  players,
+  leagueScoringSettings,
+  rosteredPlayers,
+}: MakeTopPlayersProps) => {
+  const calculatedPlayers = calculateBasicStatsForPlayers({
+    players: Object.values(players),
+    startWeek: 1,
+    endWeek,
+    leagueScoringSettings,
+    rosteredPlayers,
+  })
+
+  return calculatedPlayers
+}
+
+interface GetTopPlayersProps {
+  position: SearchPosition
+  timeFrame: TimeFrame
+  players: CalculatedPlayer[]
+}
+
+export const makeTopPlayers = ({
+  position,
+  timeFrame,
+  players,
+}: GetTopPlayersProps) => {
+  const positionPlayers = getPlayersByPosition(players, position)
+
+  const ordered = positionPlayers.sort((a, b) => sortByPoints(a, b, timeFrame))
+
+  const numPlayersToShow = isFlexPosition(position) ? 200 : 100
   const limited = ordered.slice(0, numPlayersToShow)
 
-  const tiered = calculateTiers(limited)
+  const tiered = calculateTiers(limited, timeFrame)
 
   return tiered
 }
 
-export const getRosters = async (startWeek: number, endWeek: number) => {
-  const playersObj = await readPlayers()
-  const players = Object.values(playersObj)
+interface MakeRostersProps {
+  players: CalculatedPlayer[]
+  leagueRosterSpots: SearchPosition[]
+  leagueValidRosterPositions: SearchPosition[]
+  sleeperUserMetadata: Record<string, SleeperUser>
+}
 
+export const makeRosters = async ({
+  players,
+  leagueRosterSpots,
+  leagueValidRosterPositions,
+  sleeperUserMetadata,
+}: MakeRostersProps) => {
   const ownedPlayers = players.filter((p) => !!p.ownerId)
 
-  const calculatedOwnedPlayers = calculateBasicStatsForPlayers(ownedPlayers, startWeek, endWeek)
-
-  const owners = Array.from(new Set(calculatedOwnedPlayers.map((p) => p.ownerId)) as Set<string>)
-
-  const ownerNames = await Promise.all(owners.map(async (ownerId) => await getOwnerName(ownerId)))
+  const owners = Array.from(
+    new Set(ownedPlayers.map((p) => p.ownerId)) as Set<string>,
+  )
 
   const rosters: Roster[] = []
 
-  owners.map(async (ownerId, idx) => {
-    const fullRoster = calculatedOwnedPlayers.filter((p) => p.ownerId === ownerId)
-    const startingLineup = createStartingLineup(fullRoster)
+  //TODO: This object has to be more generic and better
+  owners.forEach(async (ownerId) => {
+    const fullRoster = ownedPlayers.filter((p) => p.ownerId === ownerId)
+    const startingLineup = createStartingLineup(fullRoster, leagueRosterSpots)
+    const startingPlayers = Object.values(startingLineup)
 
     //For each owner id create a Roster object
     const roster: Roster = {
       ownerId,
-      ownerName: ownerNames[idx],
+      ownerName: sleeperUserMetadata[ownerId]?.displayName ?? `Owner ${ownerId}`,
+      teamName: sleeperUserMetadata[ownerId]?.teamName ?? `Team ${ownerId}`,
       fullRoster,
-      startingLineup,
+      starters: startingLineup,
       avgPoints: {
-        startingStatSum: rosterSumAvgStats(startingLineup),
+        totalPoints: rosterSumAvgStats(startingPlayers),
         rank: 999,
       },
       stdDev: {
-        startingStatSum: rosterSumStdDev(startingLineup),
+        totalPoints: rosterSumStdDev(startingPlayers),
         rank: 999,
       },
-      QB: {
-        startingStatSum: rosterSumAvgStats(startingLineup, SearchPosition.QB),
-        rank: 999,
-      },
-      RB: {
-        startingStatSum: rosterSumAvgStats(startingLineup, SearchPosition.RB),
-        rank: 999,
-      },
-      WR: {
-        startingStatSum: rosterSumAvgStats(startingLineup, SearchPosition.WR),
-        rank: 999,
-      },
-      TE: {
-        startingStatSum: rosterSumAvgStats(startingLineup, SearchPosition.TE),
-        rank: 999,
-      },
-      FLEX: {
-        startingStatSum: rosterSumAvgStats(startingLineup, SearchPosition.FLEX),
-        rank: 999,
-      },
-      K: {
-        startingStatSum: rosterSumAvgStats(startingLineup, SearchPosition.K),
-        rank: 999,
-      },
-      DEF: {
-        startingStatSum: rosterSumAvgStats(startingLineup, SearchPosition.DEF),
-        rank: 999,
-      },
+      positionRanks: initPositionRanks(
+        startingPlayers,
+        leagueValidRosterPositions,
+      ),
     }
 
     rosters.push(roster)
   })
 
-  fillInRosterRanks(rosters)
-  rosters.sort((a, b) => b.avgPoints.startingStatSum - a.avgPoints.startingStatSum)
+  fillInRosterRanks(rosters, leagueValidRosterPositions)
+
+  rosters.sort((a, b) => b.avgPoints.totalPoints - a.avgPoints.totalPoints)
+
   return rosters
 }
 
-export const getTrades = (rosters: Roster[], ownerId?: string) => {
+export const getTrades = (rosters: Roster[], leagueRosterSpots: SearchPosition[], ownerId?: string) => {
   const myRoster = rosters.find((r) => r.ownerId === ownerId)
 
   if (!ownerId || !myRoster) return []
@@ -100,11 +155,13 @@ export const getTrades = (rosters: Roster[], ownerId?: string) => {
     for (let i = 0; i < myRoster.fullRoster.length; i++) {
       for (let j = i + 1; j < myRoster.fullRoster.length + 1; j++) {
         const myTradePlayers = [myRoster.fullRoster[i]]
-        if (j !== myRoster.fullRoster.length) myTradePlayers.push(myRoster.fullRoster[j])
+        if (j !== myRoster.fullRoster.length)
+          myTradePlayers.push(myRoster.fullRoster[j])
         for (let k = 0; k < oppRoster.fullRoster.length; k++) {
           for (let l = k + 1; l < oppRoster.fullRoster.length + 1; l++) {
             const oppTradePlayers = [oppRoster.fullRoster[k]]
-            if (l !== oppRoster.fullRoster.length) oppTradePlayers.push(oppRoster.fullRoster[l])
+            if (l !== oppRoster.fullRoster.length)
+              oppTradePlayers.push(oppRoster.fullRoster[l])
 
             const myFullRoster = myRoster.fullRoster.slice(0)
             if (j !== myRoster.fullRoster.length) myFullRoster.splice(j, 1)
@@ -116,24 +173,26 @@ export const getTrades = (rosters: Roster[], ownerId?: string) => {
             myFullRoster.push(...oppTradePlayers)
             oppFullRoster.push(...myTradePlayers)
 
-            const myNewStartingLineup = createStartingLineup(myFullRoster)
-            const oppNewStartingLineup = createStartingLineup(oppFullRoster)
+            const myNewStartingLineup = createStartingLineup(myFullRoster, leagueRosterSpots)
+            const oppNewStartingLineup = createStartingLineup(oppFullRoster, leagueRosterSpots)
 
-            const myNewAvgPoints = rosterSumAvgStats(myNewStartingLineup)
-            const oppNewAvgPoints = rosterSumAvgStats(oppNewStartingLineup)
+            const myNewAvgPoints = rosterSumAvgStats(Object.values(myNewStartingLineup))
+            const oppNewAvgPoints = rosterSumAvgStats(Object.values(oppNewStartingLineup))
 
             const trade: Trade = {
               team1Owner: myRoster.ownerName,
               team2Owner: oppRoster.ownerName,
               team1Players: myTradePlayers,
               team2Players: oppTradePlayers,
-              team1Improvement: myNewAvgPoints - myRoster.avgPoints.startingStatSum,
-              team2Improvement: oppNewAvgPoints - oppRoster.avgPoints.startingStatSum,
+              team1Improvement:
+                myNewAvgPoints - myRoster.avgPoints.totalPoints,
+              team2Improvement:
+                oppNewAvgPoints - oppRoster.avgPoints.totalPoints
             }
 
             if (
-              myNewAvgPoints - myRoster.avgPoints.startingStatSum > 2 &&
-              oppNewAvgPoints - oppRoster.avgPoints.startingStatSum > 2
+              myNewAvgPoints - myRoster.avgPoints.totalPoints > 2 &&
+              oppNewAvgPoints - oppRoster.avgPoints.totalPoints > 2
             ) {
               trades.push(trade)
             }

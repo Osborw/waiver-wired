@@ -1,7 +1,6 @@
 import fetch from 'node-fetch'
-import { Player, SleeperPosition, WeeklyStats } from '../../shared/types'
-import { calculateDefPPR, calculatePPR } from './calculators'
-import { mapWeekDataToFantasyStats } from './mapper'
+import { Player, WeeklyStats } from '../../shared/types'
+import { mapWeekDataToFantasyStats } from '../../shared/stats-mapper'
 import { readUnits, writePlayers } from '../dbs/main'
 
 // READ IN Weekly STATS
@@ -36,13 +35,11 @@ export const loadWeeklyStats = async (maxWeeks: number, year: number) => {
             const weekData = mapWeekDataToFantasyStats(data[id])
             if (weekData && weekData.gp != undefined && weekData.gp >= 1) {
 
-                const isDefense = allUnitsObj[id].position === SleeperPosition.DEF
-
                 const weeklyStats: WeeklyStats = {
                     id,
                     weekNumber: week,
                     gp: 1,
-                    ptsPPR: isDefense ? calculateDefPPR(weekData) : calculatePPR(weekData)
+                    weekStats: weekData
                 }
 
                 if (!playerObj[id]) {
@@ -56,7 +53,6 @@ export const loadWeeklyStats = async (maxWeeks: number, year: number) => {
                         fantasyPositions: unit.fantasyPositions,
                         injuryStatus: unit.injuryStatus,
                         team: unit.team,
-                        ownerId: null,
                         weeklyStats: [weeklyStats]
                     }
                     playerObj[id] = player

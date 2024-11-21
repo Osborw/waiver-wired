@@ -8,22 +8,39 @@ export enum SleeperPosition {
 }
 
 export enum SearchPosition {
-    QB = 'QB',
-    RB = 'RB',
-    WR = 'WR',
-    TE = 'TE',
-    K = 'K',
-    DEF = 'DEF',
-    FLEX = 'FLEX',
+  QB = 'QB',
+  RB = 'RB',
+  WR = 'WR',
+  TE = 'TE',
+  K = 'K',
+  DEF = 'DEF',
+  FLEX = 'FLEX',
+  SUPER_FLEX = 'SUPER_FLEX'
+}
+
+export const SearchPositionToSleeperPositionMapper = {
+  [SearchPosition.QB]: [SleeperPosition.QB],
+  [SearchPosition.RB]: [SleeperPosition.RB],
+  [SearchPosition.WR]: [SleeperPosition.WR],
+  [SearchPosition.TE]: [SleeperPosition.TE],
+  [SearchPosition.DEF]: [SleeperPosition.DEF],
+  [SearchPosition.K]: [SleeperPosition.K],
+  [SearchPosition.FLEX]: [SleeperPosition.RB, SleeperPosition.WR, SleeperPosition.TE],
+  [SearchPosition.SUPER_FLEX]: [SleeperPosition.RB, SleeperPosition.WR, SleeperPosition.TE, SleeperPosition.QB],
 }
 
 export enum SleeperInjuryStatus {
   IR = 'IR',
-  Out = "Out",
-  Questionable = "Questionable",
+  Out = 'Out',
+  Questionable = 'Questionable',
   NA = 'NA',
   PUP = 'PUP',
-  Sus = 'SUS'
+  Sus = 'SUS',
+}
+
+export enum TimeFrame {
+  Season = 'season',
+  FiveWeek = 'fiveWeek',
 }
 
 export interface SleeperUnit {
@@ -58,23 +75,30 @@ export interface Player {
   injuryStatus: SleeperInjuryStatus | null
 
   weeklyStats: WeeklyStats[]
-  ownerId: string | null
 }
 
 export interface WeeklyStats {
   id: string
   weekNumber: number
-  ptsPPR: number
+  gp: number
+  weekStats: Partial<FantasyStats>
+}
+
+export interface CalculatedWeeklyStats extends WeeklyStats {
+  fantasyPoints: number
+}
+
+export interface Metrics {
+  avgPoints: number
+  stdDev: number
   gp: number
 }
 
 export interface CalculatedPlayer extends Player {
   fantasyPositions: SleeperPosition[]
-  avgPoints: number
-  stdDev: number
-  gp: number
-  tier?: number
-  tierDiff?: number
+  seasonMetrics: Metrics
+  fiveWeekMetrics: Metrics
+  ownerId: string | null
 }
 
 export interface TieredPlayer extends CalculatedPlayer {
@@ -83,50 +107,49 @@ export interface TieredPlayer extends CalculatedPlayer {
 }
 
 export interface RosterStat {
-  startingStatSum: number
+  totalPoints: number
   rank: number
 }
 
-export interface Lineup {
-  QB: CalculatedPlayer[]
-  RB: CalculatedPlayer[]
-  WR: CalculatedPlayer[]
-  TE: CalculatedPlayer[]
-  FLEX: CalculatedPlayer[]
-  K: CalculatedPlayer[]
-  DEF: CalculatedPlayer[]
+export interface PositionRosterStat extends RosterStat {
+  position: SearchPosition
+}
+
+export interface LineupSlot {
+  position: SearchPosition,
+  player?: CalculatedPlayer
+}
+
+export interface LeagueInfo {
+  leagueId: string
+  leagueName: string
+  rosterSpots: SearchPosition[] 
+  validRosterPositions: SearchPosition[] 
 }
 
 export interface Roster {
-
   ownerId: string
   ownerName: string
-  startingLineup: Lineup 
+  teamName: string
+  starters: Record<string, LineupSlot> 
   fullRoster: CalculatedPlayer[]
-
+  positionRanks: PositionRosterStat[]
   avgPoints: RosterStat
   stdDev: RosterStat
-
-  QB: RosterStat
-  RB: RosterStat
-  WR: RosterStat
-  TE: RosterStat
-  FLEX: RosterStat
-  K: RosterStat
-  DEF: RosterStat
-  
 }
 
 export interface Trade {
   team1Owner: string
   team2Owner: string
-  team1Players: CalculatedPlayer[],
+  team1Players: CalculatedPlayer[]
   team2Players: CalculatedPlayer[]
   team1Improvement: number
   team2Improvement: number
 }
 
 export interface FantasyStats {
+  weekScore: number
+
   rankStd: number
   rankPPR: number
   rankHalfPPR: number
@@ -204,6 +227,7 @@ export interface FantasyStats {
   rushRecYd: number
   rushRZAtt: number
   rushTd: number
+  rushFd: number
   rushTd40p: number
   rushTd50p: number
   rushTdLng: number
@@ -265,10 +289,12 @@ export interface FantasyStats {
   kr: number
   krLng: number
   krYd: number
+  krTd: number
   miscRetYd: number
   pr: number
   prLng: number
   prYd: number
+  prTd: number
   prYpa: number
   puntBlkd: number
   puntIn20: number
@@ -281,7 +307,7 @@ export interface FantasyStats {
   stTd: number
   stTklSolo: number
   xpBlkd: number
-  
+
   anytimeTds: number
   ff: number
   ffMisc: number
@@ -324,11 +350,13 @@ export interface FantasyStats {
   defKr: number
   defKrLng: number
   defKrYd: number
+  defKrTd: number
   defKrYpa: number
   defPassDef: number
   defPr: number
   defPrLng: number
   defPrYd: number
+  defPrTd: number
   defPrYpa: number
   defStFF: number
   defStFumRec: number

@@ -1,12 +1,11 @@
 import React from 'react'
 import { Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ComposedChart } from 'recharts'
 import { IndividualGraphTooltip } from './GraphTooltip'
-import { TimeFrame } from './TimeFrameSelector'
-import { SearchPosition, SleeperPosition, WeeklyStats } from '../../shared/types'
+import { SearchPosition, SleeperPosition, TimeFrame, WeeklyStats } from '../../../shared/types'
 
 const weekExists = (weeks: WeeklyStats[], weekNumber: number) => {
   const matchingWeek = weeks.find(week => week.weekNumber === weekNumber)
-  if (matchingWeek) return matchingWeek.ptsPPR
+  if (matchingWeek) return matchingWeek.weekStats.weekScore
   else return null
 }
 
@@ -15,7 +14,7 @@ interface IndividualGraphProps {
   avg: number
   stdDev: number
   position: SearchPosition 
-  timeFrame: TimeFrame
+  timeFrame: TimeFrame 
 
 }
 
@@ -36,7 +35,7 @@ const IndividualGraph = ({ weeks, avg, stdDev, position, timeFrame }: Individual
 
   const yDomain = position === 'K' ? [0, 25] : [0, 50]
   //this isnt working for some reason vvvvvv
-  const xDomain = timeFrame === TimeFrame.fiveWeeks ? [1, 17] : [1, 17]
+  const xDomain = timeFrame === TimeFrame.FiveWeek ? [1, 17] : [1, 17]
 
   return (
     <ComposedChart

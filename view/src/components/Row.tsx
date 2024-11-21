@@ -1,9 +1,11 @@
+import React from 'react'
 import IndividualGraph from './IndividualGraph'
 import styled from 'styled-components'
 import { useState, useEffect } from 'react'
-import { CalculatedPlayer, Roster, SearchPosition, SleeperPosition, WeeklyStats } from '../../shared/types'
-import { TimeFrame } from './TimeFrameSelector'
+import { CalculatedPlayer, Roster, SearchPosition, SleeperPosition, TimeFrame, WeeklyStats } from '../../../shared/types'
 import { View } from './ViewSelector'
+import { LineupSlot } from '../../../shared/types'
+import { isFlexPosition } from '../../../shared/position-logic'
 
 const NameFieldLength = '200px'
 const AvgPPRFieldLength = '120px'
@@ -158,7 +160,7 @@ export const Row = ({
         color={determineTierColor(tier)} 
       >
         <Cell>{rank}</Cell>
-        {selectedPosition === SearchPosition.FLEX && <Cell>{position}</Cell>}
+        {isFlexPosition(selectedPosition) && <Cell>{position}</Cell>}
         <NameField name={name} ownerId={ownerId} myOwnerId={myOwnerId} />
         <Cell>{gamesPlayed}</Cell>
         <Cell inputsize={AvgPPRFieldLength}>{avg ? avg.toFixed(2) : 0}</Cell>
@@ -210,19 +212,24 @@ export const RosterTitleRow = ({ toggleAllVisible }: RosterTitleRowProps) => {
 }
 
 interface RosterRowProps {
-  player: CalculatedPlayer 
-  position: SearchPosition
+  rosterSlot: LineupSlot
   allVisible: boolean
 }
 
 export const RosterRow = ({
-  player,
-  position,
+  rosterSlot,
   allVisible,
 }: RosterRowProps) => {
   const [individualGraphVisible, toggleIndividualGraphVisibility] = useState(
     false,
   )
+
+  const position = rosterSlot.position
+  const player = rosterSlot.player
+
+  if(!player) return <div>Error</div>
+
+  const metrics = player.fiveWeekMetrics
 
   //all Visible changes when someone click the close all button
   useEffect(() => {
@@ -236,10 +243,10 @@ export const RosterRow = ({
       <Cells>
         <Cell>{position}</Cell>
         <Cell inputsize={NameFieldLength}>{player.fullName}</Cell>
-        <Cell>{player.gp}</Cell>
-        <Cell inputsize={AvgPPRFieldLength}>{player.avgPoints ? player.avgPoints.toFixed(2) : 0}</Cell>
+        <Cell>{metrics.gp}</Cell>
+        <Cell inputsize={AvgPPRFieldLength}>{metrics.avgPoints ? metrics.avgPoints.toFixed(2) : 0}</Cell>
         <Cell inputsize={AvgPPRFieldLength}>
-          {(player.gp > 1 && player.stdDev) ? player.stdDev.toFixed(2) : '------'}
+          {(metrics.gp > 1 && metrics.stdDev) ? metrics.stdDev.toFixed(2) : '------'}
         </Cell>
         <Cell>{individualGraphVisible ? ' ˄ ' : ' ˅ '}</Cell>
       </Cells>
@@ -248,10 +255,10 @@ export const RosterRow = ({
           {
             <IndividualGraph
               weeks={player.weeklyStats}
-              avg={player.avgPoints}
-              stdDev={player.stdDev}
+              avg={metrics.avgPoints}
+              stdDev={metrics.stdDev}
               position={position}
-              timeFrame={TimeFrame.fiveWeeks}
+              timeFrame={TimeFrame.FiveWeek}
             />
           }
         </Graph>

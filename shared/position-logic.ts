@@ -1,7 +1,14 @@
-import { Player, SearchPosition, SleeperPosition } from "./types"
+import { CalculatedPlayer, Player, SearchPosition, SleeperPosition } from "./types"
 
 const playerPlaysPosition = (p: Player, position: SearchPosition) => {
   if(position === SearchPosition.FLEX){
+    if(p.fantasyPositions?.includes(SleeperPosition.RB)) return true
+    if(p.fantasyPositions?.includes(SleeperPosition.WR)) return true
+    if(p.fantasyPositions?.includes(SleeperPosition.TE)) return true
+    return false
+  }
+  if(position === SearchPosition.SUPER_FLEX){
+    if(p.fantasyPositions?.includes(SleeperPosition.QB)) return true
     if(p.fantasyPositions?.includes(SleeperPosition.RB)) return true
     if(p.fantasyPositions?.includes(SleeperPosition.WR)) return true
     if(p.fantasyPositions?.includes(SleeperPosition.TE)) return true
@@ -15,9 +22,13 @@ const playerPlaysPosition = (p: Player, position: SearchPosition) => {
   else if(position === SearchPosition.K) return p.fantasyPositions?.includes(SleeperPosition.K)
 }
 
-export const getPlayersByPosition = (players: Record<string, Player>, position: SearchPosition) => {
-  const allPlayers = Object.values(players)
-  return allPlayers.filter(p => playerPlaysPosition(p, position))
+
+export const getPlayersByPosition = (players: CalculatedPlayer[], position: SearchPosition) => {
+  return players.filter(p => playerPlaysPosition(p, position))
+}
+
+export const isFlexPosition = (position: SearchPosition) => {
+  return position === SearchPosition.FLEX || position === SearchPosition.SUPER_FLEX
 }
 
 export const convertSearchPositionToSleeperPosition = (pos: SearchPosition) => {

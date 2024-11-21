@@ -1,3 +1,5 @@
+import React from 'react'
+
 const linkStyle = {
   marginRight: 15,
   cursor: 'pointer',
