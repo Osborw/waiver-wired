@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import Layout from './components/MyLayout'
-import { getLeague } from './server/getIndex'
-import { LeagueInfo, Roster, Trade } from '../../shared/types'
-import { TopPlayerReturn } from '../../shared/api-types'
-import { Players } from './pages/players'
-import { Rosters } from './pages/rosters'
-import { Trades } from './pages/trades'
-import { Spinner } from './components/Spinner'
+import { Home } from './pages/home'
+import { League } from './pages/league'
 
 export enum Page {
+  HOME,
+  LEAGUE,
   PLAYERS,
   ROSTERS,
   TRADES
 }
 
 export const App = () => {
-  const [page, setPage] = useState<Page>(Page.PLAYERS)
-  const [players, setPlayers] = useState<TopPlayerReturn[]>([])
-  const [rosters, setRosters] = useState<Roster[]>([])
-  const [trades, setTrades] = useState<Trade[]>([])
-  const [leagueInfo, setLeagueInfo] = useState<LeagueInfo>()
-  const [ownerId, setOwnerId] = useState<string>()
+  const [page, setPage] = useState<Page>(Page.HOME)
 
   useEffect(() => {
     const init = async () => {
@@ -31,34 +22,21 @@ export const App = () => {
       const leagueId = pathItems[1]
       const userId = pathItems[2]
 
-      await getLeagueInfo(leagueId, userId)
+      //if there's no leagueId or userId, set page as home
+      if(leagueId && userId){
+       setPage(Page.LEAGUE) 
+      }
+      else {
+        setPage(Page.HOME)
+      }
     }
     init()
   }, [])
 
-  const getLeagueInfo = async (leagueId: string, userId: string) => {
-    const ret = await getLeague(leagueId, userId)
-    ret.players.map(p => console.log(p.position, p.topPlayers.length))
-    setPlayers(ret.players)
-    setOwnerId(userId)
-    setRosters(ret.rosters)
-    setLeagueInfo(ret.league)
-    setTrades(ret.trades)
-    const websiteTitle = document.getElementById('title')
-    if(websiteTitle) websiteTitle.innerText = `${ret.league.leagueName} Waiver Wired`
-  }
-
   return (
     <div>
-      {leagueInfo && ownerId ? (
-        <Layout leagueName={leagueInfo.leagueName} setPage={setPage}>
-          {page === Page.PLAYERS && <Players players={players} leagueInfo={leagueInfo} ownerId={ownerId} />}
-          {page === Page.ROSTERS && <Rosters rosters={rosters} />}
-          {page === Page.TRADES && <Trades trades={trades} />}
-        </Layout>
-      ) : (
-        <Spinner />
-      )}
+      {page === Page.HOME && <Home />}
+      {page === Page.LEAGUE && <League />}
     </div>
   )
 }
