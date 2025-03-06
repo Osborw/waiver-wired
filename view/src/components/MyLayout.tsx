@@ -1,6 +1,6 @@
 import React, { ReactNode, Dispatch } from 'react';
 import Header from './Header';
-import { Page } from '../app';
+import { Page } from '../pages/league';
 
 const layoutStyle = {
   marginLeft: 20,

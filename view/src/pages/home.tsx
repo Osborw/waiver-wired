@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { LeagueInfo, getLeaguesByUsername } from '../server/getIndex'
+import { LeagueInfo, getLeaguesByUserId, getUserIdByUsername } from '../server/getIndex'
+import { Link } from 'react-router'
 
 const HomePageLayout = styled.div`
   display: flex;
@@ -26,6 +27,8 @@ const Leagues = styled.div`
 export const Home = () => {
   const [usernameSearch, setUsernameSearch] = useState('')
   const [leagues, setLeagues] = useState<LeagueInfo[]>([])
+  const [userId, setUserId] = useState<string>('')
+  const [searchError, setSearchError] = useState<string>()
 
   useEffect(() => {
     const init = async () => {}
@@ -33,7 +36,12 @@ export const Home = () => {
   }, [])
 
   const searchForLeaguesByUser = async () => {
-    const leagues = await getLeaguesByUsername(usernameSearch)
+    const searchedUserId = await getUserIdByUsername(usernameSearch)
+
+    if(!searchedUserId) setSearchError(`No User found for "${usernameSearch}"`) 
+
+    const leagues = await getLeaguesByUserId(searchedUserId)
+    setUserId(searchedUserId)
     setLeagues(leagues)
   }
 
@@ -51,9 +59,10 @@ export const Home = () => {
 
       </Input>
       {/* <Button onClick={searchForLeaguesByUser}>Search</Button> */}
+      {searchError && <p>{searchError}</p>}
       <Leagues>
         {leagues.map((league) => (
-          <LeagueTile league={league} />
+          <LeagueTile league={league} userId={userId} />
         ))}
       </Leagues>
     </HomePageLayout>
@@ -68,12 +77,15 @@ const LeagueTileDiv = styled.div`
 
 interface LeagueTileProps {
   league: LeagueInfo
+  userId: string
 }
 
-const LeagueTile = ({ league }: LeagueTileProps) => {
+const LeagueTile = ({ league, userId }: LeagueTileProps) => {
   return (
-    <LeagueTileDiv>
-      <p>{league.name}</p>
-    </LeagueTileDiv>
+    <Link to={`/${league.leagueId}/${userId}`}>
+      <LeagueTileDiv>
+        <p>{league.name}</p>
+      </LeagueTileDiv>
+    </Link>
   )
 }

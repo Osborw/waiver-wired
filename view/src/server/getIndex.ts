@@ -38,9 +38,9 @@ interface GetUserFromSleeperReturn {
   user_id: string
 }
 
-export const getLeaguesByUsername = async (username: string) => {
+export const getUserIdByUsername = async (username: string) => {
   const res = await fetch(`https://api.sleeper.app/v1/user/${username}`)
   const data: GetUserFromSleeperReturn = await res.json()
   const userId = data.user_id 
-  return getLeaguesByUserId(userId)
+  return userId 
 }

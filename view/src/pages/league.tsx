@@ -7,7 +7,12 @@ import { Players } from '../pages/players'
 import { Rosters } from '../pages/rosters'
 import { Trades } from '../pages/trades'
 import { Spinner } from '../components/Spinner'
-import { Page } from '../app'
+
+export enum Page {
+  PLAYERS,
+  ROSTERS,
+  TRADES
+}
 
 export const League = () => {
   const [page, setPage] = useState<Page>(Page.PLAYERS)

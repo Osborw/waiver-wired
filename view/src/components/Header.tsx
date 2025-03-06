@@ -1,5 +1,5 @@
 import React, { Dispatch } from 'react'
-import { Page } from '../app';
+import { Page } from '../pages/league';
 
 const linkStyle = {
   marginRight: 15
