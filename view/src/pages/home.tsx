@@ -55,6 +55,7 @@ export const Home = () => {
       <Input 
         onChange={(e: any) => setUsernameSearch(e.target.value)}
         onKeyDown={onKeyDown}
+        spellCheck={false}
       >
 
       </Input>
@@ -73,6 +74,8 @@ const LeagueTileDiv = styled.div`
   display: flex;
   border: solid;
   border-radius: 5px;
+  margin: 10px;
+  padding: 5px;
 `
 
 interface LeagueTileProps {

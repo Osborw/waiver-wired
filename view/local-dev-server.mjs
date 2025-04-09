@@ -11,7 +11,8 @@ const main = async () => {
   let ctx = await esbuild.context({
     entryPoints: [
       {out: 'bundle', in: 'src/index.tsx'},
-      'src/index.html'
+      'src/index.html',
+      'src/index.css'
     ],
     bundle: true,
     minify: true,
@@ -19,7 +20,8 @@ const main = async () => {
     outdir: 'build',
     outbase: 'src',
     loader: {
-      '.html': 'copy'
+      '.html': 'copy',
+      '.css': 'copy'
     }
   })
 

@@ -11,7 +11,7 @@ import { Spinner } from '../components/Spinner'
 export enum Page {
   PLAYERS,
   ROSTERS,
-  TRADES
+  TRADES,
 }
 
 export const League = () => {
@@ -32,10 +32,9 @@ export const League = () => {
       const userId = pathItems[2]
 
       //if there's no leagueId or userId, show some error
-      if(leagueId && userId){
+      if (leagueId && userId) {
         await getLeagueInfo(leagueId, userId)
-      }
-      else {
+      } else {
         alert('woah this league or user does not exist!')
       }
     }
@@ -50,7 +49,7 @@ export const League = () => {
     setLeagueInfo(ret.league)
     setTrades(ret.trades)
     const websiteTitle = document.getElementById('title')
-    if(websiteTitle) websiteTitle.innerText = `${ret.league.leagueName} Waiver Wired`
+    if (websiteTitle) websiteTitle.innerText = `${ret.league.leagueName} Waiver Wired`
   }
 
   return (
