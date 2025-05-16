@@ -38,9 +38,18 @@ export const Home = () => {
   const searchForLeaguesByUser = async () => {
     const searchedUserId = await getUserIdByUsername(usernameSearch)
 
-    if(!searchedUserId) setSearchError(`No User found for "${usernameSearch}"`) 
+    if(!searchedUserId) {
+      setSearchError(`No User found for "${usernameSearch}"`) 
+      return
+    }
 
     const leagues = await getLeaguesByUserId(searchedUserId)
+
+    if(!leagues || leagues.length < 1) {
+      setSearchError(`No Leagues found for User "${usernameSearch}"`)
+      return
+    }
+
     setUserId(searchedUserId)
     setLeagues(leagues)
   }
@@ -49,11 +58,16 @@ export const Home = () => {
     if(event.key === "Enter") searchForLeaguesByUser()
   }
 
+  const onChange = (event: any) => {
+    setSearchError(undefined)
+    setUsernameSearch(event.target.value)
+  }
+
   return (
     <HomePageLayout>
       <Title> WAIVER WIRED! </Title>
       <Input 
-        onChange={(e: any) => setUsernameSearch(e.target.value)}
+        onChange={onChange}
         onKeyDown={onKeyDown}
         spellCheck={false}
       >
