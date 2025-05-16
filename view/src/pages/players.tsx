@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Layout from '../components/MyLayout'
 import PositionSelector from '../components/PositionSelector'
 import { TimeFrameSelector } from '../components/TimeFrameSelector'
 import { ViewSelector, View } from '../components/ViewSelector'
 import PlayerTable from '../components/PlayerTable'
 import PlayerGraph from '../components/PlayerGraph'
-import { getLeague } from '../server/getIndex'
 import { TieredPlayer, SearchPosition, TimeFrame, LeagueInfo } from '../../../shared/types'
 import { TopPlayerReturn } from '../../../shared/api-types'
 

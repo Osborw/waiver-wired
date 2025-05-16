@@ -108,7 +108,6 @@ export const makeRosters = async ({
 
   const rosters: Roster[] = []
 
-  //TODO: This object has to be more generic and better
   owners.forEach(async (ownerId) => {
     const fullRoster = ownedPlayers.filter((p) => p.ownerId === ownerId)
     const startingLineup = createStartingLineup(fullRoster, leagueRosterSpots)

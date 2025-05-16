@@ -260,7 +260,7 @@ export const mapWeekDataToFantasyStats = (data: any) => {
 /**
  * Use this array to help check if there are any new keys provided by sleeper
  * that we do not account for.
- * 
+ *
  * If there are missing keys, add them here and also to the mapper above.
  */
 export const sleeperStatKeys = [
@@ -288,6 +288,7 @@ export const sleeperStatKeys = [
   'tm_off_snp',
   'tm_st_snp',
 
+  'fg_ret_yd',
   'fga',
   'fgblkd',
   'fgm',
@@ -296,11 +297,16 @@ export const sleeperStatKeys = [
   'fgm_30_39',
   'fgm_40_49',
   'fgm_50p',
+  'fgm_50_59',
+  'fgm_60p',
   'fgmiss',
+  'fgmiss_0_19',
   'fgmiss_20_29',
   'fgmiss_30_39',
   'fgmiss_40_49',
+  'fgmiss_50_59',
   'fgmiss_50p',
+  'fgmiss_60p',
   'fgm_lng',
   'fgm_pct',
   'fgm_yds',
@@ -384,6 +390,7 @@ export const sleeperStatKeys = [
   'bonus_fd_te',
   'bonus_fd_wr',
   'bonus_pass_cmp_25',
+  'bonus_pass_yd_300',
   'bonus_pass_yd_400',
   'bonus_rec_rb',
   'bonus_rec_te',
@@ -475,7 +482,7 @@ export const sleeperStatKeys = [
   'def_st_ff',
   'def_st_fum_rec',
   'def_st_td',
-  'def_st_tkl_sol',
+  'def_st_tkl_solo',
   'def_td',
   'def_2pt',
   'int',
@@ -497,7 +504,7 @@ export const sleeperStatKeys = [
   'yds_allow_0_100',
   'yds_allow_100_199',
   'yds_allow_200_299',
-  'yds_allow_300_350',
+  'yds_allow_300_349',
   'yds_allow_350_399',
   'yds_allow_400_449',
   'yds_allow_450_499',

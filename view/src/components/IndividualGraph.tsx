@@ -1,7 +1,7 @@
 import React from 'react'
-import { Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ComposedChart } from 'recharts'
+import { Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, ComposedChart } from 'recharts'
 import { IndividualGraphTooltip } from './GraphTooltip'
-import { SearchPosition, SleeperPosition, TimeFrame, WeeklyStats } from '../../../shared/types'
+import { SearchPosition, TimeFrame, WeeklyStats } from '../../../shared/types'
 
 const weekExists = (weeks: WeeklyStats[], weekNumber: number) => {
   const matchingWeek = weeks.find(week => week.weekNumber === weekNumber)

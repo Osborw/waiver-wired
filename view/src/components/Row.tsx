@@ -2,7 +2,7 @@ import React from 'react'
 import IndividualGraph from './IndividualGraph'
 import styled from 'styled-components'
 import { useState, useEffect } from 'react'
-import { CalculatedPlayer, Roster, SearchPosition, SleeperPosition, TimeFrame, WeeklyStats } from '../../../shared/types'
+import { SearchPosition, SleeperPosition, TimeFrame, WeeklyStats } from '../../../shared/types'
 import { View } from './ViewSelector'
 import { LineupSlot } from '../../../shared/types'
 import { isFlexPosition } from '../../../shared/position-logic'
@@ -54,7 +54,7 @@ interface TitleRowProps {
   toggleAllVisible: () => void
 }
 
-export const TitleRow = ({ position, timeFrame, view, toggleAllVisible }: TitleRowProps) => {
+export const TitleRow = ({ position, toggleAllVisible }: TitleRowProps) => {
   return (
     <TitleRowComponent>
       <Cell>{'Rank'}</Cell>

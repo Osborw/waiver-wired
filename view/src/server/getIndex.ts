@@ -6,30 +6,41 @@ export const getLeague = async (leagueId: string, userId: string) => {
   return data
 }
 
-export const getLeaguesForUser = async (userId: string) => {
-
+interface GetLeaguesByUserIdReturn {
+  league_id: string
+  name: string
+  avatar: string
 }
 
-// export const topPlayers = async (position: SearchPosition) => {
-//   const res = await fetch(`http://localhost:3001/allSeason/${position}`)
-//   const data: TopPlayerReturn = await res.json()
-//   return data
-// }
+export interface LeagueInfo {
+  leagueId: string
+  name: string
+  avatar: string
+}
 
-// export const fiveWeekTopPlayers = async (position: SearchPosition)=> {
-//   const res = await fetch(`http://localhost:3001/fiveWeeks/${position}`)
-//   const data: TopPlayerReturn = await res.json()
-//   return data
-// }
+export const getLeaguesByUserId = async (userId: string): Promise<LeagueInfo[]> => {
+  //TODO: Make this by env or something
+  const season = '2024'
+  const res = await fetch(`https://api.sleeper.app/v1/user/${userId}/leagues/nfl/${season}`)
+  const data: GetLeaguesByUserIdReturn[] = await res.json()
 
-// export const getRosters = async () => {
-//   const res = await fetch(`http://localhost:3001/rosters`)
-//   const data: RostersReturn = await res.json()
-//   return data
-// }
+  const leagues: LeagueInfo[] = data.map(league => ({
+    leagueId: league.league_id,
+    name: league.name,
+    avatar: league.avatar
+  }))
 
-// export const getTrades = async () => {
-//   const res = await fetch(`http://localhost:3001/trades`)
-//   const data: TradesReturn = await res.json()
-//   return data
-// }
+  return leagues
+}
+
+interface GetUserFromSleeperReturn {
+  display_name: string
+  user_id: string
+}
+
+export const getUserIdByUsername = async (username: string) => {
+  const res = await fetch(`https://api.sleeper.app/v1/user/${username}`)
+  const data: GetUserFromSleeperReturn = await res.json()
+  const userId = data?.user_id 
+  return userId 
+}

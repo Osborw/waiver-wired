@@ -6,7 +6,6 @@ import {
   YAxis,
   Tooltip,
   Scatter,
-  Cell,
   Dot,
 } from 'recharts'
 import { TopPlayersGraphTooltip } from './GraphTooltip'

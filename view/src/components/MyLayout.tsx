@@ -1,14 +1,14 @@
 import React, { ReactNode, Dispatch } from 'react';
 import Header from './Header';
-import { Page } from '../app';
+import { Page } from '../pages/league';
+import styled from 'styled-components';
 
-const layoutStyle = {
-  marginLeft: 20,
-  marginRight: 20,
-  paddingLeft: 20,
-  paddingRight: 20,
-}
-
+const LayoutDiv = styled.div`
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+`
 interface LayoutProps {
   leagueName: string
   setPage: Dispatch<React.SetStateAction<Page>>
@@ -16,10 +16,10 @@ interface LayoutProps {
 }
 
 const Layout = (props: LayoutProps) => (
-  <div style={layoutStyle}>
+  <LayoutDiv>
     <Header leagueName={props.leagueName} setPage={props.setPage}/>
     {props && props.children}
-  </div>
+  </LayoutDiv>
 );
 
 export default Layout;

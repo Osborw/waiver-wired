@@ -9,14 +9,16 @@ const main = async () => {
   await esbuild.build({
     entryPoints: [
       {out: 'bundle', in: 'src/index.tsx'},
-      'src/index.html'
+      'src/index.html',
+      'src/index.css'
     ],
     bundle: true,
     minify: true,
     outdir: 'build',
     outbase: 'src',
     loader: {
-      '.html': 'copy'
+      '.html': 'copy',
+      '.css': 'copy'
     }
   })
 }

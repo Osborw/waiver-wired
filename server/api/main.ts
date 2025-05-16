@@ -129,6 +129,7 @@ fastify.get(
       trades,
     }
 
+    reply.code(200)
     return ret
   },
 )

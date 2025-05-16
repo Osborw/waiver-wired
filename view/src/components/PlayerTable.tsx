@@ -70,9 +70,6 @@ export const RosterTable = ({ roster }: RosterTableProps) => {
     toggleAllVisible(!allVisible)
   }, [roster])
 
-  const cat = () => {
-  }
-
   return (
     <div>
       <RosterTitleRow toggleAllVisible={() => toggleAllVisible(!allVisible)} />
