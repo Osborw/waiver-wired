@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 
 const HomePageLayout = styled.div`
   display: flex;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   flex-direction: column;
   justify-content: center;
@@ -59,7 +59,6 @@ export const Home = () => {
       >
 
       </Input>
-      {/* <Button onClick={searchForLeaguesByUser}>Search</Button> */}
       {searchError && <p>{searchError}</p>}
       <Leagues>
         {leagues.map((league) => (
