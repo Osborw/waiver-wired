@@ -15,14 +15,14 @@
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@types/recharts": "1.8.26",
-    "esbuild": "0.24.0",
+    "esbuild": "0.25.4",
     "typescript": "^5.6.2"
   },
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router": "^7.2.0",
-    "recharts": "2.9.0",
-    "styled-components": "6.1.0"
+    "react-router": "7.5.2",
+    "recharts": "2.15.3",
+    "styled-components": "6.1.18"
   }
 }
