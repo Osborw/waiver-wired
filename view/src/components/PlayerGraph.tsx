@@ -73,7 +73,7 @@ export default ({ players, timeFrame, position, myOwnerId }: PlayerGraphProps) =
   )
 }
 
-const RenderDot: ScatterCustomizedShape = ({ cx, cy, payload }) => {
+const RenderDot: ScatterCustomizedShape = ({ cx, cy, payload }: any) => {
   return (
     <Dot cx={cx} cy={cy} fill={payload.color} r={4} />
   )
