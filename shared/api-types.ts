@@ -4,7 +4,6 @@ export interface LeagueReturn {
     players: TopPlayerReturn[]
     league: LeagueInfo
     rosters: Roster[] 
-    trades: Trade[]
 }
 
 export interface TopPlayerReturn {

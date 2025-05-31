@@ -1,145 +1,80 @@
 import React, { useState } from 'react'
-import { SleeperPosition, Trade } from '../../../shared/types'
+import { Roster, SearchPosition, SleeperPosition, Trade } from '../../../shared/types'
 import { styled } from 'styled-components'
+import { RosterList } from '../components/RosterList'
 
-const TradeDiv = styled.div`
+const TradeBuilderContainer = styled.div`
   display: flex;
   flex-direction: row;
-  margin-bottom: 20px;
-  border-style: solid;
-  border-width: 1px;
-  width: 70%;
+  width: 100vw;
 `
 
-const PlayerDiv = styled.div`
+const RosterContainer = styled.div`
   display: flex;
   flex-direction: column;
-  border-style: solid;
-  border-width: 1px;
-  width: 55%;
+  border: 1px black solid;
+  width: 20%;
+  min-height: 500px;
 `
 
-const PlayerListDiv = styled.div`
-  margin: 5px;
-`
-
-const IconDiv = styled.div`
+const OfferContainer = styled.div`
   display: flex;
-  flex-direction: column;
+  border: 1px black solid;
+  width: 20%;
+  min-height: 500px;
+`
+
+const ArrowContainer = styled.div`
+  border: 1px black solid;
   width: 10%;
+  min-height: 500px;
 `
 
-const ImprovementDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  border-style: solid;
-  border-width: 1px;
-`
-
-const NameDiv = styled.div`
-  margin: 2px;
-`
-
-const OwnerIdDiv = styled.div`
+const SortContainer = styled.div`
   display: flex;
   flex-direction: row;
+  border: 1px black solid;
+  height: 10%;
 `
 
-const PositionColor = styled.span<{ color?: string }>`
-  color: ${(props) => props.color || 'black'};
+const PlayersContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px black solid;
+  height: 90%
 `
 
-const colorByPosition = (position: SleeperPosition) => {
-  if (position === SleeperPosition.QB) return 'red'
-  if (position === SleeperPosition.RB) return 'green'
-  if (position === SleeperPosition.WR) return 'blue'
-  if (position === SleeperPosition.TE) return 'orange'
-  if (position === SleeperPosition.K) return 'purple'
-  if (position === SleeperPosition.DEF) return 'brown'
-}
-
-const getOwners = (trades: Trade[]) => {
-  const owners = trades.map((t) => t.team2Owner)
-  return Array.from(new Set(owners))
-}
 
 interface TradesProps {
-  trades: Trade[]
+  rosters: Roster[]
+  ownerId: string
+  leagueRosterSpots: SearchPosition[]
 }
 
-export const Trades = ({trades}: TradesProps) => {
-  const filteredTrades = trades.filter(t => !t.team2Players.find(p => p.fantasyPositions[0] === SleeperPosition.DEF))
-  const owners = getOwners(filteredTrades)
-  const [expanded, setExpanded] = useState<string[]>([])
+export const Trades = ({rosters, ownerId, leagueRosterSpots}: TradesProps) => {
 
-  const toggleExpanded = (ownerId: string) => {
-    if (expanded.includes(ownerId)) {
-      const copyExpanded = [...expanded]
-      const idx = expanded.findIndex((id) => id === ownerId)
-      copyExpanded.splice(idx, 1)
-      setExpanded(copyExpanded)
-    } else {
-      setExpanded([...expanded, ownerId])
-    }
-  }
+  const [selectedRoster, setSelectedRoster] =  useState(rosters.find(roster => roster.ownerId !== ownerId))
+
+  const ownersRoster = rosters.find(roster => roster.ownerId === ownerId)
+  if(!ownersRoster) return <div>No owners roster found!</div>
+  if(!selectedRoster) return <div>No selected roster found!</div>
 
   return (
     <div>
-      <h2> Trades </h2>
-      <div>
-        {owners.map((ownerId) => {
-          const isExpanded = expanded.includes(ownerId)
-          const size = isExpanded ? 100 : 1
-          return (
-            <div>
-              <OwnerIdDiv>
-                <h3>{ownerId}</h3>
-                <div style={{ display: 'flex', alignItems: 'center', margin: '5px' }}>
-                  <button onClick={() => toggleExpanded(ownerId)}>{isExpanded ? '-' : '+'}</button>
-                </div>
-              </OwnerIdDiv>
-              {filteredTrades
-                .filter((t) => t.team2Owner === ownerId)
-                .slice(0, size)
-                .map((t) => {
-                  return (
-                    <TradeDiv>
-                      <PlayerDiv>
-                        <ImprovementDiv>{t.team1Improvement.toFixed(1)}</ImprovementDiv>
-                        <PlayerListDiv>
-                          {t.team1Players.map((p) => (
-                            <NameDiv>
-                              <PositionColor
-                                color={colorByPosition(p.fantasyPositions[0])}
-                              >{`${p.fantasyPositions[0]}`}</PositionColor>
-                              {` - ${p.fullName} - ${p.fiveWeekMetrics.avgPoints.toFixed(2)}`}
-                            </NameDiv>
-                          ))}
-                        </PlayerListDiv>
-                      </PlayerDiv>
-                      <IconDiv>
-                        <ImprovementDiv>{`<--->`}</ImprovementDiv>
-                      </IconDiv>
-                      <PlayerDiv>
-                        <ImprovementDiv>{t.team2Improvement.toFixed(1)}</ImprovementDiv>
-                        <PlayerListDiv>
-                          {t.team2Players.map((p) => (
-                            <NameDiv>
-                              <PositionColor
-                                color={colorByPosition(p.fantasyPositions[0])}
-                              >{`${p.fantasyPositions[0]}`}</PositionColor>
-                              {` - ${p.fullName} - ${p.fiveWeekMetrics.avgPoints.toFixed(2)}`}
-                            </NameDiv>
-                          ))}
-                        </PlayerListDiv>
-                      </PlayerDiv>
-                    </TradeDiv>
-                  )
-                })}
-            </div>
-          )
-        })}
-      </div>
+      <h2>Trade Builder</h2>
+      <TradeBuilderContainer>
+        <RosterList roster={ownersRoster} oppRoster={selectedRoster} leagueRosterSpots={leagueRosterSpots} />
+        <OfferContainer>
+
+        </OfferContainer>
+        <ArrowContainer>
+
+        </ArrowContainer>
+        <OfferContainer>
+
+        </OfferContainer>
+        <RosterList roster={selectedRoster} oppRoster={ownersRoster} leagueRosterSpots={leagueRosterSpots} />
+      </TradeBuilderContainer>
     </div>
   )
 }
