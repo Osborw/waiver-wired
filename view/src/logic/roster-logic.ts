@@ -7,6 +7,7 @@ import {
   SearchPosition,
   SearchPositionToSleeperPositionMapper,
   SleeperInjuryStatus,
+  TempRoster,
   TimeFrame,
 } from '../../../shared/types'
 
@@ -43,6 +44,18 @@ export const sortByPoints = (
   if (timeFrame === TimeFrame.FiveWeek)
     return sort(a.fiveWeekMetrics, b.fiveWeekMetrics)
   else return sort(a.seasonMetrics, b.seasonMetrics)
+}
+
+export const createTempRoster = (ownerId: string, players: CalculatedPlayer[], leagueRosterSpots: SearchPosition[]): TempRoster => {
+  const starters = createStartingLineup(players, leagueRosterSpots)
+  const avgPoints = rosterSumAvgStats(Object.values(starters))
+
+  return {
+    ownerId,
+    fullRoster: players,
+    starters,
+    avgPoints
+  }  
 }
 
 export const createStartingLineup = (

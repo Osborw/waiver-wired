@@ -138,6 +138,13 @@ export interface Roster {
   stdDev: RosterStat
 }
 
+export interface TempRoster {
+  ownerId: string
+  starters: Record<string, LineupSlot>
+  fullRoster: CalculatedPlayer[]
+  avgPoints: number 
+}
+
 export interface Trade {
   team1Owner: string
   team2Owner: string
