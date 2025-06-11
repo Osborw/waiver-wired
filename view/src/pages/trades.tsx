@@ -14,7 +14,6 @@ const TradeBuilderContainer = styled.div`
 const ArrowContainer = styled.div`
   border: 1px black solid;
   width: 10%;
-  min-height: 500px;
 `
 
 const createBaseTradeRoster = (originalRoster: Roster): TradeRoster => {

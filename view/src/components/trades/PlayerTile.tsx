@@ -57,6 +57,7 @@ interface PlayerTileProps {
   ownerTradeRoster: TradeRoster
   oppTradeRoster: TradeRoster
   leagueRosterSpots: SearchPosition[]
+  inOffer: boolean
   onClick: (player: CalculatedPlayer) => void 
 }
 
@@ -83,13 +84,15 @@ const getTradeValue = ({ player, ownerPostTradeRoster, oppPostTradeRoster, leagu
   return { userGain, oppGain }
 }
 
-export const PlayerTile = ({ player, ownerTradeRoster, oppTradeRoster, leagueRosterSpots, onClick}: PlayerTileProps) => {
+export const PlayerTile = ({ player, ownerTradeRoster, oppTradeRoster, leagueRosterSpots, inOffer, onClick}: PlayerTileProps) => {
   const tradeValue = getTradeValue({
     player,
     ownerPostTradeRoster: ownerTradeRoster.postTradeRoster,
     oppPostTradeRoster: oppTradeRoster.postTradeRoster,
     leagueRosterSpots,
   })
+
+  const buttonText = inOffer ? '-' : '+'
 
   return (
     <PlayerTileContainer>
@@ -106,7 +109,7 @@ export const PlayerTile = ({ player, ownerTradeRoster, oppTradeRoster, leagueRos
         <TradeInfo>
           {tradeValue.userGain.toFixed(0)} | {tradeValue.oppGain.toFixed(0)}
         </TradeInfo>
-        <button onClick={() => onClick(player)}>+</button>
+        <button onClick={() => onClick(player)}>{buttonText}</button>
       </TradeActionContainer>
     </PlayerTileContainer>
   )

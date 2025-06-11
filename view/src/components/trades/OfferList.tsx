@@ -9,14 +9,12 @@ const RosterContainer = styled.div`
   flex-direction: column;
   border: 1px black solid;
   width: 20%;
-  min-height: 500px;
 `
 
 const PlayersContainer = styled.div`
   display: flex;
   flex-direction: column;
   border: 1px black solid;
-  height: 90%;
 `
 
 interface TradesProps {
@@ -43,6 +41,7 @@ export const OfferList = ({
             ownerTradeRoster={ownerTradeRoster}
             oppTradeRoster={oppTradeRoster}
             leagueRosterSpots={leagueRosterSpots}
+            inOffer={true}
             onClick={removePlayerFromOfferList}
           />
         ))}
