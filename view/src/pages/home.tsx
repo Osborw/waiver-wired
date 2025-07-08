@@ -1,28 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { LeagueInfo, getLeaguesByUserId, getUserIdByUsername } from '../server/getIndex'
 import { Link } from 'react-router'
-
-const HomePageLayout = styled.div`
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
-
-const Title = styled.h1``
-
-const Input = styled.input`
-  border-radius: 5px;
-  margin: 10px;
-`
-
-const Leagues = styled.div`
-  display: flex;
-  flex-direction: row;
-`
+import './home.scss'
 
 export const Home = () => {
   const [usernameSearch, setUsernameSearch] = useState('')
@@ -64,32 +43,23 @@ export const Home = () => {
   }
 
   return (
-    <HomePageLayout>
-      <Title> WAIVER WIRED! </Title>
-      <Input 
+    <div className='home-layout'>
+      <h1> WAIVER WIRED! </h1>
+      <input 
         onChange={onChange}
         onKeyDown={onKeyDown}
         spellCheck={false}
       >
-
-      </Input>
+      </input>
       {searchError && <p>{searchError}</p>}
-      <Leagues>
+      <div className='leagues'>
         {leagues.map((league) => (
           <LeagueTile league={league} userId={userId} />
         ))}
-      </Leagues>
-    </HomePageLayout>
+      </div>
+    </div>
   )
 }
-
-const LeagueTileDiv = styled.div`
-  display: flex;
-  border: solid;
-  border-radius: 5px;
-  margin: 10px;
-  padding: 5px;
-`
 
 interface LeagueTileProps {
   league: LeagueInfo
@@ -99,9 +69,9 @@ interface LeagueTileProps {
 const LeagueTile = ({ league, userId }: LeagueTileProps) => {
   return (
     <Link to={`/${league.leagueId}/${userId}`}>
-      <LeagueTileDiv>
+      <div className='league-tile'>
         <p>{league.name}</p>
-      </LeagueTileDiv>
+      </div>
     </Link>
   )
 }

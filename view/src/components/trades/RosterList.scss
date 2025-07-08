@@ -1,0 +1,25 @@
+.roster {
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 200px;
+  max-width: 300px;
+  border: 1px black solid;
+}
+
+.sort {
+  display: flex;
+  flex-direction: column;
+  border: 1px black solid;
+}
+
+.points {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.players {
+  display: flex;
+  flex-direction: column;
+  border: 1px black solid;
+}

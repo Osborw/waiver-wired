@@ -1,0 +1,15 @@
+html {
+  display: flex;
+  height: 100vh;
+}
+
+body {
+  display: flex;
+  flex: 1 1 auto;
+  margin: 0px;
+}
+
+div {
+  display: flex;
+  flex: 1 0 auto;
+}

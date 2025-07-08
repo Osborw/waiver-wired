@@ -1,21 +1,9 @@
 import React from 'react'
 import { CalculatedPlayer, SearchPosition } from '../../../../shared/types'
-import { styled } from 'styled-components'
 import { TradeRoster } from '../../pages/trades'
 import { PlayerTile } from './PlayerTile'
+import './OfferList.scss'
 
-const RosterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: 1px black solid;
-  width: 20%;
-`
-
-const PlayersContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: 1px black solid;
-`
 
 interface TradesProps {
   offeredPlayers: CalculatedPlayer[]
@@ -33,8 +21,8 @@ export const OfferList = ({
   leagueRosterSpots,
 }: TradesProps) => {
   return (
-    <RosterContainer>
-      <PlayersContainer>
+    <div className='roster'>
+      <div className='players'>
         {offeredPlayers.map((player) => (
           <PlayerTile
             player={player}
@@ -45,7 +33,7 @@ export const OfferList = ({
             onClick={removePlayerFromOfferList}
           />
         ))}
-      </PlayersContainer>
-    </RosterContainer>
+      </div>
+    </div>
   )
 }

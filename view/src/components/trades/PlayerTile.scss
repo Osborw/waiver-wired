@@ -1,0 +1,39 @@
+.player-tile {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid gray;
+  margin: 2px;
+  padding: 4px;
+}
+
+div.player-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-info-line {
+  display: flex;
+  flex-direction: row;
+}
+
+p {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-right: 2px;
+  margin-left: 2px;
+}
+
+.trade-action {
+  display: flex;
+  flex-direction: row;
+}
+
+p.trade-info {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-right: 2px;
+  margin-left: 2px;
+  display: flex;
+  align-items: center;
+}

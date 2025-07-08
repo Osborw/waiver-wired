@@ -1,8 +1,8 @@
 import React from 'react'
 import { CalculatedPlayer, SearchPosition, TempRoster } from '../../../../shared/types'
-import { styled } from 'styled-components'
 import { createTempRoster } from '../../logic/roster-logic'
 import { TradeRoster } from '../../pages/trades'
+import './PlayerTile.scss'
 
 /**
  *
@@ -12,45 +12,6 @@ import { TradeRoster } from '../../pages/trades'
  * So for each player, that's two calculations that each take O(n^2) I think. not great, but not horrible. We'll see what happens.
  *
  */
-const PlayerTileContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  border: 1px solid gray;
-  margin: 2px;
-  padding: 4px;
-`
-
-const PlayerInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const PlayerInfoLine = styled.div`
-  display: flex;
-  flex-direction: row;
-`
-
-const PlayerInfo = styled.p`
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-right: 2px;
-  margin-left: 2px;
-`
-
-const TradeActionContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-`
-
-const TradeInfo = styled.p`
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-right: 2px;
-  margin-left: 2px;
-  display: flex;
-  align-items: center;
-`
 
 interface PlayerTileProps {
   player: CalculatedPlayer
@@ -95,22 +56,22 @@ export const PlayerTile = ({ player, ownerTradeRoster, oppTradeRoster, leagueRos
   const buttonText = inOffer ? '-' : '+'
 
   return (
-    <PlayerTileContainer>
-      <PlayerInfoContainer>
-        <PlayerInfoLine>
-          <PlayerInfo>{player.fullName}</PlayerInfo>
-          <PlayerInfo>{player.fantasyPositions[0]}</PlayerInfo>
-        </PlayerInfoLine>
-        <PlayerInfoLine>
-          <PlayerInfo>{player.fiveWeekMetrics.avgPoints.toFixed(2)}</PlayerInfo>
-        </PlayerInfoLine>
-      </PlayerInfoContainer>
-      <TradeActionContainer>
-        <TradeInfo>
+    <div className='player-tile'>
+      <div className='player-info'>
+        <div className='player-info-line'>
+          <p>{player.fullName}</p>
+          <p>{player.fantasyPositions[0]}</p>
+        </div>
+        <div className='player-info-line'>
+          <p>{player.fiveWeekMetrics.avgPoints.toFixed(2)}</p>
+        </div>
+      </div>
+      <div className='trade-action'>
+        <p className='trade-info'>
           {tradeValue.userGain.toFixed(0)} | {tradeValue.oppGain.toFixed(0)}
-        </TradeInfo>
+        </p>
         <button onClick={() => onClick(player)}>{buttonText}</button>
-      </TradeActionContainer>
-    </PlayerTileContainer>
+      </div>
+    </div>
   )
 }

@@ -1,34 +1,8 @@
 import React from 'react'
 import { CalculatedPlayer, SearchPosition, SleeperPosition } from '../../../../shared/types'
-import { styled } from 'styled-components'
 import { TradeRoster } from '../../pages/trades'
 import { PlayerTile } from './PlayerTile'
-
-const RosterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: 1px black solid;
-  width: 20%;
-`
-
-const SortContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: 1px black solid;
-`
-
-const PointsContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
-
-const PlayersContainer = styled.div`
-  display: flex;
-  position: absolute;
-  flex-direction: column;
-  border: 1px black solid;
-`
+import './RosterList.scss'
 
 const sortRosterByPosition = (a: CalculatedPlayer, b: CalculatedPlayer) => {
   //TODO: This might have to change depending on what other positions there are
@@ -69,16 +43,16 @@ export const RosterList = ({
   const sortedRoster = ownerTradeRoster.remainingRoster.fullRoster.sort(sortRosterByPosition)
 
   return (
-    <RosterContainer>
-      <SortContainer>
+    <div className='roster'>
+      <div className='sort'>
         <h3>{ownerTradeRoster.ownerName}</h3>
-        <PointsContainer>
+        <div className='points'>
           <h3>{originalPoints.toFixed(2)}</h3>
           <h4>{newPoints.toFixed(2)}</h4>
           <h5>{pointDifference.toFixed(2)}</h5>
-        </PointsContainer>
-      </SortContainer>
-      <PlayersContainer>
+        </div>
+      </div>
+      <div className='players'>
         {sortedRoster.map((player) => (
           <PlayerTile
             player={player}
@@ -89,7 +63,7 @@ export const RosterList = ({
             onClick={addPlayerToOfferList}
           />
         ))}
-      </PlayersContainer>
-    </RosterContainer>
+      </div>
+    </div>
   )
 }

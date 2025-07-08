@@ -1,0 +1,20 @@
+.trade-screen { 
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  scrollbar-gutter: auto;
+}
+
+.trade-builder {
+  display: flex;
+  flex-direction: row;
+  min-width: 1000px;
+  max-width: 1500px;
+  flex: 1 0 auto;
+  border: 1px solid;
+}
+
+.arrow {
+  border: 1px black solid;
+  width: 100px;
+}

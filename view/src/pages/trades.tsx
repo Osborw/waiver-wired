@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { CalculatedPlayer, Roster, SearchPosition, TempRoster } from '../../../shared/types'
-import { styled } from 'styled-components'
 import { RosterList } from '../components/trades/RosterList'
 import { createStartingLineup, rosterSumAvgStats } from '../logic/roster-logic'
 import { OfferList } from '../components/trades/OfferList'
+import './trades.scss'
 
-const TradeBuilderContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100vw;
-`
-
-const ArrowContainer = styled.div`
-  border: 1px black solid;
-  width: 10%;
-`
 
 const createBaseTradeRoster = (originalRoster: Roster): TradeRoster => {
   const baseTempRoster: TempRoster = {
@@ -189,9 +179,9 @@ export const Trades = ({ rosters, ownerId, leagueRosterSpots }: TradesProps) => 
   if (!oppOfferedPlayers) return <div>Could not create opp offered players list!</div>
 
   return (
-    <div>
+    <div className='trade-screen'>
       <h2>Trade Builder</h2>
-      <TradeBuilderContainer>
+      <div className='trade-builder'>
         <RosterList
           ownerTradeRoster={ownerTradeRoster}
           oppTradeRoster={oppTradeRoster}
@@ -205,7 +195,7 @@ export const Trades = ({ rosters, ownerId, leagueRosterSpots }: TradesProps) => 
           removePlayerFromOfferList={removeOwnerPlayerFromOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />
-        <ArrowContainer></ArrowContainer>
+        <div className='arrow'></div>
         <OfferList 
           offeredPlayers={oppOfferedPlayers}
           ownerTradeRoster={ownerTradeRoster}
@@ -219,7 +209,7 @@ export const Trades = ({ rosters, ownerId, leagueRosterSpots }: TradesProps) => 
           addPlayerToOfferList={addOppPlayerToOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />
-      </TradeBuilderContainer>
+      </div>
     </div>
   )
 }

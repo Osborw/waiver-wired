@@ -7,6 +7,7 @@ import { Players } from '../pages/players'
 import { Rosters } from '../pages/rosters'
 import { Trades } from '../pages/trades' 
 import { Spinner } from '../components/Spinner'
+import './league.scss'
 
 export enum Page {
   PLAYERS,
@@ -53,7 +54,7 @@ export const League = () => {
   }
 
   return (
-    <div>
+    <div className='league-info'>
       {leagueInfo && ownerId ? (
         <Layout leagueName={leagueInfo.leagueName} setPage={setPage}>
           {page === Page.PLAYERS && <Players players={players} leagueInfo={leagueInfo} ownerId={ownerId} />}

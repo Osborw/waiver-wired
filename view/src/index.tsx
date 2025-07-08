@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import { Home } from './pages/home'
 import { League } from './pages/league'
+import './index.scss' 
 
 const container = document.getElementById('app')
 const root = createRoot(container!)

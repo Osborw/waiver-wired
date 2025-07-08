@@ -1,9 +1,6 @@
 import React, { Dispatch } from 'react'
 import { Page } from '../pages/league';
-
-const linkStyle = {
-  marginRight: 15
-};
+import './Header.scss'
 
 interface HeaderProps {
   leagueName: string,
@@ -11,16 +8,16 @@ interface HeaderProps {
 }
 
 const Header = ({leagueName, setPage}: HeaderProps) => (
-  <div style={{marginBottom: '16px'}}>
+  <div className='header'>
     <h2>{leagueName}</h2>
     <div>
-      <a onClick={() => setPage(Page.PLAYERS)} style={linkStyle}>
+      <a onClick={() => setPage(Page.PLAYERS)}>
         Players 
       </a>
-      <a onClick={() => setPage(Page.ROSTERS)} style={linkStyle}>
+      <a onClick={() => setPage(Page.ROSTERS)}>
         Rosters 
       </a>
-      <a onClick={() => setPage(Page.TRADES)} style={linkStyle}>
+      <a onClick={() => setPage(Page.TRADES)}>
         Trades 
       </a>
     </div>
