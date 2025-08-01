@@ -1,14 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-
-const Tooltip = styled.div`
-  background-color: #f7f7f7;
-  border: 2px solid;
-  border-radius: 15px;
-`
-const Words = styled.div`
-  padding: 10px;
-`
+import s from './GraphTooltip.module.scss'
 
 export const IndividualGraphTooltip = (props: any) => {
   if (!props.active) {
@@ -16,8 +7,8 @@ export const IndividualGraphTooltip = (props: any) => {
   }
   const { payload } = props
   return (
-    <Tooltip>
-      <Words>
+    <div className={s.tooltip}>
+      <div className={s.words}>
         {payload[0] ? (
           <>
             <div>{`Week ${payload[0].payload.x}`}</div>
@@ -26,8 +17,8 @@ export const IndividualGraphTooltip = (props: any) => {
         ) : (
           <div>{`Not Active`}</div>
         )}
-      </Words>
-    </Tooltip>
+      </div>
+    </div>
   )
 }
 
@@ -37,13 +28,13 @@ export const TopPlayersGraphTooltip = (props: any) => {
   }
   const { payload } = props
   return (
-    <Tooltip>
-      <Words>
+    <div className={s.tooltip}>
+      <div className={s.words}>
           <>
             <div>{`${payload[0].payload.label}`}</div>
             <div>{`${payload[0].payload.y.toFixed(2)}`}</div>
           </>
-      </Words>
-    </Tooltip>
+      </div>
+    </div>
   ) 
 }

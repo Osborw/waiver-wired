@@ -5,5 +5,11 @@ a {
 .header {
   display: flex;
   flex-direction: column;
+  flex: 0 1 auto;
   margin-bottom: 16px;
+}
+
+.tabs {
+  display: flex;
+  flex: 0 1 auto;
 }

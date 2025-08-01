@@ -11,13 +11,7 @@ import {
 import { TopPlayersGraphTooltip } from './GraphTooltip'
 import { TieredPlayer, SearchPosition, TimeFrame } from '../../../shared/types'
 import { ScatterCustomizedShape } from 'recharts/types/cartesian/Scatter'
-import { styled } from 'styled-components'
-
-const GraphDiv = styled.div`
-  max-width: 850px;
-  overflow-x: scroll;
-  overflow-y: hidden;
-`
+import s from './PlayerGraph.module.scss'
 
 interface PlayerGraphProps {
   players: TieredPlayer[]
@@ -55,7 +49,7 @@ export default ({ players, timeFrame, position, myOwnerId }: PlayerGraphProps) =
   })
 
   return (
-    <GraphDiv>
+    <div className={s.graph}>
       <ScatterChart
         width={determineWidth(players)}
         height={400}
@@ -69,7 +63,7 @@ export default ({ players, timeFrame, position, myOwnerId }: PlayerGraphProps) =
         />
         <Scatter name='Players' data={datum} fill='#8884d8' shape={RenderDot}></Scatter>
       </ScatterChart>
-    </GraphDiv>
+    </div>
   )
 }
 

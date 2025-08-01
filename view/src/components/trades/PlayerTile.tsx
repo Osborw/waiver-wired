@@ -2,7 +2,7 @@ import React from 'react'
 import { CalculatedPlayer, SearchPosition, TempRoster } from '../../../../shared/types'
 import { createTempRoster } from '../../logic/roster-logic'
 import { TradeRoster } from '../../pages/trades'
-import './PlayerTile.scss'
+import s from './PlayerTile.module.scss'
 
 /**
  *
@@ -56,18 +56,18 @@ export const PlayerTile = ({ player, ownerTradeRoster, oppTradeRoster, leagueRos
   const buttonText = inOffer ? '-' : '+'
 
   return (
-    <div className='player-tile'>
-      <div className='player-info'>
-        <div className='player-info-line'>
+    <div className={s.player_tile}>
+      <div className={s.player_info}>
+        <div className={s.player_info_line}>
           <p>{player.fullName}</p>
           <p>{player.fantasyPositions[0]}</p>
         </div>
-        <div className='player-info-line'>
+        <div className={s.player_info_line}>
           <p>{player.fiveWeekMetrics.avgPoints.toFixed(2)}</p>
         </div>
       </div>
-      <div className='trade-action'>
-        <p className='trade-info'>
+      <div className={s.trade_action}>
+        <p className={s.trade_info}>
           {tradeValue.userGain.toFixed(0)} | {tradeValue.oppGain.toFixed(0)}
         </p>
         <button onClick={() => onClick(player)}>{buttonText}</button>

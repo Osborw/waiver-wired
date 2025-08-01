@@ -1,0 +1,62 @@
+.title_row {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  font-weight: bold;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.cells {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 0.5px solid #c7c7c7;
+  margin-top: 0.5px;
+  margin-bottom: 0.5px;
+}
+
+.cells_color_white {
+  background-color: 'white';
+}
+.cells_color_gray {
+  background-color: #f2f2f2;
+}
+
+.graph {
+  display: flex;
+  flex-direction: column;
+}
+
+.cell {
+  justify-content: center;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 80px;
+  color: black; 
+  text-align: center;
+}
+
+.cell_width_small {
+  width: 80px;
+}
+.cell_width_med {
+  width: 120px;
+}
+.cell_width_large {
+  width: 200px;
+}
+.cell_color_black {
+  color: 'black';
+}
+.cell_color_green {
+  color: 'green'
+}
+.cell_color_blue {
+  color: 'blue'
+}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { LeagueInfo, getLeaguesByUserId, getUserIdByUsername } from '../server/getIndex'
 import { Link } from 'react-router'
-import './home.scss'
+import s from './home.module.scss'
 
 export const Home = () => {
   const [usernameSearch, setUsernameSearch] = useState('')
@@ -43,7 +43,7 @@ export const Home = () => {
   }
 
   return (
-    <div className='home-layout'>
+    <div className={s.home_layout}>
       <h1> WAIVER WIRED! </h1>
       <input 
         onChange={onChange}
@@ -52,7 +52,7 @@ export const Home = () => {
       >
       </input>
       {searchError && <p>{searchError}</p>}
-      <div className='leagues'>
+      <div className={s.leagues}>
         {leagues.map((league) => (
           <LeagueTile league={league} userId={userId} />
         ))}
@@ -69,7 +69,7 @@ interface LeagueTileProps {
 const LeagueTile = ({ league, userId }: LeagueTileProps) => {
   return (
     <Link to={`/${league.leagueId}/${userId}`}>
-      <div className='league-tile'>
+      <div className={s.league_tile}>
         <p>{league.name}</p>
       </div>
     </Link>

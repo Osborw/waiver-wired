@@ -1,10 +1,10 @@
 import React from 'react'
-import './Spinner.scss'
+import s from './Spinner.module.scss'
 
 export const Spinner = () => {
   return (
-    <div className='spinner'>
-      <div className='animation'> </div>
+    <div className={s.spinner}>
+      <div className={s.animation}> </div>
       <p>Loading Information for your League...</p>
     </div>
   )

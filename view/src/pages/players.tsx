@@ -6,6 +6,7 @@ import PlayerTable from '../components/PlayerTable'
 import PlayerGraph from '../components/PlayerGraph'
 import { TieredPlayer, SearchPosition, TimeFrame, LeagueInfo } from '../../../shared/types'
 import { TopPlayerReturn } from '../../../shared/api-types'
+import s from './players.module.scss'
 
 interface PlayersProps {
   players: TopPlayerReturn[]
@@ -54,7 +55,7 @@ export const Players = ({players, leagueInfo, ownerId}: PlayersProps) => {
   }
   
   return (
-    <div>
+    <div className={s.player}>
       <TimeFrameSelector onClick={setNewTimeFrame} />
       <PositionSelector validSearchPositions={leagueInfo?.validRosterPositions} onClick={setNewPosition} />
       <h2 >

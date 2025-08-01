@@ -1,12 +1,6 @@
 import React from 'react'
 import { SearchPosition } from "../../../shared/types";
-
-const linkStyle = {
-  marginRight: 15,
-  cursor: 'pointer',
-  color: 'blue',
-  textDecoration: 'underline'
-};
+import s from './PositionSelector.module.scss'
 
 interface HeaderProps {
   validSearchPositions: SearchPosition[]
@@ -14,10 +8,10 @@ interface HeaderProps {
 }
 
 const Header = ({validSearchPositions, onClick}: HeaderProps) => (
-  <div style={{marginBottom: '16px', }}>
+  <div className={s.pos_header}>
     {validSearchPositions.map(pos => {
       return (
-        <a style={linkStyle} onClick={() => onClick(pos)}>{pos}</a>
+        <a key={`${pos}-link`} onClick={() => onClick(pos)}>{pos}</a>
       ) 
     })}
   </div>

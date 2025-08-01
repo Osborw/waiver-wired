@@ -1,7 +1,7 @@
 import React from 'react'
 import { RosterTable } from '../components/PlayerTable'
 import { Roster, RosterStat } from '../../../shared/types'
-import { styled } from 'styled-components'
+import s from './rosters.module.scss'
 
 const niceRank = (rank: number) => {
   if (rank === 1) return `1st`
@@ -11,16 +11,11 @@ const niceRank = (rank: number) => {
 }
 
 const determineRankColor = (rank: number, numRosters: number) => {
-  if(rank <= numRosters * .2) return 'blue'
-  if(rank <= numRosters * .5) return 'green'
-  if(rank <= numRosters * .8) return 'orange'
-  return 'red'
+  if(rank <= numRosters * .2) return s.stat_color_blue
+  if(rank <= numRosters * .5) return s.stat_color_green
+  if(rank <= numRosters * .8) return s.stat_color_orange
+  return s.stat_color_red
 }
-
-const StatDiv = styled.div`
-  margin-left: 20px;
-  color: ${props => props.color || 'black'};
-`
 
 interface StatProps {
   stat: RosterStat
@@ -29,13 +24,8 @@ interface StatProps {
 }
 
 const Stat = ({ stat, numRosters, name }: StatProps) => {
-  return <StatDiv color={determineRankColor(stat.rank, numRosters)}>{`${name} - ${stat.totalPoints.toFixed(2)}(${niceRank(stat.rank)})`}</StatDiv>
+  return <div className={`stat ${determineRankColor(stat.rank, numRosters)}`}>{`${name} - ${stat.totalPoints.toFixed(2)}(${niceRank(stat.rank)})`}</div>
 }
-
-const RosterStatsDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-`
 
 interface RosterStatsProps {
   roster: Roster
@@ -44,19 +34,15 @@ interface RosterStatsProps {
 
 const RosterStats = ({ roster, numRosters }: RosterStatsProps) => {
   return (
-    <RosterStatsDiv>
+    <div className={s.roster_stats}>
       <Stat stat={roster.avgPoints} numRosters={numRosters} name={'Avg'} />
       <Stat stat={roster.stdDev} numRosters={numRosters} name={'StdDev'} />
       {roster.positionRanks.map(pos => (
         <Stat stat={pos} numRosters={numRosters} name={pos.position} />
       ))}
-    </RosterStatsDiv>
+    </div>
   )
 }
-
-const RosterDiv = styled.div`
-  margin-bottom: 20px;
-`
 
 interface RostersProps {
   rosters: Roster[]
@@ -67,16 +53,16 @@ export const Rosters = ({rosters}: RostersProps) => {
   const numRosters = rosters.length
 
   return (
-    <div>
+    <div className={s.rosters}>
       <h2> Rosters </h2>
-      <div>
+      <div className={s.rosters}>
         {rosters.map((r) => {
           return (
-            <RosterDiv>
+            <div className={s.roster}>
               <h3>{r.ownerName}</h3>
               <RosterTable roster={r} key={`roster-${r.ownerId}`} />
               <RosterStats roster={r} numRosters={numRosters} key={`stats-${r.ownerId}`} />
-            </RosterDiv>
+            </div>
           )
         })}
       </div>

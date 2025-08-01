@@ -7,7 +7,7 @@ import { Players } from '../pages/players'
 import { Rosters } from '../pages/rosters'
 import { Trades } from '../pages/trades' 
 import { Spinner } from '../components/Spinner'
-import './league.scss'
+import s from './league.module.scss'
 
 export enum Page {
   PLAYERS,
@@ -16,7 +16,7 @@ export enum Page {
 }
 
 export const League = () => {
-  const [page, setPage] = useState<Page>(Page.TRADES)
+  const [page, setPage] = useState<Page>(Page.PLAYERS)
   const [players, setPlayers] = useState<TopPlayerReturn[]>([])
   const [rosters, setRosters] = useState<Roster[]>([])
   // const [trades, setTrades] = useState<Trade[]>([])
@@ -54,7 +54,7 @@ export const League = () => {
   }
 
   return (
-    <div className='league-info'>
+    <div className={s.league_info}>
       {leagueInfo && ownerId ? (
         <Layout leagueName={leagueInfo.leagueName} setPage={setPage}>
           {page === Page.PLAYERS && <Players players={players} leagueInfo={leagueInfo} ownerId={ownerId} />}

@@ -2,7 +2,7 @@ import React from 'react'
 import { CalculatedPlayer, SearchPosition, SleeperPosition } from '../../../../shared/types'
 import { TradeRoster } from '../../pages/trades'
 import { PlayerTile } from './PlayerTile'
-import './RosterList.scss'
+import s from './RosterList.module.scss'
 
 const sortRosterByPosition = (a: CalculatedPlayer, b: CalculatedPlayer) => {
   //TODO: This might have to change depending on what other positions there are
@@ -43,16 +43,16 @@ export const RosterList = ({
   const sortedRoster = ownerTradeRoster.remainingRoster.fullRoster.sort(sortRosterByPosition)
 
   return (
-    <div className='roster'>
-      <div className='sort'>
+    <div className={s.roster}>
+      <div className={s.sort}>
         <h3>{ownerTradeRoster.ownerName}</h3>
-        <div className='points'>
+        <div className={s.points}>
           <h3>{originalPoints.toFixed(2)}</h3>
           <h4>{newPoints.toFixed(2)}</h4>
           <h5>{pointDifference.toFixed(2)}</h5>
         </div>
       </div>
-      <div className='players'>
+      <div className={s.players}>
         {sortedRoster.map((player) => (
           <PlayerTile
             player={player}

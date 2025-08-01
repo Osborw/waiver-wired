@@ -2,7 +2,7 @@ import React from 'react'
 import { CalculatedPlayer, SearchPosition } from '../../../../shared/types'
 import { TradeRoster } from '../../pages/trades'
 import { PlayerTile } from './PlayerTile'
-import './OfferList.scss'
+import s from './OfferList.module.scss'
 
 
 interface TradesProps {
@@ -21,8 +21,8 @@ export const OfferList = ({
   leagueRosterSpots,
 }: TradesProps) => {
   return (
-    <div className='roster'>
-      <div className='players'>
+    <div className={s.roster}>
+      <div className={s.players}>
         {offeredPlayers.map((player) => (
           <PlayerTile
             player={player}

@@ -4,6 +4,7 @@ import { convertSearchPositionToSleeperPosition, isFlexPosition } from '../../..
 import { RosterRow, RosterTitleRow, Row, TitleRow } from './Row'
 import { useState, useEffect } from 'react'
 import { View } from './ViewSelector'
+import s from './PlayerTable.module.scss'
 
 interface PlayerTableProps {
   players: TieredPlayer[]
@@ -22,7 +23,7 @@ export default ({ players, position, timeFrame, view, myOwnerId }: PlayerTablePr
   }, [players])
 
   return (
-    <div>
+    <div className={s.table}>
       <TitleRow
         position={position}
         timeFrame={timeFrame}
@@ -71,7 +72,7 @@ export const RosterTable = ({ roster }: RosterTableProps) => {
   }, [roster])
 
   return (
-    <div>
+    <div className={s.table}>
       <RosterTitleRow toggleAllVisible={() => toggleAllVisible(!allVisible)} />
       {Object.values(roster.starters).map(slot => {
         return <RosterRow rosterSlot={slot} allVisible={allVisible} />

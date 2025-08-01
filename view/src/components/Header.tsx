@@ -1,16 +1,16 @@
 import React, { Dispatch } from 'react'
 import { Page } from '../pages/league';
-import './Header.scss'
+import s from './Header.module.scss'
 
 interface HeaderProps {
   leagueName: string,
   setPage: Dispatch<React.SetStateAction<Page>>
 }
 
-const Header = ({leagueName, setPage}: HeaderProps) => (
-  <div className='header'>
+export const Header = ({leagueName, setPage}: HeaderProps) => (
+  <div className={s.header}>
     <h2>{leagueName}</h2>
-    <div>
+    <div className={s.tabs}>
       <a onClick={() => setPage(Page.PLAYERS)}>
         Players 
       </a>
@@ -22,6 +22,4 @@ const Header = ({leagueName, setPage}: HeaderProps) => (
       </a>
     </div>
   </div>
-);
-
-export default Header;
+)

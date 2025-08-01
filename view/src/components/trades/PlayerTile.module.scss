@@ -1,4 +1,4 @@
-.player-tile {
+.player_tile {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -7,12 +7,12 @@
   padding: 4px;
 }
 
-div.player-info {
+div.player_info {
   display: flex;
   flex-direction: column;
 }
 
-.player-info-line {
+.player_info_line {
   display: flex;
   flex-direction: row;
 }
@@ -24,12 +24,12 @@ p {
   margin-left: 2px;
 }
 
-.trade-action {
+.trade_action {
   display: flex;
   flex-direction: row;
 }
 
-p.trade-info {
+p.trade_info {
   margin-top: 0px;
   margin-bottom: 0px;
   margin-right: 2px;

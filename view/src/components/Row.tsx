@@ -1,51 +1,11 @@
 import React from 'react'
 import IndividualGraph from './IndividualGraph'
-import styled from 'styled-components'
 import { useState, useEffect } from 'react'
 import { SearchPosition, SleeperPosition, TimeFrame, WeeklyStats } from '../../../shared/types'
 import { View } from './ViewSelector'
 import { LineupSlot } from '../../../shared/types'
 import { isFlexPosition } from '../../../shared/position-logic'
-
-const NameFieldLength = '200px'
-const AvgPPRFieldLength = '120px'
-const SmallNumberFieldLength = '80px'
-
-const TitleRowComponent = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  fontweight: bold;
-`
-
-const RowComponent = styled.div`
-  display: flex;
-  flex-direction: column;
-  cursor: pointer;
-`
-
-const Cells = styled.div<{ color?: string }>`
-  display: flex;
-  flex-direction: row;
-  border-bottom: 0.5px solid #c7c7c7;
-  margin-top: 0.5px;
-  margin-bottom: 0.5px;
-  background: ${props => props.color || 'white'}
-`
-const Graph = styled.div`
-  display: flex;
-  flex-direction: column;
-`
-
-const Cell = styled.div<{ inputsize?: string, inputcolor?: string }>`
-  margintop: 2px;
-  marginbottom: 2px;
-  marginleft: 10px;
-  marginright: 10px;
-  width: ${props => props.inputsize || SmallNumberFieldLength};
-  color: ${props => props.inputcolor || 'black'};
-  text-align: center;
-`
+import s from './Row.module.scss'
 
 interface TitleRowProps {
   position: SearchPosition
@@ -56,22 +16,22 @@ interface TitleRowProps {
 
 export const TitleRow = ({ position, toggleAllVisible }: TitleRowProps) => {
   return (
-    <TitleRowComponent>
-      <Cell>{'Rank'}</Cell>
-      {position === 'FLEX' && <Cell>{'Position'}</Cell>}
-      <Cell inputsize={NameFieldLength}>{'Name'}</Cell>
-      <Cell>{'Games Played'}</Cell>
-      <Cell inputsize={AvgPPRFieldLength}>{'Average PPR'}</Cell>
-      <Cell inputsize={AvgPPRFieldLength}>{'Standard Deviation'}</Cell>
-      <Cell inputsize={AvgPPRFieldLength}>{'Tier'}</Cell>
-      <Cell>
+    <div className={s.title_row}>
+      <div className={s.cell}>{'Rank'}</div>
+      {position === 'FLEX' && <div className={s.cell}>{'Position'}</div>}
+      <div className={`${s.cell} ${s.cell_width_large}`}>{'Name'}</div>
+      <div className={s.cell}>{'Games Played'}</div>
+      <div className={`${s.cell} ${s.cell_width_med}`}>{'Average PPR'}</div>
+      <div className={`${s.cell} ${s.cell_width_med}`}>{'Standard Deviation'}</div>
+      <div className={`${s.cell} ${s.cell_width_med}`}>{'Tier'}</div>
+      <div className={s.cell}>
         <button
           onClick={() => toggleAllVisible()}
         >
           ^ Close All ^
         </button>
-      </Cell>
-    </TitleRowComponent>
+      </div>
+    </div>
   )
 }
 
@@ -89,25 +49,25 @@ const NameField = ({ name, ownerId, myOwnerId }: NameFieldProps) => {
   return (
     <div>
       {ownerId === myOwnerId && (
-        <Cell inputcolor='green' inputsize={NameFieldLength}>
+        <div className={`${s.cell} ${s.cell_width_large} ${s.cell_color_green}`}>
           {name}
-        </Cell>
+        </div>
       )}
       {ownedButNotByMe(ownerId, myOwnerId) && (
-        <Cell inputsize={NameFieldLength}>{name}</Cell>
+        <div className={`${s.cell} ${s.cell_width_large}`}>{name}</div>
       )}
       {!ownerId && (
-        <Cell inputcolor='blue' inputsize={NameFieldLength}>
+        <div className={`${s.cell} ${s.cell_color_blue} ${s.cell_width_large}`}>
           {name}
-        </Cell>
+        </div>
       )}
     </div>
   )
 }
 
 const determineTierColor = (tier: number) => {
-  if(tier % 2 === 0) return 'white'
-  if(tier % 2 === 1) return '#f2f2f2'
+  if(tier % 2 === 0) return s.cells_color_white 
+  if(tier % 2 === 1) return s.cells_color_gray
 }
 
 interface RowProps {
@@ -153,25 +113,23 @@ export const Row = ({
   }, [allVisible])
 
   return (
-    <RowComponent
+    <div className={s.row}
       onClick={() => toggleIndividualGraphVisibility(!individualGraphVisible)}
     >
-      <Cells 
-        color={determineTierColor(tier)} 
-      >
-        <Cell>{rank}</Cell>
-        {isFlexPosition(selectedPosition) && <Cell>{position}</Cell>}
+      <div className={`${s.cells} ${determineTierColor(tier)}`}>
+        <div className={s.cell}>{rank}</div>
+        {isFlexPosition(selectedPosition) && <div className={s.cell}>{position}</div>}
         <NameField name={name} ownerId={ownerId} myOwnerId={myOwnerId} />
-        <Cell>{gamesPlayed}</Cell>
-        <Cell inputsize={AvgPPRFieldLength}>{avg ? avg.toFixed(2) : 0}</Cell>
-        <Cell inputsize={AvgPPRFieldLength}>
+        <div className={s.cell}>{gamesPlayed}</div>
+        <div className={`${s.cell} ${s.cell_width_med}`}>{avg ? avg.toFixed(2) : 0}</div>
+        <div className={`${s.cell} ${s.cell_width_med}`}>
           {(gamesPlayed > 1 && stdDev) ? stdDev.toFixed(2) : '------'}
-        </Cell>
-        <Cell inputsize={AvgPPRFieldLength}> {tierDiff ? -tierDiff.toFixed(0): ''} </Cell>
-        <Cell>{individualGraphVisible ? ' ˄ ' : ' ˅ '}</Cell>
-      </Cells>
+        </div>
+        <div className={`${s.cell} ${s.cell_width_med}`}> {tierDiff ? -tierDiff.toFixed(0): ''} </div>
+        <div className={s.cell}>{individualGraphVisible ? ' ˄ ' : ' ˅ '}</div>
+      </div>
       {individualGraphVisible && (
-        <Graph>
+        <div className={s.graph}>
           {
             <IndividualGraph
               weeks={weeks}
@@ -181,9 +139,9 @@ export const Row = ({
               timeFrame={timeFrame}
             />
           }
-        </Graph>
+        </div>
       )}
-    </RowComponent>
+    </div>
   )
 }
 
@@ -194,20 +152,20 @@ interface RosterTitleRowProps {
 
 export const RosterTitleRow = ({ toggleAllVisible }: RosterTitleRowProps) => {
   return (
-    <TitleRowComponent>
-      <Cell>{'Position'}</Cell>
-      <Cell inputsize={NameFieldLength}>{'Name'}</Cell>
-      <Cell>{'Games Played'}</Cell>
-      <Cell inputsize={AvgPPRFieldLength}>{'Average PPR'}</Cell>
-      <Cell inputsize={AvgPPRFieldLength}>{'Standard Deviation'}</Cell>
-      <Cell>
+    <div className={s.title_row}>
+      <div className={s.cell}>{'Position'}</div>
+      <div className={`${s.cell} ${s.cell_width_large}`}>{'Name'}</div>
+      <div className={s.cell}>{'Games Played'}</div>
+      <div className={`${s.cell} ${s.cell_width_med}`}>{'Average PPR'}</div>
+      <div className={`${s.cell} ${s.cell_width_med}`}>{'Standard Deviation'}</div>
+      <div className={s.cell}>
         <button
           onClick={() => toggleAllVisible()}
         >
           ^ Close All ^
         </button>
-      </Cell>
-    </TitleRowComponent>
+      </div>
+    </div>
   )
 }
 
@@ -237,21 +195,21 @@ export const RosterRow = ({
   }, [allVisible])
 
   return (
-    <RowComponent
+    <div className={s.row}
       onClick={() => toggleIndividualGraphVisibility(!individualGraphVisible)}
     >
-      <Cells>
-        <Cell>{position}</Cell>
-        <Cell inputsize={NameFieldLength}>{player.fullName}</Cell>
-        <Cell>{metrics.gp}</Cell>
-        <Cell inputsize={AvgPPRFieldLength}>{metrics.avgPoints ? metrics.avgPoints.toFixed(2) : 0}</Cell>
-        <Cell inputsize={AvgPPRFieldLength}>
+      <div className={`${s.cells} ${s.cell_color_white}`} >
+        <div className={s.cell}>{position}</div>
+        <div className={`${s.cell} ${s.cell_width_large}`}>{player.fullName}</div>
+        <div className={s.cell}>{metrics.gp}</div>
+        <div className={`${s.cell} ${s.cell_width_med}`}>{metrics.avgPoints ? metrics.avgPoints.toFixed(2) : 0}</div>
+        <div className={`${s.cell} ${s.cell_width_med}`}>
           {(metrics.gp > 1 && metrics.stdDev) ? metrics.stdDev.toFixed(2) : '------'}
-        </Cell>
-        <Cell>{individualGraphVisible ? ' ˄ ' : ' ˅ '}</Cell>
-      </Cells>
+        </div>
+        <div className={s.cell}>{individualGraphVisible ? ' ˄ ' : ' ˅ '}</div>
+      </div>
       {individualGraphVisible && (
-        <Graph>
+        <div className={s.graph}>
           {
             <IndividualGraph
               weeks={player.weeklyStats}
@@ -261,8 +219,8 @@ export const RosterRow = ({
               timeFrame={TimeFrame.FiveWeek}
             />
           }
-        </Graph>
+        </div>
       )}
-    </RowComponent>
+    </div>
   )
 }

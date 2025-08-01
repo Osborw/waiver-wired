@@ -1,0 +1,33 @@
+.rosters {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+}
+
+.roster_stats {
+  display: flex;
+  flex-direction: row;
+}
+
+.stat {
+  margin-left: 20px;
+}
+
+.stat_color_blue {
+  color: blue;
+}
+.stat_color_green {
+  color: green; 
+}
+.stat_color_orange {
+  color: orange; 
+}
+.stat_color_red {
+  color: red; 
+}
+
+.roster {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}

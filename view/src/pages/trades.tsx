@@ -3,7 +3,7 @@ import { CalculatedPlayer, Roster, SearchPosition, TempRoster } from '../../../s
 import { RosterList } from '../components/trades/RosterList'
 import { createStartingLineup, rosterSumAvgStats } from '../logic/roster-logic'
 import { OfferList } from '../components/trades/OfferList'
-import './trades.scss'
+import s from './trades.module.scss'
 
 
 const createBaseTradeRoster = (originalRoster: Roster): TradeRoster => {
@@ -179,9 +179,9 @@ export const Trades = ({ rosters, ownerId, leagueRosterSpots }: TradesProps) => 
   if (!oppOfferedPlayers) return <div>Could not create opp offered players list!</div>
 
   return (
-    <div className='trade-screen'>
+    <div className={s.trade_screen}>
       <h2>Trade Builder</h2>
-      <div className='trade-builder'>
+      <div className={s.trade_builder}>
         <RosterList
           ownerTradeRoster={ownerTradeRoster}
           oppTradeRoster={oppTradeRoster}
@@ -195,7 +195,7 @@ export const Trades = ({ rosters, ownerId, leagueRosterSpots }: TradesProps) => 
           removePlayerFromOfferList={removeOwnerPlayerFromOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />
-        <div className='arrow'></div>
+        <div className={s.arrow}></div>
         <OfferList 
           offeredPlayers={oppOfferedPlayers}
           ownerTradeRoster={ownerTradeRoster}

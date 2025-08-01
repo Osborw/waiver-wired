@@ -1,7 +1,7 @@
 import React, { ReactNode, Dispatch } from 'react';
-import Header from './Header';
+import { Header } from './Header';
 import { Page } from '../pages/league';
-import './MyLayout.scss'
+import s from './MyLayout.module.scss'
 
 interface LayoutProps {
   leagueName: string
@@ -10,7 +10,7 @@ interface LayoutProps {
 }
 
 const Layout = (props: LayoutProps) => (
-  <div className='layout'>
+  <div className={s.layout}>
     <Header leagueName={props.leagueName} setPage={props.setPage}/>
     {props && props.children}
   </div>
