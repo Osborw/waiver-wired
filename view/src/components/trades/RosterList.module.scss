@@ -1,7 +1,7 @@
 .roster {
   flex: 1 1 auto;
   flex-direction: column;
-  min-width: 200px;
+  min-width: 220px;
   max-width: 300px;
   border: 1px black solid;
 }
@@ -10,6 +10,21 @@
   display: flex;
   flex-direction: column;
   border: 1px black solid;
+  flex: 0 0 auto;
+}
+
+.name_header {
+  text-align: center;
+}
+
+.green_value {
+  color: green;
+}
+.red_value {
+  color: red;
+}
+.black_value {
+  color: black;
 }
 
 .points {

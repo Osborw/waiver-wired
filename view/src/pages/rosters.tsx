@@ -24,7 +24,7 @@ interface StatProps {
 }
 
 const Stat = ({ stat, numRosters, name }: StatProps) => {
-  return <div className={`stat ${determineRankColor(stat.rank, numRosters)}`}>{`${name} - ${stat.totalPoints.toFixed(2)}(${niceRank(stat.rank)})`}</div>
+  return <div className={`${s.stat} ${determineRankColor(stat.rank, numRosters)}`}>{`${name} - ${stat.totalPoints.toFixed(2)}(${niceRank(stat.rank)})`}</div>
 }
 
 interface RosterStatsProps {

@@ -195,7 +195,7 @@ export const Trades = ({ rosters, ownerId, leagueRosterSpots }: TradesProps) => 
           removePlayerFromOfferList={removeOwnerPlayerFromOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />
-        <div className={s.arrow}></div>
+        <div className={s.arrow}>{'<-->'}</div>
         <OfferList 
           offeredPlayers={oppOfferedPlayers}
           ownerTradeRoster={ownerTradeRoster}

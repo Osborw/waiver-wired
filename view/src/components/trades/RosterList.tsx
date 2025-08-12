@@ -23,6 +23,12 @@ const sortRosterByPosition = (a: CalculatedPlayer, b: CalculatedPlayer) => {
   else return positionDifference
 }
 
+const determinePointColor = (value: number) => {
+  if(value > 0) return s.green_value
+  else if(value < 0) return s.red_value
+  return s.black_value
+}
+
 interface TradesProps {
   ownerTradeRoster: TradeRoster
   oppTradeRoster: TradeRoster
@@ -45,12 +51,10 @@ export const RosterList = ({
   return (
     <div className={s.roster}>
       <div className={s.sort}>
-        <h3>{ownerTradeRoster.ownerName}</h3>
-        <div className={s.points}>
-          <h3>{originalPoints.toFixed(2)}</h3>
-          <h4>{newPoints.toFixed(2)}</h4>
-          <h5>{pointDifference.toFixed(2)}</h5>
-        </div>
+        <h3 className={s.name_header}>{ownerTradeRoster.ownerName}</h3>
+        <p>Original Points: {originalPoints.toFixed(2)}</p>
+        <p>New Points:    {newPoints.toFixed(2)}</p>
+        <p>Point Difference: <span className={determinePointColor(pointDifference)}>{pointDifference.toFixed(2)}</span></p>
       </div>
       <div className={s.players}>
         {sortedRoster.map((player) => (

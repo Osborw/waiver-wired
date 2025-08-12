@@ -16,5 +16,8 @@
 
 .arrow {
   border: 1px black solid;
-  width: 100px;
+  flex: 0 0 auto; 
+  justify-content: center;
+  align-items: center;
+  width: 50px;
 }
