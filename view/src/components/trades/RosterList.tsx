@@ -59,6 +59,7 @@ export const RosterList = ({
       <div className={s.players}>
         {sortedRoster.map((player) => (
           <PlayerTile
+            key={`${player.id}-tile`}
             player={player}
             ownerTradeRoster={ownerTradeRoster}
             oppTradeRoster={oppTradeRoster}

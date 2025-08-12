@@ -16,7 +16,7 @@ export enum Page {
 }
 
 export const League = () => {
-  const [page, setPage] = useState<Page>(Page.TRADES)
+  const [page, setPage] = useState<Page>(Page.PLAYERS)
   const [players, setPlayers] = useState<TopPlayerReturn[]>([])
   const [rosters, setRosters] = useState<Roster[]>([])
   // const [trades, setTrades] = useState<Trade[]>([])
