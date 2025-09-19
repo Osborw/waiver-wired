@@ -3,6 +3,7 @@ import { CalculatedPlayer, SearchPosition, SleeperPosition } from '../../../../s
 import { TradeRoster } from '../../pages/trades'
 import { PlayerTile } from './PlayerTile'
 import s from './RosterList.module.scss'
+import { TradeRoom } from '../../logic/trade/trade-room'
 
 const sortRosterByPosition = (a: CalculatedPlayer, b: CalculatedPlayer) => {
   //TODO: This might have to change depending on what other positions there are
@@ -30,18 +31,22 @@ const determinePointColor = (value: number) => {
 }
 
 interface TradesProps {
-  ownerTradeRoster: TradeRoster
-  oppTradeRoster: TradeRoster
+  ownerId: string
+  tradeRoom?: TradeRoom
+  changeTradeRooms?: (ownerId: string) => void
   addPlayerToOfferList: (player: CalculatedPlayer) => void
   leagueRosterSpots: SearchPosition[]
 }
 
 export const RosterList = ({
-  ownerTradeRoster,
-  oppTradeRoster,
-  addPlayerToOfferList,
+  ownerId,
+  tradeRoom,
+  changeTradeRooms,
+  addPlayerToOffer  List,
   leagueRosterSpots,
 }: TradesProps) => {
+
+  if (!tradeRoom) return <div>Error! Empty trade room!</div>
 
   const originalPoints = ownerTradeRoster.originalRoster.avgPoints.totalPoints
   const newPoints = ownerTradeRoster.postTradeRoster.avgPoints

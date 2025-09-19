@@ -1,101 +1,48 @@
 import React, { useEffect, useState } from 'react'
-import { CalculatedPlayer, Roster, SearchPosition, TempRoster } from '../../../shared/types'
+import { CalculatedPlayer, Roster, SearchPosition } from '../../../shared/types'
 import { RosterList } from '../components/trades/RosterList'
-import { createStartingLineup, rosterSumAvgStats } from '../logic/roster-logic'
 import { OfferList } from '../components/trades/OfferList'
 import s from './trades.module.scss'
+import { TradeRoster, addPlayerToRemaining, addPlayerToTradeRoster, createBaseTradeRoster, removePlayerFromRemaining, removePlayerFromTradeRoster } from '../logic/trade/base-trade-roster'
+import { TradeRoom, TradeRoomPartnerId, createTradeRoom } from '../logic/trade/trade-room'
 
-
-const createBaseTradeRoster = (originalRoster: Roster): TradeRoster => {
-  const baseTempRoster: TempRoster = {
-    fullRoster: originalRoster.fullRoster,
-    ownerId: originalRoster.ownerId,
-    starters: originalRoster.starters,
-    avgPoints: originalRoster.avgPoints.totalPoints
-  }
-
-  return {
-    ownerId: originalRoster.ownerId,
-    ownerName: originalRoster.ownerName,
-    originalRoster,
-    remainingRoster: baseTempRoster,
-    postTradeRoster: baseTempRoster
-  }
-}
-
-const createTempRosterFromPlayerList = (ownerId: string, players: CalculatedPlayer[], leagueRosterSpots: SearchPosition[]): TempRoster => {
-  const fullRoster = players
-  const starters = createStartingLineup(players, leagueRosterSpots)
-  const avgPoints = rosterSumAvgStats(Object.values(starters))
-
-  return {
-    ownerId,
-    fullRoster,
-    starters,
-    avgPoints
-  }
-}
-
-export interface TradeRoster {
-  ownerId: string
-  ownerName: string
-  originalRoster: Roster
-  remainingRoster: TempRoster 
-  postTradeRoster: TempRoster
-}
-
-const removePlayerFromTradeRoster = (roster: TradeRoster, player: CalculatedPlayer, leagueRosterSpots: SearchPosition[]) => {
-  const newPostTradeRosterList = roster.postTradeRoster.fullRoster.filter(p => p.id !== player.id)
-  roster.postTradeRoster = createTempRosterFromPlayerList(roster.ownerId, newPostTradeRosterList, leagueRosterSpots)
-}
-
-const removePlayerFromRemaining = (roster: TradeRoster, player: CalculatedPlayer, leagueRosterSpots: SearchPosition[]) => {
-  const newRemainingRosterList = roster.remainingRoster.fullRoster.filter(p => p.id !== player.id)
-  roster.remainingRoster = createTempRosterFromPlayerList(roster.ownerId, newRemainingRosterList, leagueRosterSpots)
-}
-
-const addPlayerToTradeRoster = (roster: TradeRoster, player: CalculatedPlayer, leagueRosterSpots: SearchPosition[]) => {
-  const newPostTradeRosterList = [...roster.postTradeRoster.fullRoster, player]
-  roster.postTradeRoster = createTempRosterFromPlayerList(roster.ownerId, newPostTradeRosterList, leagueRosterSpots)
-}
-
-const addPlayerToRemaining = (roster: TradeRoster, player: CalculatedPlayer, leagueRosterSpots: SearchPosition[]) => {
-  const newRemaingingRosterList = [...roster.remainingRoster.fullRoster, player]
-  roster.remainingRoster = createTempRosterFromPlayerList(roster.ownerId, newRemaingingRosterList, leagueRosterSpots)
-}
 
 interface TradesProps {
   rosters: Roster[]
-  ownerId: string
+  userId: string
   leagueRosterSpots: SearchPosition[]
 }
 
-export const Trades = ({ rosters, ownerId, leagueRosterSpots }: TradesProps) => {
-  const [ownerTradeRoster, setOwnerTradeRoster] = useState<TradeRoster>()
-  const [oppTradeRoster, setOppTradeRoster] = useState<TradeRoster>()
-  const [ownerOfferedPlayers, setOwnerOfferedPlayers] = useState<CalculatedPlayer[]>()
-  const [oppOfferedPlayers, setOppOfferedPlayers] = useState<CalculatedPlayer[]>()
+export const Trades = ({ rosters, userId, leagueRosterSpots }: TradesProps) => {
+  const [tradeRooms, setTradeRooms] = useState<Map<TradeRoomPartnerId, TradeRoom>>()
+  const [selectedTradeRoom, setSelectedTradeRoom] = useState<TradeRoom>()
 
-  const setRosters = () => {
-    const ownerRoster = rosters.find((roster) => roster.ownerId === ownerId)
-    const oppRoster = rosters.find((roster) => roster.ownerId !== ownerId)
-    if (!ownerRoster) {
-      console.error('No owner roster found!')
-      return
-    }
-    if (!oppRoster) {
-      console.error('No opp roster found!')
+  const initTradeRooms = () => {
+    const userRoster = rosters.find(roster => roster.ownerId === userId)
+
+    if (!userRoster) {
+      console.error('No user roster available! Cannot initiate trade screen')
       return
     }
 
-    //Create starting state
-    setOwnerTradeRoster(createBaseTradeRoster(ownerRoster))
-    setOppTradeRoster(createBaseTradeRoster(oppRoster))
-    setOwnerOfferedPlayers([])
-    setOppOfferedPlayers([])
+    const newTradeRooms = new Map<TradeRoomPartnerId, TradeRoom>() 
+    rosters.forEach(roster => {
+      if (roster.ownerId === userId) return
+      const newTradeRoom = createTradeRoom(userRoster, roster)
+      newTradeRooms.set(roster.ownerId, newTradeRoom)
+    })
+
+    setTradeRooms(newTradeRooms)
+    const firstTradeRoom = newTradeRooms.values().next().value
+    setSelectedTradeRoom(firstTradeRoom)
+  }
+  
+  const changeTradeRooms = (ownerId: string) => {
+    const newTradeRoom = tradeRooms?.get(ownerId)
+    setSelectedTradeRoom(newTradeRoom)
   }
 
-  useEffect(() => setRosters(), [])
+  useEffect(() => initTradeRooms(), [])
 
   const addOwnerPlayerToOfferList = (player: CalculatedPlayer) => {
     setOwnerOfferedPlayers(current => {
@@ -178,34 +125,35 @@ export const Trades = ({ rosters, ownerId, leagueRosterSpots }: TradesProps) => 
   if (!ownerOfferedPlayers) return <div>Could not create owner offered players list!</div>
   if (!oppOfferedPlayers) return <div>Could not create opp offered players list!</div>
 
+  if (!selectedTradeRoom) return <div>No selected Trade Room</div>
+
   return (
     <div className={s.trade_screen}>
       <h2>Trade Builder</h2>
       <div className={s.trade_builder}>
         <RosterList
-          ownerTradeRoster={ownerTradeRoster}
-          oppTradeRoster={oppTradeRoster}
+          ownerId={userId}
+          tradeRoom={selectedTradeRoom}
           addPlayerToOfferList={addOwnerPlayerToOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />
         <OfferList 
-          offeredPlayers={ownerOfferedPlayers}
-          ownerTradeRoster={oppTradeRoster}
-          oppTradeRoster={ownerTradeRoster}
+          ownerId={userId}
+          tradeRoom={selectedTradeRoom}
           removePlayerFromOfferList={removeOwnerPlayerFromOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />
         <div className={s.arrow}>{'<-->'}</div>
         <OfferList 
-          offeredPlayers={oppOfferedPlayers}
-          ownerTradeRoster={ownerTradeRoster}
-          oppTradeRoster={oppTradeRoster}
+          ownerId={selectedTradeRoom.partnerOwnerId}
+          tradeRoom={selectedTradeRoom}
           removePlayerFromOfferList={removeOppPlayerFromOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />
         <RosterList
-          ownerTradeRoster={oppTradeRoster}
-          oppTradeRoster={ownerTradeRoster}
+          ownerId={selectedTradeRoom.partnerOwnerId}
+          tradeRoom={selectedTradeRoom}
+          changeTradeRooms={changeTradeRooms}
           addPlayerToOfferList={addOppPlayerToOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />

@@ -1,22 +1,18 @@
 import React from 'react'
 import { CalculatedPlayer, SearchPosition } from '../../../../shared/types'
-import { TradeRoster } from '../../pages/trades'
 import { PlayerTile } from './PlayerTile'
 import s from './OfferList.module.scss'
+import { TradeRoom } from '../../logic/trade/trade-room'
 
 
 interface TradesProps {
-  offeredPlayers: CalculatedPlayer[]
-  ownerTradeRoster: TradeRoster
-  oppTradeRoster: TradeRoster
+  ownerId: string
+  tradeRoom?: TradeRoom
   removePlayerFromOfferList: (player: CalculatedPlayer) => void
   leagueRosterSpots: SearchPosition[]
 }
 
 export const OfferList = ({
-  offeredPlayers,
-  ownerTradeRoster,
-  oppTradeRoster,
   removePlayerFromOfferList,
   leagueRosterSpots,
 }: TradesProps) => {

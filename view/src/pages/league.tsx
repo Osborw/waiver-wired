@@ -59,7 +59,7 @@ export const League = () => {
         <Layout leagueName={leagueInfo.leagueName} setPage={setPage}>
           {page === Page.PLAYERS && <Players players={players} leagueInfo={leagueInfo} ownerId={ownerId} />}
           {page === Page.ROSTERS && <Rosters rosters={rosters} />}
-          {page === Page.TRADES && <Trades rosters={rosters} ownerId={ownerId} leagueRosterSpots={leagueInfo.rosterSpots} />}
+          {page === Page.TRADES && <Trades rosters={rosters} userId={ownerId} leagueRosterSpots={leagueInfo.rosterSpots} />}
         </Layout>
       ) : (
         <Spinner />
