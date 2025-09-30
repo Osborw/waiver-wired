@@ -28,7 +28,7 @@ export const Trades = ({ rosters, userId, leagueRosterSpots }: TradesProps) => {
     const newTradeRooms = new Map<TradeRoomPartnerId, TradeRoom>() 
     rosters.forEach(roster => {
       if (roster.ownerId === userId) return
-      const newTradeRoom = createTradeRoom(userRoster, roster)
+      const newTradeRoom = createTradeRoom(userRoster, roster, leagueRosterSpots)
       newTradeRooms.set(roster.ownerId, newTradeRoom)
     })
 
@@ -43,44 +43,6 @@ export const Trades = ({ rosters, userId, leagueRosterSpots }: TradesProps) => {
   }
 
   useEffect(() => initTradeRooms(), [])
-
-  const addOwnerPlayerToOfferList = (player: CalculatedPlayer) => {
-    setOwnerOfferedPlayers(current => {
-      if(!current) return [player]
-      return [...current, player]
-    })
-
-    if(!ownerTradeRoster) {
-      console.error('Cannot find the owner Trade Roster!')
-      return
-    }
-    if(!oppTradeRoster) {
-      console.error('Cannot find the opp Trade Roster!')
-      return
-    }
-    removePlayerFromTradeRoster(ownerTradeRoster, player, leagueRosterSpots)
-    removePlayerFromRemaining(ownerTradeRoster, player, leagueRosterSpots)
-    addPlayerToTradeRoster(oppTradeRoster, player, leagueRosterSpots)
-  }
-
-  const addOppPlayerToOfferList = (player: CalculatedPlayer) => {
-    setOppOfferedPlayers(current => {
-      if(!current) return [player]
-      return [...current, player]
-    })
-
-    if(!ownerTradeRoster) {
-      console.error('Cannot find the owner Trade Roster!')
-      return
-    }
-    if(!oppTradeRoster) {
-      console.error('Cannot find the opp Trade Roster!')
-      return
-    }
-    removePlayerFromTradeRoster(oppTradeRoster, player, leagueRosterSpots)
-    removePlayerFromRemaining(oppTradeRoster, player, leagueRosterSpots)
-    addPlayerToTradeRoster(ownerTradeRoster, player, leagueRosterSpots)
-  }
 
   const removeOwnerPlayerFromOfferList = (player: CalculatedPlayer) => {
     setOwnerOfferedPlayers(current => {
@@ -120,11 +82,6 @@ export const Trades = ({ rosters, userId, leagueRosterSpots }: TradesProps) => {
     addPlayerToRemaining(oppTradeRoster, player, leagueRosterSpots)
   }
 
-  if (!ownerTradeRoster) return <div>No owners roster found!</div>
-  if (!oppTradeRoster) return <div>No opp roster found!</div>
-  if (!ownerOfferedPlayers) return <div>Could not create owner offered players list!</div>
-  if (!oppOfferedPlayers) return <div>Could not create opp offered players list!</div>
-
   if (!selectedTradeRoom) return <div>No selected Trade Room</div>
 
   return (
@@ -134,7 +91,6 @@ export const Trades = ({ rosters, userId, leagueRosterSpots }: TradesProps) => {
         <RosterList
           ownerId={userId}
           tradeRoom={selectedTradeRoom}
-          addPlayerToOfferList={addOwnerPlayerToOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />
         <OfferList 
@@ -154,7 +110,6 @@ export const Trades = ({ rosters, userId, leagueRosterSpots }: TradesProps) => {
           ownerId={selectedTradeRoom.partnerOwnerId}
           tradeRoom={selectedTradeRoom}
           changeTradeRooms={changeTradeRooms}
-          addPlayerToOfferList={addOppPlayerToOfferList}
           leagueRosterSpots={leagueRosterSpots}
         />
       </div>
