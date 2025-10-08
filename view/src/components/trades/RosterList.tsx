@@ -17,15 +17,14 @@ const sortRosterByPosition = (a: CalculatedPlayer, b: CalculatedPlayer) => {
 
   const positionDifference = positionOrder[a.fantasyPositions[0]] - positionOrder[b.fantasyPositions[0]]
 
-  if(positionDifference === 0){
+  if (positionDifference === 0) {
     return b.fiveWeekMetrics.avgPoints - a.fiveWeekMetrics.avgPoints
-  }
-  else return positionDifference
+  } else return positionDifference
 }
 
 const determinePointColor = (value: number) => {
-  if(value > 0) return s.green_value
-  else if(value < 0) return s.red_value
+  if (value > 0) return s.green_value
+  else if (value < 0) return s.red_value
   return s.black_value
 }
 
@@ -33,34 +32,39 @@ interface TradesProps {
   ownerId: string
   tradeRoom?: TradeRoom
   changeTradeRooms?: (ownerId: string) => void
+  allTradeRooms?: TradeRoom[]
   leagueRosterSpots: SearchPosition[]
 }
 
-export const RosterList = ({
-  ownerId,
-  tradeRoom,
-  changeTradeRooms,
-  leagueRosterSpots,
-}: TradesProps) => {
-
+export const RosterList = ({ ownerId, tradeRoom, changeTradeRooms, allTradeRooms, leagueRosterSpots }: TradesProps) => {
   if (!tradeRoom) return <div>Error! Empty trade room!</div>
 
   const isUser = ownerId === tradeRoom.userOwnerId
   const tradeRoster = isUser ? tradeRoom.userTradeRoster : tradeRoom.partnerTradeRoster
-  const oppTradeRoster = isUser ? tradeRoom.partnerTradeRoster: tradeRoom.userTradeRoster
+  const oppTradeRoster = isUser ? tradeRoom.partnerTradeRoster : tradeRoom.userTradeRoster
 
   const originalPoints = tradeRoster.originalRoster.avgPoints.totalPoints
   const newPoints = tradeRoster.postTradeRoster.avgPoints
-  const pointDifference = newPoints - originalPoints 
+  const pointDifference = newPoints - originalPoints
   const sortedRoster = tradeRoster.remainingRoster.fullRoster.sort(sortRosterByPosition)
 
   return (
     <div className={s.roster}>
       <div className={s.sort}>
-        <h3 className={s.name_header}>{tradeRoster.ownerName}</h3>
+        {!!changeTradeRooms ? (
+          <select id="trade-partners" value={ownerId} onChange={(e) => changeTradeRooms(e.target.value)}>
+            {allTradeRooms?.map(room => (
+              <option value={room.partnerOwnerId}>{room.partnerTradeRoster.ownerName}</option>
+            ))}
+          </select>
+        ) : (
+          <h3 className={s.name_header}>{tradeRoster.ownerName}</h3>
+        )}
         <p>Original Points: {originalPoints.toFixed(2)}</p>
-        <p>New Points:    {newPoints.toFixed(2)}</p>
-        <p>Point Difference: <span className={determinePointColor(pointDifference)}>{pointDifference.toFixed(2)}</span></p>
+        <p>New Points: {newPoints.toFixed(2)}</p>
+        <p>
+          Point Difference: <span className={determinePointColor(pointDifference)}>{pointDifference.toFixed(2)}</span>
+        </p>
       </div>
       <div className={s.players}>
         {sortedRoster.map((player) => (

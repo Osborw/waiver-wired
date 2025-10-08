@@ -110,6 +110,7 @@ export const Trades = ({ rosters, userId, leagueRosterSpots }: TradesProps) => {
           ownerId={selectedTradeRoom.partnerOwnerId}
           tradeRoom={selectedTradeRoom}
           changeTradeRooms={changeTradeRooms}
+          allTradeRooms={tradeRooms}
           leagueRosterSpots={leagueRosterSpots}
         />
       </div>
