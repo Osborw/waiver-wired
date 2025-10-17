@@ -20,7 +20,7 @@ export interface LeagueInfo {
 
 export const getLeaguesByUserId = async (userId: string): Promise<LeagueInfo[]> => {
   //TODO: Make this by env or something
-  const season = '2024'
+  const season = '2025'
   const res = await fetch(`https://api.sleeper.app/v1/user/${userId}/leagues/nfl/${season}`)
   const data: GetLeaguesByUserIdReturn[] = await res.json()
 
