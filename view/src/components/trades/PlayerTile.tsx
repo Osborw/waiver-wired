@@ -1,8 +1,8 @@
 import React from 'react'
 import { CalculatedPlayer, SearchPosition, TempRoster } from '../../../../shared/types'
 import { createTempRoster } from '../../logic/roster-logic'
-import { TradeRoster } from '../../pages/trades'
 import s from './PlayerTile.module.scss'
+import { TradeRoster } from '../../logic/trade/base-trade-roster'
 
 /**
  *
@@ -15,41 +15,41 @@ import s from './PlayerTile.module.scss'
 
 interface PlayerTileProps {
   player: CalculatedPlayer
-  ownerTradeRoster: TradeRoster
-  oppTradeRoster: TradeRoster
+  userTradeRoster: TradeRoster 
+  partnerTradeRoster: TradeRoster
   leagueRosterSpots: SearchPosition[]
   inOffer: boolean
-  onClick: (player: CalculatedPlayer) => void 
+  onClick: () => void 
 }
 
 interface GetTradeValueProps {
   player: CalculatedPlayer
-  ownerPostTradeRoster: TempRoster
-  oppPostTradeRoster: TempRoster
+  userPostTradeRoster: TempRoster
+  partnerPostTradeRoster: TempRoster
   leagueRosterSpots: SearchPosition[]
 }
 
-const getTradeValue = ({ player, ownerPostTradeRoster, oppPostTradeRoster, leagueRosterSpots }: GetTradeValueProps) => {
+const getTradeValue = ({ player, userPostTradeRoster, partnerPostTradeRoster, leagueRosterSpots }: GetTradeValueProps) => {
   //create two new temp rosters
-  const newOwnerRoster = ownerPostTradeRoster.fullRoster.filter((p) => p.id !== player.id)
-  const newOppRoster = [...oppPostTradeRoster.fullRoster, player]
+  const newOwnerRoster = userPostTradeRoster.fullRoster.filter((p) => p.id !== player.id)
+  const newOppRoster = [...partnerPostTradeRoster.fullRoster, player]
 
-  const ownerTempRoster = createTempRoster(ownerPostTradeRoster.ownerId, newOwnerRoster, leagueRosterSpots)
-  const oppTempRoster = createTempRoster(oppPostTradeRoster.ownerId, newOppRoster, leagueRosterSpots)
+  const ownerTempRoster = createTempRoster(userPostTradeRoster.ownerId, newOwnerRoster, leagueRosterSpots)
+  const oppTempRoster = createTempRoster(partnerPostTradeRoster.ownerId, newOppRoster, leagueRosterSpots)
 
   //subtract old values from new values
-  const userGain = ownerTempRoster.avgPoints - ownerPostTradeRoster.avgPoints
-  const oppGain = oppTempRoster.avgPoints - oppPostTradeRoster.avgPoints
+  const userGain = ownerTempRoster.avgPoints - userPostTradeRoster.avgPoints
+  const oppGain = oppTempRoster.avgPoints - partnerPostTradeRoster.avgPoints
 
   //return those two numbers
   return { userGain, oppGain }
 }
 
-export const PlayerTile = ({ player, ownerTradeRoster, oppTradeRoster, leagueRosterSpots, inOffer, onClick}: PlayerTileProps) => {
+export const PlayerTile = ({ player, userTradeRoster, partnerTradeRoster, leagueRosterSpots, inOffer, onClick}: PlayerTileProps) => {
   const tradeValue = getTradeValue({
     player,
-    ownerPostTradeRoster: ownerTradeRoster.postTradeRoster,
-    oppPostTradeRoster: oppTradeRoster.postTradeRoster,
+    userPostTradeRoster: userTradeRoster.postTradeRoster,
+    partnerPostTradeRoster: partnerTradeRoster.postTradeRoster,
     leagueRosterSpots,
   })
 
@@ -70,7 +70,7 @@ export const PlayerTile = ({ player, ownerTradeRoster, oppTradeRoster, leagueRos
         <p className={s.trade_info}>
           {tradeValue.userGain.toFixed(0)} | {tradeValue.oppGain.toFixed(0)}
         </p>
-        <button onClick={() => onClick(player)}>{buttonText}</button>
+        <button onClick={onClick}>{buttonText}</button>
       </div>
     </div>
   )

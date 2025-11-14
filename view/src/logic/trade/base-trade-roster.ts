@@ -41,7 +41,9 @@ export interface TradeRoster {
 
 export const removePlayerFromTradeRoster = (roster: TradeRoster, player: CalculatedPlayer, leagueRosterSpots: SearchPosition[]) => {
   const newPostTradeRosterList = roster.postTradeRoster.fullRoster.filter(p => p.id !== player.id)
+  console.log({newPostTradeRosterList})
   roster.postTradeRoster = createTempRosterFromPlayerList(roster.ownerId, newPostTradeRosterList, leagueRosterSpots)
+  console.log({roster})
 }
 
 export const removePlayerFromRemaining = (roster: TradeRoster, player: CalculatedPlayer, leagueRosterSpots: SearchPosition[]) => {

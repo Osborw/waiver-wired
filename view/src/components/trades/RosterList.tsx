@@ -2,7 +2,7 @@ import React from 'react'
 import { CalculatedPlayer, SearchPosition, SleeperPosition } from '../../../../shared/types'
 import { PlayerTile } from './PlayerTile'
 import s from './RosterList.module.scss'
-import { TradeRoom, addPlayerToOfferList } from '../../logic/trade/trade-room'
+import { TradeRoom } from '../../logic/trade/trade-room'
 
 const sortRosterByPosition = (a: CalculatedPlayer, b: CalculatedPlayer) => {
   //TODO: This might have to change depending on what other positions there are
@@ -34,9 +34,17 @@ interface TradesProps {
   changeTradeRooms?: (ownerId: string) => void
   allTradeRooms?: TradeRoom[]
   leagueRosterSpots: SearchPosition[]
+  addPlayerToOfferList: (tradeRoom: TradeRoom, player: CalculatedPlayer, ownerId: string) => void
 }
 
-export const RosterList = ({ ownerId, tradeRoom, changeTradeRooms, allTradeRooms, leagueRosterSpots }: TradesProps) => {
+export const RosterList = ({
+  ownerId,
+  tradeRoom,
+  changeTradeRooms,
+  allTradeRooms,
+  leagueRosterSpots,
+  addPlayerToOfferList,
+}: TradesProps) => {
   if (!tradeRoom) return <div>Error! Empty trade room!</div>
 
   const isUser = ownerId === tradeRoom.userOwnerId
@@ -53,7 +61,7 @@ export const RosterList = ({ ownerId, tradeRoom, changeTradeRooms, allTradeRooms
       <div className={s.sort}>
         {!!changeTradeRooms ? (
           <select id="trade-partners" value={ownerId} onChange={(e) => changeTradeRooms(e.target.value)}>
-            {allTradeRooms?.map(room => (
+            {allTradeRooms?.map((room) => (
               <option value={room.partnerOwnerId}>{room.partnerTradeRoster.ownerName}</option>
             ))}
           </select>
@@ -71,8 +79,8 @@ export const RosterList = ({ ownerId, tradeRoom, changeTradeRooms, allTradeRooms
           <PlayerTile
             key={`${player.id}-tile`}
             player={player}
-            ownerTradeRoster={tradeRoster}
-            oppTradeRoster={oppTradeRoster}
+            userTradeRoster={tradeRoster}
+            partnerTradeRoster={oppTradeRoster}
             leagueRosterSpots={leagueRosterSpots}
             inOffer={false}
             onClick={() => addPlayerToOfferList(tradeRoom, player, player.ownerId as string)}
