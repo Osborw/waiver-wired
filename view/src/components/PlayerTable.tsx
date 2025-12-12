@@ -75,7 +75,7 @@ export const RosterTable = ({ roster }: RosterTableProps) => {
     <div className={s.table}>
       <RosterTitleRow toggleAllVisible={() => toggleAllVisible(!allVisible)} />
       {Object.values(roster.starters).map(slot => {
-        return <RosterRow rosterSlot={slot} allVisible={allVisible} />
+        return <RosterRow key={`${slot.player?.id}-roster-row`} rosterSlot={slot} allVisible={allVisible} />
       })}
     </div>
   )

@@ -38,7 +38,7 @@ const RosterStats = ({ roster, numRosters }: RosterStatsProps) => {
       <Stat stat={roster.avgPoints} numRosters={numRosters} name={'Avg'} />
       <Stat stat={roster.stdDev} numRosters={numRosters} name={'StdDev'} />
       {roster.positionRanks.map(pos => (
-        <Stat stat={pos} numRosters={numRosters} name={pos.position} />
+        <Stat key={`${pos.position}-stat`} stat={pos} numRosters={numRosters} name={pos.position} />
       ))}
     </div>
   )
@@ -58,7 +58,7 @@ export const Rosters = ({rosters}: RostersProps) => {
       <div className={s.rosters}>
         {rosters.map((r) => {
           return (
-            <div className={s.roster}>
+            <div className={s.roster} key={`${r.ownerId}-roster`}>
               <h3>{r.ownerName}</h3>
               <RosterTable roster={r} key={`roster-${r.ownerId}`} />
               <RosterStats roster={r} numRosters={numRosters} key={`stats-${r.ownerId}`} />

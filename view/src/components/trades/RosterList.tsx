@@ -62,7 +62,7 @@ export const RosterList = ({
         {!!changeTradeRooms ? (
           <select id="trade-partners" value={ownerId} onChange={(e) => changeTradeRooms(e.target.value)}>
             {allTradeRooms?.map((room) => (
-              <option value={room.partnerOwnerId}>{room.partnerTradeRoster.ownerName}</option>
+              <option key={room.partnerOwnerId} value={room.partnerOwnerId}>{room.partnerTradeRoster.ownerName}</option>
             ))}
           </select>
         ) : (

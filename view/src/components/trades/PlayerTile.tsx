@@ -55,8 +55,10 @@ export const PlayerTile = ({ player, userTradeRoster, partnerTradeRoster, league
 
   const buttonText = inOffer ? '-' : '+'
 
+  const highlighted = tradeValue.oppGain > Math.abs(tradeValue.userGain) + .5
+
   return (
-    <div className={s.player_tile}>
+    <div className={`${s.player_tile} ${highlighted && s.player_tile_green}`}>
       <div className={s.player_info}>
         <div className={s.player_info_line}>
           <p>{player.fullName}</p>

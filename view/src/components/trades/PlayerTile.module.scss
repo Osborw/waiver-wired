@@ -8,6 +8,12 @@
   flex: 0 0 auto;
 }
 
+.player_tile_green {
+  border-color: green;
+  border-width: 2px;
+  background-color: rgba(185, 255, 185, 0.5);
+}
+
 div.player_info {
   display: flex;
   flex-direction: column;
